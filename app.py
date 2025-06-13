@@ -1,13 +1,16 @@
+
 import requests
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
-api_key = os.getenv("OPENAIP_API_KEY")  # Make sure this is set correctly!
+api_key_openaip = os.getenv("OPENAIP_API_KEY")
+api_key_wx = os.getenv("CHECKWXAPI_API_KEY")
 
 # Correct header for public API
 headers = {
-    "x-openaip-api-key": api_key
+    "x-openaip-api-key": api_key_openaip
 }
 
 params = {
@@ -19,6 +22,7 @@ url = "https://api.core.openaip.net/api/airports"
 response = requests.get(url, headers=headers, params=params)
 
 print("Status Code:", response.status_code)
+print("Raw Response:", response.text)
 
 data = response.json()
 airport = data["items"][0]  # We searched EGSS, so only one result
@@ -45,3 +49,12 @@ for freq in airport["frequencies"]:
 print("\nRunways:")
 for rw in airport["runways"]:
     print(f" - Runway {rw['designator']}: {rw['dimension']['length']['value']}m x {rw['dimension']['width']['value']}m")
+
+
+
+
+url = "https://api.checkwx.com/taf/EGLL"
+
+response = requests.request("GET", url, headers={'X-API-Key': api_key_wx})
+
+print(response.text)
