@@ -19,7 +19,6 @@ url = "https://api.core.openaip.net/api/airports"
 response = requests.get(url, headers=headers, params=params)
 
 print("Status Code:", response.status_code)
-print("Raw Response:", response.text)
 
 data = response.json()
 airport = data["items"][0]  # We searched EGSS, so only one result
