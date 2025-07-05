@@ -1,33 +1,15 @@
 colours-light {
---bg-dark: hsl(194 48% 88%);
---bg: hsl(194 89% 94%);
---bg-light: hsl(194 100% 99%);
---text: hsl(198 100% 3%);
---text-muted: hsl(193 42% 25%);
---highlight: hsl(194 100% 97%);
---border: hsl(194 23% 47%);
---border-muted: hsl(194 27% 59%);
---primary: hsl(190 100% 13%);
---secondary: hsl(14 62% 28%);
---danger: hsl(9 21% 41%);
---warning: hsl(52 23% 34%);
---success: hsl(147 19% 36%);
---info: hsl(217 22% 41%);
+--bg-dark: hsl(0 0% 96.1%);
+--primary-light: hsl(190 100% 42.5%);
+--higlight-light: hsl(0 0% 100%);
+--text-light: hsl(0 0% 0%);
+--secondary-light: hsl(0 0% 80.4%);
 }
 
 colours-dark {
---bg-dark: hsl(202 100% 1%);
---bg: hsl(196 92% 4%);
---bg-light: hsl(193 59% 7%);
---text: hsl(194 100% 92%);
---text-muted: hsl(194 33% 67%);
---highlight: hsl(193 29% 36%);
---border: hsl(193 42% 25%);
---border-muted: hsl(191 83% 13%);
---primary: hsl(193 64% 61%);
---secondary: hsl(14 69% 71%);
---danger: hsl(9 26% 64%);
---warning: hsl(52 19% 57%);
---success: hsl(146 17% 59%);
---info: hsl(217 28% 65%);
+--bg-light: hsl(0 0% 12.5%);
+--primary-dark: hsl(190 100% 27.6%);
+--higlight-dark: hsl(0 0% 20.8%);
+--text-dark: hsl(0 0% 100%);
+--secondary-dark: hsl(0 0% 32.9%);
 }
