@@ -4,6 +4,7 @@
 --higlight: hsl(0 0% 100%);
 --text: hsl(0 0% 0%);
 --onhover: hsl(0 0% 80.4%);
+--popupbg: hsla(0, 0%, 0%, 0.33);
 }
 
 .dark-mode {
@@ -12,4 +13,5 @@
 --higlight: hsl(0 0% 20.8%);
 --text: hsl(0 0% 100%);
 --onhover: hsl(0 0% 32.9%);
+--popupbg: hsla(0, 0%, 0%, 0.33);
 }
