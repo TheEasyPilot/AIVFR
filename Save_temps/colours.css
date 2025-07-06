@@ -1,15 +1,15 @@
-colours-light {
---bg-dark: hsl(0 0% 96.1%);
---primary-light: hsl(190 100% 42.5%);
---higlight-light: hsl(0 0% 100%);
---text-light: hsl(0 0% 0%);
---secondary-light: hsl(0 0% 80.4%);
+:root {
+--bg: hsl(0 0% 96.1%);
+--primary: hsl(190 100% 42.5%);
+--higlight: hsl(0 0% 100%);
+--text: hsl(0 0% 0%);
+--onhover: hsl(0 0% 80.4%);
 }
 
-colours-dark {
---bg-light: hsl(0 0% 12.5%);
---primary-dark: hsl(190 100% 27.6%);
---higlight-dark: hsl(0 0% 20.8%);
---text-dark: hsl(0 0% 100%);
---secondary-dark: hsl(0 0% 32.9%);
+.dark-mode {
+--bg: hsl(0 0% 12.5%);
+--primary: hsl(190 100% 27.6%);
+--higlight: hsl(0 0% 20.8%);
+--text: hsl(0 0% 100%);
+--onhover: hsl(0 0% 32.9%);
 }
