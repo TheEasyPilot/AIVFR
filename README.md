@@ -1,4 +1,4 @@
-# Flight_Planning_Companion
+# AIVFR - AI Assisted Flgiht Planning Webtool
 
 ## License
 
