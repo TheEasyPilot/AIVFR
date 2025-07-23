@@ -1,0 +1,98 @@
+FUNCTION verifyICAO (code):
+BEGIN
+    IF len(code) == 4 THEN
+        FOR letter in code:
+            IF isdigit(letter) THEN
+                RETURN False
+            ENDIF   
+        NEXT code
+        ENDFOR
+    ELSE
+        RETURN False
+    ENDIF
+    RETURN True
+END
+
+-----------------
+
+FUNCTION prompt (type, text)
+BEGIN
+    model = "gpt-3.5-turbo",
+    messages = [
+        {"role": makePrompt(type)},
+        {"user's prompt": text}
+        ]
+    RETURN response
+END
+
+-------------------------
+
+FUNCTION makePrompt (type)
+BEGIN
+    IF type == Route THEN
+        prompt = (
+        "Your role is to generate the best possible route.
+        Display in ICAO format. 
+        Current flight data is as follows: {input relevant data from .json file}. 
+        Justify your response.
+        Your output should strictly have the following layout: LAYOUT"
+        )
+        RETURN prompt
+
+    ELSEIF type == Brief THEN
+        prompt = (
+        "Your role is to generate a complete flight brief.
+        Current flight data is as follows: {input relevant data from .json file}. 
+        All Flight data should be displayed in your response.
+        consider Threat Error and Management in your respone.
+        Your output should strictly have the following layout: LAYOUT"
+        )
+        RETURN prompt
+    
+    #and so on...
+    ENDIF    
+END
+
+------------------------------
+
+FUNCTION fetchAirportName (code)
+BEGIN
+    IF code valid THEN
+        headers = {
+            "x-openaip-api-key": api_key_openaip
+        }
+
+        params = {
+            "search": str(code)
+        }
+
+        url = "https://api.core.openaip.net/api/airports"
+
+        response = requests.get(url, headers=headers, params=params)
+
+        data = response.json()
+        *to be parsed, then:*
+
+        Code = airport["ICAOcode"]
+        Name = airport["name"]
+
+        IF error ocurred OR Code != code THEN
+        RETURN "VoidInput"
+
+        ELSEIF Code == code THEN
+            RETURN name
+        ENDIF
+    ENDIF
+END
+
+-----------------------------------------
+
+FUNCTION fetchMetar (code)
+BEGIN
+    IF code valid THEN
+        url = (f"https://api.checkwx.com/metar/{code}/decoded")
+        response = requests.request("GET", url, headers={'X-API-Key': api_key_wx})
+        print(response.json())
+        *to be parsed and appended to .json data file*
+    ENDIF
+END
