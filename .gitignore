@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 
-# .env files containing info not to be commited
+# dotenv files
 *.env
 
 # User-specific files (MonoDevelop/Xamarin Studio)
