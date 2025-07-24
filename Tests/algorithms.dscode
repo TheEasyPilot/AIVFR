@@ -57,25 +57,20 @@ END
 
 FUNCTION fetchAirportName(code):
 BEGIN
-    IF code valid THEN
-
-        *Since the API's Website provides a certain layout for users accessing the API,
-        I've just taken that and used it here as there is not reason to dumb down what
-        is already provided.*
+    IF verifyICAO(code) THEN
 
         headers = {
             "x-openaip-api-key": api_key_openaip
         }
-
         params = {
             "search": str(code)
         }
-
         url = "https://api.core.openaip.net/api/airports"
 
         response = requests.get(url, headers=headers, params=params)
 
         data = response.json()
+        airport = data["items"][0]
 
         *to be parsed, then:*
 
@@ -83,7 +78,7 @@ BEGIN
         Name = airport["name"]
 
         IF error ocurred OR Code != code THEN
-        RETURN "VoidInput"
+        RETURN False
 
         ELSEIF Code == code THEN
             RETURN name
@@ -95,7 +90,7 @@ END
 
 FUNCTION fetchMETAR(code):
 BEGIN
-    IF code valid THEN
+    IF verifyICAO(code) THEN
         url = (f"https://api.checkwx.com/metar/{code}/decoded")
         response = request.get(url).json()
         print(response)
@@ -105,7 +100,7 @@ END
 
 FUNCTION fetchTAF(code):
 BEGIN
-    IF code valid THEN
+    IF verifyICAO(code) THEN
         url = (f"https://api.checkwx.com/taf/{code}/decoded")
         response = request.get(url).json()
         print(response)
@@ -115,13 +110,13 @@ END
 
 -------------------------------------------
 
-FUNCTION editJSON(key, value):
+FUNCTION updateJSON(key, value):
 BEGIN
     with open("data.json", "r") as file:
     data = json.load(file)
     data[key] = value
     with open("data.json", "w") as file:
-    json.dump(data, file)
+    json.dump(data, file, indent=4)
 END
 
 ---------------------------------------------
@@ -146,8 +141,10 @@ E) CRANE OPERATING PSN 504957N 0001607W (SOUTH SHOREHAM) MAX HEIGHT 136FT AGL/ 1
 ----------------------------------------------
 
 FUNCTION CheckSaved():
-BEGIN
-    IF localStorage is empty THEN
+BEGIN    
+    with open("data.json", "r") as file:
+    data = json.load(file)
+    IF data["saved"] == False THEN
         RETURN False
     ELSE
         RETURN True
