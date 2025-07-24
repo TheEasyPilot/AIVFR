@@ -1,4 +1,4 @@
-FUNCTION verifyICAO (code):
+FUNCTION verifyICAO(code):
 BEGIN
     IF len(code) == 4 THEN
         FOR letter in code:
@@ -15,7 +15,7 @@ END
 
 -----------------
 
-FUNCTION prompt (type, text):
+FUNCTION prompt(type, text):
 BEGIN
     model = "gpt-3.5-turbo",
     instructions = [
@@ -27,7 +27,7 @@ END
 
 -------------------------
 
-FUNCTION makePrompt (type):
+FUNCTION makePrompt(type):
 BEGIN
     IF type == Route THEN
         prompt = (
@@ -55,7 +55,7 @@ END
 
 ------------------------------
 
-FUNCTION fetchAirportName (code):
+FUNCTION fetchAirportName(code):
 BEGIN
     IF code valid THEN
 
@@ -93,7 +93,7 @@ END
 
 -----------------------------------------
 
-FUNCTION fetchMetar (code):
+FUNCTION fetchMETAR(code):
 BEGIN
     IF code valid THEN
         url = (f"https://api.checkwx.com/metar/{code}/decoded")
@@ -103,13 +103,53 @@ BEGIN
     ENDIF
 END
 
+FUNCTION fetchTAF(code):
+BEGIN
+    IF code valid THEN
+        url = (f"https://api.checkwx.com/taf/{code}/decoded")
+        response = request.get(url).json()
+        print(response)
+        *to be parsed and appended to .json data file*
+    ENDIF
+END
+
 -------------------------------------------
 
-FUNCTION editJSON (key, value):
+FUNCTION editJSON(key, value):
 BEGIN
     with open("data.json", "r") as file:
     data = json.load(file)
     data[key] = value
     with open("data.json", "w") as file:
     json.dump(data, file)
+END
+
+---------------------------------------------
+
+FUNCTION NotamDecoder()
+BEGIN
+    
+END
+
+ Q)EGTT/QOBCE/IV/M/AE/000/002/5050N00016W001
+ B)2505120847 C)2508111900
+ E)CRANE OPERATING PSN 504957N 0001607W (SOUTH SHOREHAM) MAX
+ HEIGHT 136FT AGL/ 142FT AMSL
+
+ C4626/25 NOTAMN
+Q) EGTT/QOBCE/IV/M/AE/000/002/5050N00016W001
+A) EGTT
+B) 2505120847
+C) 2508111900
+E) CRANE OPERATING PSN 504957N 0001607W (SOUTH SHOREHAM) MAX HEIGHT 136FT AGL/ 142FT AMSL
+
+----------------------------------------------
+
+FUNCTION CheckSaved():
+BEGIN
+    IF localStorage is empty THEN
+        RETURN False
+    ELSE
+        RETURN True
+    ENDIF
 END
