@@ -1,0 +1,32 @@
+DEVELOPMENT CRITERIA (TO BE DELETED AFTER)
+
+Iteration 1
+Screenshot/code
+Explanation and justification of code.
+Evidence of you testing your code. (Screenshots or a video).
+Did you encounter any errors?
+If no, move on to the next part if you did not add anything to the code.
+If yes, show the error.
+Explain and justify how you fixed it.
+Then show iteration 2.
+Iteration 2:
+Same as above. 
+There is no need for iteration 2 if iteration 1 was enough.
+
+
+Section review:
+At the end of the section include a review.
+
+—
+Provided evidence of each stage of the iterative development process for a coded solution relating this to the break down of the problem from the analysis stage and explaining what they did and justifying why.
+ • Provided evidence of prototype versions of their solution for each stage of the process.
+ • The solution will be well structured and modular in nature. 
+• Code will be annotated to aid future maintenance of the system. 
+• All variables and structures will be appropriately named. 
+• There will be evidence of validation for all key elements of the solution.
+ • The development will show review at all key stages in the process.
+
+Testing to inform development
+
+• Provided evidence of testing at each stage of the iterative development process.
+ • Provided evidence of any failed tests and the remedial actions taken with full justification for any actions taken.

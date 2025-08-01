@@ -19,7 +19,7 @@ FUNCTION prompt(type, text):
 BEGIN
     model = "gpt-3.5-turbo",
     instructions = [
-        "role": makePrompt(type),
+        "role": fetchPrompt(type),
         "user's prompt": text
         ]
     RETURN response
@@ -27,27 +27,27 @@ END
 
 -------------------------
 
-FUNCTION makePrompt(type):
+FUNCTION fetchRole(type):
 BEGIN
-    IF type == Route THEN
-        prompt = (
+    IF type == "Route" THEN
+        role = (
         "Your role is to generate the best possible route.
         Display in ICAO format. 
         Current flight data is as follows: {input relevant data from .json file}. 
         Justify your response.
         Your output should strictly have the following layout: LAYOUT"
         )
-        RETURN prompt
+        RETURN role
 
-    ELSEIF type == Brief THEN
-        prompt = (
+    ELSEIF type == "Brief" THEN
+        role = (
         "Your role is to generate a complete flight brief.
         Current flight data is as follows: {input relevant data from .json file}. 
         All Flight data should be displayed in your response.
         consider Threat Error and Management in your respone.
         Your output should strictly have the following layout: LAYOUT"
         )
-        RETURN prompt
+        RETURN role
     
     #and so on...
     ENDIF    
@@ -118,25 +118,6 @@ BEGIN
     with open("data.json", "w") as file:
     json.dump(data, file, indent=4)
 END
-
----------------------------------------------
-
-FUNCTION NotamDecoder()
-BEGIN
-    
-END
-
- Q)EGTT/QOBCE/IV/M/AE/000/002/5050N00016W001
- B)2505120847 C)2508111900
- E)CRANE OPERATING PSN 504957N 0001607W (SOUTH SHOREHAM) MAX
- HEIGHT 136FT AGL/ 142FT AMSL
-
- C4626/25 NOTAMN
-Q) EGTT/QOBCE/IV/M/AE/000/002/5050N00016W001
-A) EGTT
-B) 2505120847
-C) 2508111900
-E) CRANE OPERATING PSN 504957N 0001607W (SOUTH SHOREHAM) MAX HEIGHT 136FT AGL/ 142FT AMSL
 
 ----------------------------------------------
 
