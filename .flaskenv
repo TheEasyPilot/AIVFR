@@ -1,2 +1,2 @@
-FLASK_APP=Flight_Planning_Companion:create_app
+FLASK_APP=AIVFR:create_app
 FLASK_ENV=development
