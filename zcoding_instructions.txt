@@ -18,7 +18,8 @@ Section review:
 At the end of the section include a review.
 
 —
-Provided evidence of each stage of the iterative development process for a coded solution relating this to the break down of the problem from the analysis stage and explaining what they did and justifying why.
+Provided evidence of each stage of the iterative development process for a coded solution relating this to the break down of the problem from the analysis stage
+ and explaining what they did and justifying why.
  • Provided evidence of prototype versions of their solution for each stage of the process.
  • The solution will be well structured and modular in nature. 
 • Code will be annotated to aid future maintenance of the system. 
