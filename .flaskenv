@@ -1,0 +1,2 @@
+FLASK_APP=Flight_Planning_Companion:create_app
+FLASK_ENV=development
