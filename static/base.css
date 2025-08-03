@@ -1,7 +1,7 @@
 :root {
 --bg: hsl(0 0% 96.1%);
 --primary: hsl(190 100% 42.5%);
---higlight: hsl(0 0% 100%);
+--highlight: hsl(0 0% 100%);
 --text: hsl(0 0% 0%);
 --onhover: hsl(0 0% 80.4%);
 --popupbg: hsla(0, 0%, 0%, 0.33);
@@ -10,8 +10,19 @@
 .dark-mode {
 --bg: hsl(0 0% 12.5%);
 --primary: hsl(190 100% 27.6%);
---higlight: hsl(0 0% 20.8%);
+--highlight: hsl(0 0% 20.8%);
 --text: hsl(0 0% 100%);
 --onhover: hsl(0 0% 32.9%);
 --popupbg: hsla(0, 0%, 0%, 0.33);
+}
+
+
+body {
+    background-color: var(--bg);
+    font-family: 'Manrope';
+}
+
+#logo {
+    font-size: 122px;
+    font-weight: 700;
 }
