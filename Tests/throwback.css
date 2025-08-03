@@ -1,0 +1,27 @@
+#logoAI {
+    font-size: 122px;
+    font-weight: 700;
+    color: var(--primary); /* adjusting the colour for just the 'AI' part as per design'*/
+}
+
+#logoVFR {
+    font-size: 122px;
+    font-weight: 700;
+}
+
+#logoSubtitle {
+    font-size: 19;
+}
+
+#logoAlpha{
+    font-size: 19;
+}
+
+
+#settings {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 30px; 
+    right: 30px;
+}

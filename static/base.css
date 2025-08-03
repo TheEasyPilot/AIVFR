@@ -1,4 +1,4 @@
-:root {
+:root { /*these colours will be used by default...*/
 --bg: hsl(0 0% 96.1%);
 --primary: hsl(190 100% 42.5%);
 --highlight: hsl(0 0% 100%);
@@ -7,6 +7,8 @@
 --popupbg: hsla(0, 0%, 0%, 0.33);
 }
 
+/*unless dark mode is toggled, then these become the root
+and are used instead*/
 .dark-mode {
 --bg: hsl(0 0% 12.5%);
 --primary: hsl(190 100% 27.6%);
@@ -20,9 +22,11 @@
 body {
     background-color: var(--bg);
     font-family: 'Manrope';
+    padding-left: 30px;
+    
 }
 
-#logo {
-    font-size: 122px;
-    font-weight: 700;
+.text{
+    font-family: 'Manrope';
 }
+
