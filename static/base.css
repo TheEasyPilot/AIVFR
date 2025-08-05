@@ -22,8 +22,6 @@ and are used instead*/
 body {
     background-color: var(--bg);
     font-family: 'Manrope';
-    padding-left: 30px;
-    
 }
 
 .text{
