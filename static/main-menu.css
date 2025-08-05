@@ -1,2 +1,40 @@
+#logoAI, #logoVFR {
+    font-size: 122px;
+    font-weight: 650;
+}
 
+#logoAI {
+    color: var(--primary);
+}
+
+#logoVFR {
+    color: var(--text);
+}
+
+#logoAlpha {
+    color: var(--text);
+    position: relative;
+    bottom: 10px;
+    left: 10px;
+    font-weight: 100;
+    padding: 6px;
+    padding-right: 10px;
+    padding-left: 10px;
+    border: 0.1px solid var(--text);
+    border-radius: 14px;
+    border-top-color: var(--bg) 100px;
+    border-spacing: 10px;
+}
+
+#subtitle {
+    position: relative;
+    color: var(--text);
+    bottom: 25px;
+    font-weight: 700
+}
+
+body {
+    padding-left: 30px;
+    padding-top: 10px;
+}
 
