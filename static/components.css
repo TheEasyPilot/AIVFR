@@ -9,11 +9,13 @@
 
 }
 
+/* applying normal button hover effects*/
 .mainMenuButton:hover {
-    background-color: var(--onhover);
+    background-color: var(--onhover); 
     cursor: pointer;
 }
 
+/* TARGET buttons have a blue hover effect*/
 .TARGET:hover {
     background-color: var(--primary);
 }
