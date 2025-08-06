@@ -1,0 +1,19 @@
+.mainMenuButton {
+    position: relative;
+    font-family: 'Manrope';
+    font-size: 20px;
+    background-color: var(--highlight);
+    border: none;
+    padding: 10px 26px;
+    border-radius: 5px;
+
+}
+
+.mainMenuButton:hover {
+    background-color: var(--onhover);
+    cursor: pointer;
+}
+
+.TARGET:hover {
+    background-color: var(--primary);
+}
