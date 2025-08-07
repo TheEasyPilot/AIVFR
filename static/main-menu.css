@@ -66,3 +66,11 @@ body {
     height: 45px;
 }
 
+/* Disclaimer modal Content/Box */
+.disclaimerModal {
+  background-color: var(--highlight);
+  margin: 15% auto; 
+  padding: 20px;
+  width: 80%;
+  border-radius: 20px; 
+}
