@@ -30,6 +30,5 @@
   top: 0;
   width: 100%; 
   height: 100%; 
-  overflow: auto; /* enables scrolling if needed (shouldn't be the case) */
   background-color: var(--popupbg) 
 }
