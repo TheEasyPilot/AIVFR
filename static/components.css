@@ -23,7 +23,7 @@
 
 /*modals (popups)*/
 .modal {
-  /*display: none;  makes it hidden by default */
+  display: none;  /*makes it hidden by default */
   position: fixed; 
   z-index: 1; /*this makes it appear ontop*/
   left: 0;
