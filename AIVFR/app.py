@@ -5,12 +5,12 @@ main = Blueprint('app', __name__)
 #main menu
 @main.route('/') #this will be the first to load up
 def index():
-    return 'Main Menu'
+    return render_template('menu.html')
 
 #settings menu
 @main.route('/settings')
 def settingsMenu():
-    return 'settings Menu'
+    return render_template('settings.html')
 
 #dashboard
 @main.route('/dashboard')
@@ -46,3 +46,7 @@ def massAndBalanceTab():
 @main.route('/performance')
 def performanceTab():
     return 'performance tab'
+
+#shows any errors on the actual page
+if __name__ in '__main__':
+    main.run(debug=True)
