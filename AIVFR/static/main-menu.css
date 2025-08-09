@@ -67,7 +67,7 @@ body {
 }
 
 /* Disclaimer modal Content/Box */
-.disclaimerModal {
+.disclaimerContent {
   position: relative;
   background-color: var(--highlight);
   margin: 15% auto; 
@@ -97,4 +97,16 @@ body {
     margin-left: 5px;
     margin-right: 5px;
 
+}
+
+/*disclaimer modal (background)*/
+.modal{
+  display: none;  /*makes it hidden by default */
+  position: fixed; 
+  z-index: 1; /*this makes it appear ontop*/
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: var(--popupbg);
 }
