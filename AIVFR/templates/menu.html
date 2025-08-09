@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../static/main-menu.css"/>
     <link rel="stylesheet" href="../static/base.css"/>
     <link rel="stylesheet" href="../static/components.css"/>
+    <script src="../static/main-menu.js"></script>
   </head>
   
   <!--logo-->
@@ -22,20 +23,20 @@
 
   <!--Buttons-->
   <div><button class="mainMenuButton TARGET" id="continue">Continue</button></div>
-  <div><button class="mainMenuButton button">New Flight</button></div>
-  <div><button class="mainMenuButton button">Load Flight</button></div>
+  <div><button class="mainMenuButton button" id="newFlight">New Flight</button></div>
+  <div><button class="mainMenuButton button" id="loadFlight">Load Flight</button></div>
 
   <img src="../static/FPWT_images/setting-icon.svg" alt="settings-icon" id="settings"> <!--settings icon-->
 
   <!--Disclaimer Modal-->
   <div id="disclaimer" class="modal">
-    <div class="disclaimerModal">
+    <div class="disclaimerContent">
       <h1 id="disclaimerHeader">DISCLAIMER</h1>
       <p>This webapp uses AI. AI can make mistakes. Although no critical calculations related to the flight are performed by AI, any output from it is susceptible to errors, of which I, the developer, will not be responsible for in this regard. You, the pilot in command, is by law responsable for the safe execution of your flight.</p>
       <p> As this tool is only in the Alpha stages, <u><em><b>nothing from this tool should be used in real flight and is for educational purposes only.</em></b></u> If you decide to use data from this webtool, however accurate it may be, you are doing so at your own risk, and I will not take responsibility for anything that may go wrong.</p>
       <p>By pressing the ‘Continue’ Button, you agree that you have read this disclaimer and agree to the terms above.</p>
-      <span><button class="disclaimerButton button TARGET">CONTINUE</button></span>
-      <span><button class="disclaimerButton button">GO BACK</button></span>
+      <span><button class="disclaimerButton button TARGET" id="disclaimerACCEPT">CONTINUE</button></span>
+      <span><button class="disclaimerButton button" id="disclaimerEXIT">GO BACK</button></span>
     </div>
   </div>
   <body>
