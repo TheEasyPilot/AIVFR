@@ -26,7 +26,8 @@
   <div><button class="mainMenuButton button" id="newFlight">New Flight</button></div>
   <div><button class="mainMenuButton button" id="loadFlight">Load Flight</button></div>
 
-  <img src="../static/FPWT_images/setting-icon.svg" alt="settings-icon" id="settings"> <!--settings icon-->
+  <!--settings button-->
+  <a href="{{ url_for('app.settingsMenu') }}"><img src="../static/FPWT_images/setting-icon.svg" alt="settings-icon" id="settings"></a>
 
   <!--Disclaimer Modal-->
   <div id="disclaimer" class="modal">
