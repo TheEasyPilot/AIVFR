@@ -15,7 +15,7 @@ def settingsMenu():
 #dashboard
 @main.route('/dashboard')
 def dashboard():
-    return 'dashboard'
+    return render_template('dashboard.html')
 
 #Route tab
 @main.route('/route')
