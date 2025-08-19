@@ -19,14 +19,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     //main menu
-    Continue.onclick = displayDisclaimer
-    EntryState = 'Continue' 
+    if (document.getElementById("continue").clicked == true) {
+        displayDisclaimer;
+        EntryState = 'Continue'
+    }
 
     loadFlight.onclick = displayDisclaimer
-    EntryState = 'Load'
-
+ 
     newFlight.onclick = displayDisclaimer
-    EntryState = 'New'
+
+
+    console.log(EntryState)
 
     //disclaimer
     disclaimerGoBack.onclick = function() {
@@ -42,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     //Continue
     function ContinueFlight() {
-        window.open("{{ url_for('app.dashboard') }}", '_self')
+        window.open("dashboard", '_self')
     }
 });
 
