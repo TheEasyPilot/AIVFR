@@ -12,9 +12,10 @@
     <link rel="stylesheet" href="../static/main-menu.css"/>
     <link rel="stylesheet" href="../static/base.css"/>
     <link rel="stylesheet" href="../static/components.css"/>
-    <script src="../static/main-menu.js"></script>
+    <script src="../static/main-menu.js" defer></script>
   </head>
-  
+
+  <body>
   <!--logo-->
   <span id="logoAI">AI</span> <!--having these separated allows me to style them differently-->
   <span id="logoVFR">VFR</span>
@@ -23,9 +24,9 @@
 
   <!--Buttons-->
   <div><button class="mainMenuButton TARGET" id="continue">Continue</button></div>
-  <div><button class="mainMenuButton button" id="newFlight">New Flight</button></div>
   <div><button class="mainMenuButton button" id="loadFlight">Load Flight</button></div>
-
+  <div><button class="mainMenuButton button" id="newFlight">New Flight</button></div>
+  
   <!--settings button-->
   <a href="{{ url_for('app.settingsMenu') }}"><img src="../static/FPWT_images/setting-icon.svg" alt="settings-icon" id="settings"></a>
 
@@ -40,5 +41,6 @@
       <span><button class="disclaimerButton button" id="disclaimerEXIT">GO BACK</button></span>
     </div>
   </div>
-  <body>
+  
+  </body>
 </html>

@@ -10,43 +10,40 @@ document.addEventListener("DOMContentLoaded", function() {
     var disclaimerContinue = document.getElementById("disclaimerACCEPT");
     var disclaimerGoBack = document.getElementById("disclaimerEXIT");
 
-    //determines what happens if the user presses continue on disclaimer
-    var EntryState = 'none' 
-
     //display the disclaimer
     function displayDisclaimer() { 
     disclaimer.style.display = "block";
     }
 
-    //main menu
-    if (document.getElementById("continue").clicked == true) {
-        displayDisclaimer;
-        EntryState = 'Continue'
-    }
+    Continue.addEventListener("click", function() {
+        displayDisclaimer();
+        ContinueFlight(); //determines what happens if the user presses continue on disclaimer
+        
+    });
 
-    loadFlight.onclick = displayDisclaimer
- 
-    newFlight.onclick = displayDisclaimer
+    loadFlight.addEventListener("click", function() {
+        displayDisclaimer();
+    });
 
-
-    console.log(EntryState)
+    newFlight.addEventListener("click", function() {
+        displayDisclaimer();
+    });
 
     //disclaimer
     disclaimerGoBack.onclick = function() {
     disclaimer.style.display = "none";
     }
 
-    //continue button
-    if (EntryState = 'Continue') {
-        disclaimerContinue.onclick = ContinueFlight
-    }
-
     //---------------------------Continue, load, make new flight
     
-    //Continue
     function ContinueFlight() {
-        window.open("dashboard", '_self')
+        disclaimerContinue.onclick = function() {
+            window.open("dashboard", '_self')
+        }
     }
+    
 });
+
+
 
 
