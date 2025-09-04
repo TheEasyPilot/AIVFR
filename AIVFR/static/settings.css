@@ -1,12 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 header {
     background-color: var(--highlight);
+    display: flex;
+    align-items: center;
 }
 
 #goBack {
-   width: 50px;
+    width: 50px;
+    margin-left: 10px
 }
 
 #settings {
+    position: relative;
     font-size: 24px;
-    
+    margin-left: 70px;
+
 }
