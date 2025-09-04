@@ -26,5 +26,6 @@ body {
 
 .text{
     font-family: 'Manrope';
+    color: var(--text);
 }
 
