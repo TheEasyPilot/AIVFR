@@ -64,6 +64,13 @@ body {
     margin-bottom: 20px;
     width: 200px;
     height: 45px;
+    position: relative;
+    font-family: 'Manrope';
+    font-size: 20px;
+    background-color: var(--highlight);
+    border: none;
+    padding: 8px 26px;
+    border-radius: 5px;
 }
 
 /* Disclaimer modal Content/Box */

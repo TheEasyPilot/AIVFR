@@ -3,6 +3,11 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+#options{
+    padding: 40px;
+}
+
 /*header to contain the title and the back button*/
 header {
     background-color: var(--highlight);
@@ -24,5 +29,18 @@ header {
     position: relative;
     font-size: 24px;
     font-weight: 300;
-    margin-left: 42vw /*not centered definitely but is estimate- should fix*/
+    margin-left: 42vw; /*not centered definitely but is estimate- should fix*/
+}
+
+button {
+    margin-bottom: 20px;
+    width: 200px;
+    height: 45px;
+    position: relative;
+    font-family: 'Manrope';
+    font-size: 20px;
+    background-color: var(--highlight);
+    border: none;
+    padding: 8px 26px;
+    border-radius: 5px;
 }
