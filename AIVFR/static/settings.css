@@ -4,10 +4,6 @@
   box-sizing: border-box;
 }
 
-#options{
-    padding: 40px;
-}
-
 /*header to contain the title and the back button*/
 header {
     background-color: var(--highlight);
@@ -32,9 +28,12 @@ header {
     margin-left: 42vw; /*not centered definitely but is estimate- should fix*/
 }
 
+/*------------------YOU MAY WRITE SOME MORE CODE BEFORE WRITING THE ITERATION---------------------*/
+
+/*All buttons default styling*/
 button {
     margin-bottom: 20px;
-    width: 200px;
+    min-width: 165px;
     height: 45px;
     position: relative;
     font-family: 'Manrope';
@@ -43,4 +42,14 @@ button {
     border: none;
     padding: 8px 26px;
     border-radius: 5px;
+}
+
+/*All except the header*/
+#options {
+    padding: 40px;
+}
+
+/*ONLY the buttons under UNITS*/
+#UnitsButtons {
+    display: flex;
 }
