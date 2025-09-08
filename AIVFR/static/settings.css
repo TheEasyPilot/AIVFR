@@ -70,3 +70,7 @@ h2 {
     display: flex;
     gap: 10px;
 }
+
+/*surely for the settings back button I can do it so it acts the
+same as the browser back button so it just goes to last page
+it was on? that way no entry state shenannigans*/
