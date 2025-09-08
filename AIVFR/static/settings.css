@@ -2,7 +2,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: var(--text)
 }
+
+
 
 /*header to contain the title and the back button*/
 header {
@@ -17,7 +20,6 @@ header {
     width: 40px;
     margin-left: 10px;
     margin-top: 6px;
-    color: var(--text);
 }
 
 /*'settings'*/
@@ -49,17 +51,6 @@ button {
 }
 
 
-#darkToggle {
-    position: relative; 
-    margin-left: 7px; /*dark button spacing from light button*/
-    background-color: black;
-    color: white;
-}
-
-#lightToggle {
-    border: 0.1px solid black;
-}
-
 h2 {
     font-weight: 400;
     margin-bottom: 10px;
@@ -70,6 +61,21 @@ h2 {
     display: flex;
     gap: 10px;
 }
+
+#darkToggle {
+    position: relative; 
+    margin-left: 7px; /*dark button spacing from light button*/
+    background-color: black;
+    color: white;
+    border: 0.1px solid hsl(0 0% 96.1%);
+}
+
+#lightToggle {
+    background-color: white;
+    color: black;
+    border: 0.1px solid hsl(0 0% 12.5%);
+}
+
 
 /*surely for the settings back button I can do it so it acts the
 same as the browser back button so it just goes to last page
