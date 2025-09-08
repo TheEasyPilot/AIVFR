@@ -48,10 +48,16 @@ button {
     padding: 40px;
 }
 
-/*dark button spacing from light button*/
-#dark {
-    position: relative;
-    margin-left: 7px;
+
+#darkToggle {
+    position: relative; 
+    margin-left: 7px; /*dark button spacing from light button*/
+    background-color: black;
+    color: white;
+}
+
+#lightToggle {
+    border: 0.1px solid black;
 }
 
 h2 {
