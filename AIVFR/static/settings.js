@@ -10,3 +10,21 @@ darkMode.addEventListener("click", () => {
 lightMode.addEventListener("click", () => {
     root.classList.remove("dark-mode");
 });//reversing it so that it just applies whatever is in the :root
+
+//-----------Choosing units--------------------
+const airspeed = document.getElementById("airspeed")
+const airspeed_options = document.getElementById("airspeed_options")
+
+const altitude = document.getElementById("altitude")
+const mass = document.getElementById("mass")
+const fuel = document.getElementById("fuel")
+
+//airspeed
+airspeed.addEventListener("click", () => {
+    //close all other open options (should just be one column), then:
+    airspeed_options.style.display = "block";
+    airspeed.onclick = function() {
+        airspeed_options.style.display = "none";
+    }
+});
+

@@ -36,26 +36,28 @@
   
       <div id="UnitsButtons">
         <div> <!--AIRSPEED-->
-          <button class="dropdown" style="display: block; ">Airspeed</button>
-          <button style="display: block;">Knots</button>
-          <button style="display: block;">MPH</button>
-          <button style="display: block;">KM/H</button>
+          <button style="display: block;" id="airspeed">Airspeed</button>
+          <div id="airspeed_options" style="display: none;">
+            <button style="display: block;">Knots</button>
+            <button style="display: block;">MPH</button>
+            <button style="display: block;">KM/H</button>
+          </div>
         </div>
     
         <div> <!--ALTITUDE-->
-          <button class="dropdown"style="display: block;">Altitude</button>
+          <button style="display: block;" id="altitude">Altitude</button>
           <button style="display: block;">Feet (ft)</button>
           <button style="display: block;">Metres (m)</button>
         </div>
   
         <div> <!--MASS-->
-          <button class="dropdown" style="display: block;">Mass</button>
+          <button style="display: block;" id="mass">Mass</button>
           <button style="display: block;">Kilograms (kg)</button>
           <button style="display: block;">Pounds (lbs)</button>
         </div>
   
         <div> <!--FUEL-->
-          <button class="dropdown" style="display: block;">Fuel</button>
+          <button style="display: block;" id="fuel">Fuel</button>
           <button style="display: block;">Litres (l)</button>
           <button style="display: block;">US Gallons (gal)</button>
         </div>
