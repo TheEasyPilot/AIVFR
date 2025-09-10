@@ -22,9 +22,6 @@ const fuel = document.getElementById("fuel")
 //airspeed
 airspeed.addEventListener("click", () => {
     //close all other open options (should just be one column), then:
-    airspeed_options.style.display = "block";
-    airspeed.onclick = function() {
-        airspeed_options.style.display = "none";
-    }
+    airspeed_options.style.display = airspeed_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
