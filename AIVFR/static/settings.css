@@ -76,8 +76,8 @@ h2 {
     border: 0.1px solid hsl(0 0% 12.5%);
 }
 
-/*buttons retain TARGET colour unless clicked again*/
-#airspeed.active, #altitude.active, #mass.active, #fuel.active, #distance.active {
+/*buttons retain TARGET colour unless clicked again. active must be in classList*/
+.dropdown.active {
     background-color: var(--primary);
 }
 
