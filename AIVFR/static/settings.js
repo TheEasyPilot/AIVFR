@@ -27,10 +27,20 @@ const fuel_options = document.getElementById("fuel_options")
 const distance = document.getElementById("distance")
 const distance_options = document.getElementById("distance_options")
 
-function toggleActive(button) {
-      // Toggle 'active' class on the clicked button
-      button.classList.toggle('active');
-    }
+
+//changing the color of the button to primary unless another button is clicked
+const dropdown = document.querySelectorAll(".dropdown") //all elements in this class stored in array
+dropdown.forEach((btn, index) => { //iterates through the array and gives each button its on event listener
+    btn.addEventListener("click", () => {
+        const isActive = btn.classList.contains("active"); //checks if button is selected already
+
+        dropdown.forEach(drp => drp.classList.remove("active")); //reset anything else that's active first
+
+        if(!isActive) {
+            btn.classList.add("active"); //if not active already then make it active
+        }
+    });
+});
 
 //airspeed
 airspeed.addEventListener("click", () => {
@@ -68,7 +78,7 @@ fuel.addEventListener("click", () => {
     fuel_options.style.display = fuel_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
-//fuel
+//distance
 distance.addEventListener("click", () => {
     altitude_options.style.display = "none";
     mass_options.style.display = "none";
