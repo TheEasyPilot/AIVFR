@@ -27,33 +27,53 @@ const fuel_options = document.getElementById("fuel_options")
 const distance = document.getElementById("distance")
 const distance_options = document.getElementById("distance_options")
 
+function toggleActive(button) {
+      // Toggle 'active' class on the clicked button
+      button.classList.toggle('active');
+    }
+
 //airspeed
 airspeed.addEventListener("click", () => {
-    //close all other open options (should just be one column), then:
+    altitude_options.style.display = "none";
+    mass_options.style.display = "none";
+    fuel_options.style.display = "none";
+    distance_options.style.display = "none";
     airspeed_options.style.display = airspeed_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
 //altitude
 altitude.addEventListener("click", () => {
-    //close all other open options (should just be one column), then:
+    airspeed_options.style.display = "none";
+    mass_options.style.display = "none";
+    fuel_options.style.display = "none";
+    distance_options.style.display = "none";
     altitude_options.style.display = altitude_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
 //mass
 mass.addEventListener("click", () => {
-    //close all other open options (should just be one column), then:
+    altitude_options.style.display = "none";
+    airspeed_options.style.display = "none";
+    fuel_options.style.display = "none";
+    distance_options.style.display = "none";
     mass_options.style.display = mass_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
 //fuel
 fuel.addEventListener("click", () => {
-    //close all other open options (should just be one column), then:
+    altitude_options.style.display = "none";
+    mass_options.style.display = "none";
+    airspeed_options.style.display = "none";
+    distance_options.style.display = "none";
     fuel_options.style.display = fuel_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
 //fuel
 distance.addEventListener("click", () => {
-    //close all other open options (should just be one column), then:
+    altitude_options.style.display = "none";
+    mass_options.style.display = "none";
+    fuel_options.style.display = "none";
+    airspeed_options.style.display = "none";
     distance_options.style.display = distance_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
