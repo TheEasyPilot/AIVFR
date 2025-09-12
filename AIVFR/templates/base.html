@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <!--Getting the Manrope font from google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+
+    <meta charset='UTF-8'name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{% block title %}base{% endblock %}</title> <!--title can be changed in inherited pages-->
+    <link rel="stylesheet" href="../static/base.css"/>
+    <link rel="stylesheet" href="../static/components.css"/>
+    <link rel="stylesheet" href="../static/basePage.css"/>
+  </head>
+
+  <body>
+    <header>
+        <p>header</p>
+    </header>
+
+    <nav>
+        <p>nav</p>
+    </nav>
+
+    <main>
+        {% block content %} <!--content in this element can be changed in inherited pages-->
+        <p>content</p>
+        {% endblock %}
+    </main>
+  </body>
+</html>
+
+
