@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--text)
+}
+
+/*header to contain the Logo, the time and the home button*/
+header {
+    background-color: var(--highlight);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 50px;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+#homeButton {
+    width: 30px;
+    color: var(--text);
+}
+
+/*AIVFR logo*/
+#logoAI {
+    color: var(--primary);
+}
+
+#logoVFR {
+    position: relative;
+    right: 3px;
+    color: var(--text);
+}
+
+#logoAI, #logoVFR {
+    font-size: 25px;
+    font-weight: 700;
+}
