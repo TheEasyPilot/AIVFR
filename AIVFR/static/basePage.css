@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: var(--text)
 }
 
 /*header to contain the Logo, the time and the home button*/
@@ -38,3 +37,32 @@ header {
     font-size: 25px;
     font-weight: 700;
 }
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 10px;
+  width: 60px;
+  height: 100vh;
+  background-color: var(--highlight);
+}
+
+button {
+    margin-bottom: 20px;
+}
+
+.icon {
+    color: var(--text);
+    width: 35px;
+}
+
+#settings {
+    position: absolute;
+    bottom: 10px;
+}
+
+hr, #dashboard {
+    margin-bottom: 10px;
+}
+
+
