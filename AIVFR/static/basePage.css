@@ -82,7 +82,11 @@ hr  {
 }
 
 #NAVoverlay {
-    padding-left: 75px;
+    position: fixed;
+    padding-left: 15px;
+    margin-left: 60px;
+    width: 350px;
+    height: 100vh;
     padding-top: 8px;
     border: 0.1px solid black;
 }
