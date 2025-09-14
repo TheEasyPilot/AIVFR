@@ -16,6 +16,9 @@ header {
     padding-right: 20px;
 }
 
+main {
+    padding-left: 60px;
+}
 
 #homeButton {
     width: 30px;
@@ -34,11 +37,12 @@ header {
 }
 
 #logoAI, #logoVFR {
-    font-size: 25px;
+    font-size: 30px;
     font-weight: 700;
 }
 
-ul {
+#navbar {
+  position: fixed;
   list-style-type: none;
   margin: 0;
   padding: 10px;
@@ -48,21 +52,47 @@ ul {
 }
 
 button {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    background-color: var(--highlight);
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+
 }
 
 .icon {
     color: var(--text);
-    width: 35px;
+    width: 30px;
 }
 
 #settings {
     position: absolute;
-    bottom: 10px;
+    bottom: 90px;
+    width: 30px;
+    left: 14px;
 }
 
 hr, #dashboard {
-    margin-bottom: 10px;
+    margin-bottom: 9px;
 }
 
+hr  {
+    position: relative;
+    bottom: 3px;
+}
 
+#NAVoverlay {
+    padding-left: 75px;
+    padding-top: 8px;
+    border: 0.1px solid black;
+}
+
+.label {
+    background-color: var(--highlight);
+    border-radius: 14px;
+    max-width: fit-content;
+    padding: 10px;
+    padding-left: 17px;
+    padding-right: 17px;
+    margin-bottom: 25px;
+}
