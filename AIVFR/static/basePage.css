@@ -92,11 +92,16 @@ hr  {
 }
 
 .label {
+    position: absolute;
     background-color: var(--highlight);
     border-radius: 14px;
     max-width: fit-content;
     padding: 10px;
     padding-left: 17px;
     padding-right: 17px;
-    margin-bottom: 27px;
+    display: block;
 }
+
+#dashboardLABEL { top: 10px; left: 70px; }
+#routeLABEL     { top: 70px; left: 10px; }
+#weatherLABEL   { top: 50px; left: 280px; }
