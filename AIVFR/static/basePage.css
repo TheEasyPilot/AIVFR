@@ -61,6 +61,8 @@ button {
 }
 
 .icon {
+    position: relative;
+    top: 2px;
     color: var(--text);
     width: 30px;
 }
@@ -81,6 +83,7 @@ hr  {
     bottom: 3px;
 }
 
+/*gradient overlay*/
 #NAVoverlay {
     position: fixed;
     padding-left: 15px;
@@ -89,8 +92,10 @@ hr  {
     height: 100vh;
     padding-top: 8px;
     background-image: linear-gradient(to right, rgba(0,0,0,50%), rgba(0,0,0,0%));
+    display: none;
 }
 
+/*all labels*/
 .label {
     position: absolute;
     background-color: var(--highlight);
@@ -99,9 +104,16 @@ hr  {
     padding: 10px;
     padding-left: 17px;
     padding-right: 17px;
-    display: block;
+    display: none;
 }
 
-#dashboardLABEL { top: 10px; left: 70px; }
-#routeLABEL     { top: 70px; left: 10px; }
-#weatherLABEL   { top: 50px; left: 280px; }
+/*adjusting the label's absolute positions*/
+#dashboardLABEL { top: 10px; left: 10px; }
+#routeLABEL     { top: 75px; left: 10px; }
+#weatherLABEL   { top: 143px; left: 10px; }
+#navLABEL       { top: 213px; left: 10px; }
+#fuelLABEL      { top: 282px; left: 10px; }
+#mass_and_balanceLABEL   { top: 352px; left: 10px; }
+#performanceLABEL        { top: 420px; left: 10px; }
+
+
