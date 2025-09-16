@@ -23,7 +23,7 @@ const pairs = {
   weather: "weatherLABEL",
   navlog: "navLABEL",
   fuel: "fuelLABEL",
-  "m&b": "mass_and_balanceLABEL",
+  mass_and_balance: "mass_and_balanceLABEL",
   performance: "performanceLABEL"
 };
 

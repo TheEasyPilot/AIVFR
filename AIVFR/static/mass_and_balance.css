@@ -2,3 +2,8 @@
     font-size: 29.8px;
     font-weight: 300;
 }
+
+#mass_and_balance {
+    background-color: var(--primary);
+    pointer-events: none;
+}
