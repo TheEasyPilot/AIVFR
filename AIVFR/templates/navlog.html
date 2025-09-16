@@ -1,0 +1,14 @@
+{% extends "base.html" %} {# grab all the html from base.html, #}  
+
+{% block head %}  {{ super() }} {# inherit everything from the head but add this too #}
+<link rel="stylesheet" href="{{ url_for('static', filename='navlog.css') }}">
+<script src="{{ url_for('static', filename='navlog.js') }}" defer></script>
+{% endblock %}
+
+{% block title %} {# edit whats in the title block #}
+    Navigation Log - AIVFR
+{% endblock %}
+
+{% block content %} {# edit what's in between the content block #}
+    <div id="title">NAVIGATION LOG</div>
+{% endblock %}

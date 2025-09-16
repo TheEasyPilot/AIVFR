@@ -20,32 +20,32 @@ def dashboard():
 #Route tab
 @main.route('/route')
 def routeTab():
-    return 'Route Tab'
+    return render_template('route.html')
 
 #weather tab
 @main.route('/weather')
 def weatherTab():
-    return 'Weather Tab'
+    return render_template('weather.html')
 
 #navigation log tab
 @main.route('/navlog')
 def navlogTab():
-    return 'Navigation Log Tab'
+    return render_template('navlog.html')
 
 #fuel tab
 @main.route('/fuel')
 def fuelTab():
-    return 'Fuel'
+    return render_template('fuel.html')
 
 #mass and balance tab
 @main.route('/mass-and-balance')
 def massAndBalanceTab():
-    return 'Mass and balance tab'
+    return render_template('mass_and_balance.html')
 
 #performance tab
 @main.route('/performance')
 def performanceTab():
-    return 'performance tab'
+    return render_template('performance.html')
 
 #shows any errors on the actual page
 if __name__ in '__main__':
