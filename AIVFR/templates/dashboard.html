@@ -1,8 +1,9 @@
-{% extends "base.html" %} {% block head %}  {{ super() }} {# grab all the html from base.html #} 
+{% extends "base.html" %} {# grab all the html from base.html, #}  
+
+{% block head %}  {{ super() }} {# inherit everything from the head but add this too #}
 <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
 {% endblock %}
-
 
 {% block title %} {# edit whats in the title block #}
     Dashboard - AIVFR
@@ -11,4 +12,3 @@
 {% block content %} {# edit what's in between the content block #}
     <div id="title">DASHBOARD</div>
 {% endblock %}
-
