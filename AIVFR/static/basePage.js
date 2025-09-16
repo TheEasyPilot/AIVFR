@@ -41,6 +41,17 @@ for (let buttonId in pairs) {
       LABEL.style.display = "none";
       gradient.style.display = "none";
     });
+
+    //---------selecting another page---------------
+    button.addEventListener("click" , () => {
+      if (buttonId == "mass_and_balance") {
+        window.open("mass-and-balance", '_self') //if statement avoids syntax URL error
+      } else {
+        window.open(`${buttonId}`, '_self') //uses the button ID which matches the webpage name
+      }
+    });
   }
 }
+
+
 
