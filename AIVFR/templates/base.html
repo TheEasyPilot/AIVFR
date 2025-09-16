@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="../static/base.css"/>
     <link rel="stylesheet" href="../static/components.css"/>
     <link rel="stylesheet" href="../static/basePage.css"/>
+    {% block head %}
+
+    {% endblock %}
     <script src="../static/basePage.js" defer></script>
   </head>
   
@@ -60,9 +63,9 @@
     </nav>
 
     <main>
-        <!--{% block content %} content in this element can be changed in inherited pages-->
+        {% block content %} <!--content in this element can be changed in inherited pages-->
         
-        <!--{% endblock %}-->
+        {% endblock %}
     </main>
   </body>
 </html>
