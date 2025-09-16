@@ -1,0 +1,14 @@
+{% extends "base.html" %} {# grab all the html from base.html, #}  
+
+{% block head %}  {{ super() }} {# inherit everything from the head but add this too #}
+<link rel="stylesheet" href="{{ url_for('static', filename='fuel.css') }}">
+<script src="{{ url_for('static', filename='fuel.js') }}" defer></script>
+{% endblock %}
+
+{% block title %} {# edit whats in the title block #}
+    Fuel - AIVFR
+{% endblock %}
+
+{% block content %} {# edit what's in between the content block #}
+    <div id="title">FUEL</div>
+{% endblock %}
