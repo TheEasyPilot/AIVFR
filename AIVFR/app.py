@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session, jsonify, request, Response
+import json, os, copy
 
 main = Blueprint('app', __name__)
+main.secret_key = os.getenv("SESSION_KEY")
 
 #main menu
 @main.route('/') #this will be the first to load up
@@ -46,6 +48,26 @@ def massAndBalanceTab():
 @main.route('/performance')
 def performanceTab():
     return render_template('performance.html')
+
+#----------flight data and session management--------------
+
+#making the template to store flight data during a session
+#also allows setting default values
+
+data_template = {
+    "settings" : {"theme": "light",
+                  "units_airspeed" : "knots",
+                  "units_altitude" : "feet",
+                  "units_mass": "kilograms",
+                  "units_fuel" : "litres",
+                  "units_distance" : "nautical_miles"},
+    "flight" : {
+        "departure" : "",
+        "departure_name" : ""
+    }
+}
+
+main.con
 
 #shows any errors on the actual page
 if __name__ in '__main__':
