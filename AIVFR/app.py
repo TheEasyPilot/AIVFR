@@ -7,9 +7,9 @@ main = Blueprint('app', __name__)
 #main menu
 @main.route('/') #this will be the first to load up
 def index():
-    if "data" not in session:
-        session["data"] = data_template.copy()
-    return render_template('menu.html', data=session["data"])
+    if "flight_data" not in session: #initialise the session if not created already
+        session["flight_data"] = data_template.copy()
+    return render_template('menu.html', data=session["flight_data"])
 
 #settings menu
 @main.route('/settings')
@@ -56,7 +56,7 @@ def performanceTab():
 def debug_session():
     return jsonify(session.get("data", {}))
 
-#----------flight data and session management--------------
+#----------flight data and session management-----------------------------
 
 #making the template to store flight data during a session
 #also allows setting default values
@@ -74,27 +74,20 @@ data_template = {
     }
 }
 
-
+'''
+#Updating data in the session
 @main.route("/update", methods=["POST"])
 def update_session():
-    # update a field inside the session data
     key = request.json.get("key")
     value = request.json.get("value")
 
-    if "data" not in session:
-        session["data"] = data_template.copy()
-
     # example: update a nested field
-    session["data"]["settings"][key] = value
-    session.modified = True  # ensure session cookie is updated
+    session["flight_data"]["settings"][key] = value
+    session.modified = True
 
-    return jsonify(session["data"])
-
-@main.route("/export")
-def export_session():
-    # let user download their current state
-    return jsonify(session.get("data", {}))
-
+    return jsonify(session["flight_data"])
+'''
+    
 #shows any errors on the actual page
 if __name__ in '__main__':
     main.run(debug=True)
