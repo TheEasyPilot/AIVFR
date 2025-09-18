@@ -1,13 +1,15 @@
 from flask import Blueprint, render_template, session, jsonify, request, Response
 import json, os, copy
+from flask_session import Session
 
 main = Blueprint('app', __name__)
-main.secret_key = os.getenv("SESSION_KEY")
 
 #main menu
 @main.route('/') #this will be the first to load up
 def index():
-    return render_template('menu.html')
+    if "data" not in session:
+        session["data"] = data_template.copy()
+    return render_template('menu.html', data=session["data"])
 
 #settings menu
 @main.route('/settings')
@@ -49,6 +51,11 @@ def massAndBalanceTab():
 def performanceTab():
     return render_template('performance.html')
 
+#debug route that allows me to see the flight data at any time
+@main.route('/debug')
+def debug_session():
+    return jsonify(session.get("data", {}))
+
 #----------flight data and session management--------------
 
 #making the template to store flight data during a session
@@ -67,7 +74,26 @@ data_template = {
     }
 }
 
-main.con
+
+@main.route("/update", methods=["POST"])
+def update_session():
+    # update a field inside the session data
+    key = request.json.get("key")
+    value = request.json.get("value")
+
+    if "data" not in session:
+        session["data"] = data_template.copy()
+
+    # example: update a nested field
+    session["data"]["settings"][key] = value
+    session.modified = True  # ensure session cookie is updated
+
+    return jsonify(session["data"])
+
+@main.route("/export")
+def export_session():
+    # let user download their current state
+    return jsonify(session.get("data", {}))
 
 #shows any errors on the actual page
 if __name__ in '__main__':
