@@ -1,3 +1,7 @@
+* {
+    color: var(--text)
+}
+
 #logoAI, #logoVFR {
     position: relative;
     bottom: 20px;
