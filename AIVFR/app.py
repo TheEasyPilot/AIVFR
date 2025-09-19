@@ -55,7 +55,7 @@ def performanceTab():
 def debug_session():
     return jsonify(session.get("flight_data", {}))
 
-#----------flight data and session management-----------------------------
+#----------FLIGHT DATA AND SESSION MANAGEMENT------------------------------------
 
 #making the template to store flight data during a session
 #also allows setting default values
@@ -73,14 +73,30 @@ data_template = {
     }
 }
 
-#Updating/modifying data in the session
+#----------UPDATING/MODIFYING DATA------------------
+
+#Updating Settings data
 @main.route("/update-settings", methods=["POST"])
 def update_session():
     key = request.json.get("key")
     value = request.json.get("value")
     session["flight_data"]["settings"][key] = value
-    session.modified = True
+    session.modified = True # To check if change happened successfully
     return jsonify(session["flight_data"])
+
+#Updating flight data
+@main.route("/update", methods=["POST"])
+def update_session():
+    key = request.json.get("key")
+    value = request.json.get("value")
+    session["flight_data"]["flight"][key] = value
+    session.modified = True # To check if change happened successfully
+    return jsonify(session["flight_data"])
+
+#---------------IMPORTING DATA-----------------------
+
+
+#---------------EXPORTING DATA-----------------------
 
 #shows any errors on the actual page
 if __name__ in '__main__':
