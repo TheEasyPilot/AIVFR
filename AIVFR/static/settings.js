@@ -5,7 +5,16 @@ const darkMode = document.getElementById("darkToggle")
 
 darkMode.addEventListener("click", () => {
     root.classList.add("dark-mode");
-});//adding the class of the darkmode colours to the html page, so it applies those rules instead
+    var r = new XMLHttpRequest();
+    r.open("POST", "http://127.0.0.1:5000/update-settings", true);
+    r.onreadystatechange = function () {
+        if (r.readyState !=4 || r.status != 200) return;
+        console.log("sent"); //confirm that message was successfully sent
+    };
+    r.send(JSON.stringify({"theme" : "dark"}))
+});
+
+//adding the class of the darkmode colours to the html page, so it applies those rules instead
 
 lightMode.addEventListener("click", () => {
     root.classList.remove("dark-mode");

@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, session, jsonify, request, Response
 import json, os, copy
-from flask_session import Session
 
 main = Blueprint('app', __name__)
 
@@ -54,7 +53,7 @@ def performanceTab():
 #debug route that allows me to see the flight data at any time
 @main.route('/debug')
 def debug_session():
-    return jsonify(session.get("data", {}))
+    return jsonify(session.get("flight_data", {}))
 
 #----------flight data and session management-----------------------------
 
@@ -74,20 +73,15 @@ data_template = {
     }
 }
 
-'''
-#Updating data in the session
-@main.route("/update", methods=["POST"])
+#Updating/modifying data in the session
+@main.route("/update-settings", methods=["POST"])
 def update_session():
     key = request.json.get("key")
     value = request.json.get("value")
-
-    # example: update a nested field
     session["flight_data"]["settings"][key] = value
     session.modified = True
-
     return jsonify(session["flight_data"])
-'''
-    
+
 #shows any errors on the actual page
 if __name__ in '__main__':
     main.run(debug=True)
