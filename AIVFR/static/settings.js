@@ -1,24 +1,45 @@
-//-----------light/dark toggle----------------
+//-----Check for theme----
 const root = document.documentElement //this is the <html> element in settngs.html
+fetch("http://127.0.0.1:5000/get-settings") //fetches the current session data
+  .then(response => response.json()) //turns it into a .json file so it can be read
+  .then(settings => {
+      if (settings.theme === "dark") {
+          root.classList.add("dark-mode");
+      } else {
+          root.classList.remove("dark-mode");
+      }
+});
+
+//-----------light/dark toggle----------------
 const lightMode = document.getElementById("lightToggle")
 const darkMode = document.getElementById("darkToggle")
 
+//--DARK MODE---
 darkMode.addEventListener("click", () => {
     root.classList.add("dark-mode");
     var r = new XMLHttpRequest(); //allows sending HTTP requests (eg POST)
     r.open("POST", "http://127.0.0.1:5000/update-settings", true);
+    r.setRequestHeader("Content-Type", "application/json");
     r.onreadystatechange = function () {
         if (r.readyState !=4 || r.status != 200) return;
         console.log("sent"); //confirm that message was successfully sent
     };
-    r.send(JSON.stringify({"theme" : "dark"}))
+    r.send(JSON.stringify({ "key": "theme", "value": "dark" }));
 });
 
-//adding the class of the darkmode colours to the html page
-
+//--LIGHT MODE---
 lightMode.addEventListener("click", () => {
     root.classList.remove("dark-mode");
-});//reversing it so that it just applies whatever is in the :root
+    var r = new XMLHttpRequest(); //allows sending HTTP requests (eg POST)
+    r.open("POST", "http://127.0.0.1:5000/update-settings", true);
+    r.setRequestHeader("Content-Type", "application/json");
+    r.onreadystatechange = function () {
+        if (r.readyState !=4 || r.status != 200) return;
+        console.log("sent"); //confirm that message was successfully sent
+    };
+    r.send(JSON.stringify({ "key": "theme", "value": "light" }));
+    
+});
 
 //-----------Choosing units----------------------------------
 const airspeed = document.getElementById("airspeed")

@@ -77,7 +77,7 @@ data_template = {
 
 #Updating Settings data
 @main.route("/update-settings", methods=["POST"])
-def update_session():
+def update_settings():
     key = request.json.get("key")
     value = request.json.get("value")
     session["flight_data"]["settings"][key] = value
@@ -85,13 +85,24 @@ def update_session():
     return jsonify(session["flight_data"])
 
 #Updating flight data
-@main.route("/update", methods=["POST"])
-def update_session():
+@main.route("/update-flight", methods=["POST"])
+def update_flight():
     key = request.json.get("key")
     value = request.json.get("value")
     session["flight_data"]["flight"][key] = value
     session.modified = True # To check if change happened successfully
     return jsonify(session["flight_data"])
+
+
+#---------------READING DATA------------------------
+
+@main.route("/get-settings", methods=["GET"])
+def get_settings():
+    return jsonify(session["flight_data"]["settings"])
+
+@main.route("/get-flight", methods=["GET"])
+def get_flight():
+    return jsonify(session["flight_data"]["flight"])
 
 #---------------IMPORTING DATA-----------------------
 
@@ -101,3 +112,4 @@ def update_session():
 #shows any errors on the actual page
 if __name__ in '__main__':
     main.run(debug=True)
+    
