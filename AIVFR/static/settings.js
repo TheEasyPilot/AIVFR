@@ -5,7 +5,7 @@ const darkMode = document.getElementById("darkToggle")
 
 darkMode.addEventListener("click", () => {
     root.classList.add("dark-mode");
-    var r = new XMLHttpRequest();
+    var r = new XMLHttpRequest(); //allows sending HTTP requests (eg POST)
     r.open("POST", "http://127.0.0.1:5000/update-settings", true);
     r.onreadystatechange = function () {
         if (r.readyState !=4 || r.status != 200) return;
@@ -14,7 +14,7 @@ darkMode.addEventListener("click", () => {
     r.send(JSON.stringify({"theme" : "dark"}))
 });
 
-//adding the class of the darkmode colours to the html page, so it applies those rules instead
+//adding the class of the darkmode colours to the html page
 
 lightMode.addEventListener("click", () => {
     root.classList.remove("dark-mode");
