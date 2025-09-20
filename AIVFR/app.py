@@ -8,47 +8,47 @@ main = Blueprint('app', __name__)
 def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
-    return render_template('menu.html', data=session["flight_data"])
+    return render_template('menu.html', data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
 def settingsMenu():
-    return render_template('settings.html')
+    return render_template('settings.html', settings=session["flight_data"]["settings"])
 
 #dashboard
 @main.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', settings=session["flight_data"]["settings"])
 
 #Route tab
 @main.route('/route')
 def routeTab():
-    return render_template('route.html')
+    return render_template('route.html', settings=session["flight_data"]["settings"])
 
 #weather tab
 @main.route('/weather')
 def weatherTab():
-    return render_template('weather.html')
+    return render_template('weather.html', settings=session["flight_data"]["settings"])
 
 #navigation log tab
 @main.route('/navlog')
 def navlogTab():
-    return render_template('navlog.html')
+    return render_template('navlog.html', settings=session["flight_data"]["settings"])
 
 #fuel tab
 @main.route('/fuel')
 def fuelTab():
-    return render_template('fuel.html')
+    return render_template('fuel.html', settings=session["flight_data"]["settings"])
 
 #mass and balance tab
 @main.route('/mass-and-balance')
 def massAndBalanceTab():
-    return render_template('mass_and_balance.html')
+    return render_template('mass_and_balance.html', settings=session["flight_data"]["settings"])
 
 #performance tab
 @main.route('/performance')
 def performanceTab():
-    return render_template('performance.html')
+    return render_template('performance.html', settings=session["flight_data"]["settings"])
 
 #debug route that allows me to see the flight data at any time
 @main.route('/debug')
