@@ -11,7 +11,6 @@ darkMode.addEventListener("click", () => {
     r.setRequestHeader("Content-Type", "application/json");
     r.onreadystatechange = function () {
         if (r.readyState !=4 || r.status != 200) return;
-        console.log("sent"); //confirm that message was successfully sent
     };
     r.send(JSON.stringify({ "key": "theme", "value": "dark" }));
 });
@@ -24,7 +23,6 @@ lightMode.addEventListener("click", () => {
     r.setRequestHeader("Content-Type", "application/json");
     r.onreadystatechange = function () {
         if (r.readyState !=4 || r.status != 200) return;
-        console.log("sent"); //confirm that message was successfully sent
     };
     r.send(JSON.stringify({ "key": "theme", "value": "light" }));
     
