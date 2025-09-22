@@ -3,30 +3,27 @@ const root = document.body
 const lightMode = document.getElementById("lightToggle")
 const darkMode = document.getElementById("darkToggle")
 
-//--DARK MODE---
-darkMode.addEventListener("click", () => {
-    root.classList.add("dark-mode");
+function updateSettings (key, value) {
     var r = new XMLHttpRequest(); //allows sending HTTP requests (eg POST)
     r.open("POST", "http://127.0.0.1:5000/update-settings", true);
     r.setRequestHeader("Content-Type", "application/json");
     r.onreadystatechange = function () {
         if (r.readyState !=4 || r.status != 200) return;
     };
-    r.send(JSON.stringify({ "key": "theme", "value": "dark" }));
+   r.send(JSON.stringify({ "key": key, "value": value }));
+} 
+    
+//--DARK MODE---
+darkMode.addEventListener("click", () => {
+    root.classList.add("dark-mode");
+    updateSettings("theme", "dark");
 });
 
 //--LIGHT MODE---
 lightMode.addEventListener("click", () => {
     root.classList.remove("dark-mode");
-    var r = new XMLHttpRequest(); //allows sending HTTP requests (eg POST)
-    r.open("POST", "http://127.0.0.1:5000/update-settings", true);
-    r.setRequestHeader("Content-Type", "application/json");
-    r.onreadystatechange = function () {
-        if (r.readyState !=4 || r.status != 200) return;
-    };
-    r.send(JSON.stringify({ "key": "theme", "value": "light" }));
-    
-});
+    updateSettings("theme", "light"); }
+);
 
 //-----------Choosing units----------------------------------
 const airspeed = document.getElementById("airspeed")
@@ -104,3 +101,97 @@ distance.addEventListener("click", () => {
     distance_options.style.display = distance_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
+//---------------------UNIT SELECTION-----------------------------
+function selected (button, key, value) { //to update session value and color
+    updateSettings(key, value);
+    button.classList.add('active'); //when it is active its color changes to primary
+};
+
+
+//---------------AIRSPEED------------
+const knots = document.getElementById('knots');
+const mph = document.getElementById('mph');
+const kmph = document.getElementById('kmph');
+
+knots.addEventListener("click", () => {
+    mph.classList.remove('active')
+    kmph.classList.remove('active') //active removed so returns to normal color
+    knots.addEventListener("click", selected(knots, "units_airspeed", "knots"))
+});
+
+mph.addEventListener("click", () => {
+    knots.classList.remove('active')
+    kmph.classList.remove('active')
+    mph.addEventListener("click", selected(mph, "units_airspeed", "milesPerHour"))
+});
+
+kmph.addEventListener("click", () => {
+    knots.classList.remove('active')
+    mph.classList.remove('active')
+    kmph.addEventListener("click", selected(kmph, "units_airspeed", "kilometersPerHour"))
+});
+
+//-------------------ALTITUDE--------------
+const feet = document.getElementById('feet')
+const metres = document.getElementById('metres')
+
+feet.addEventListener("click", () => {
+    metres.classList.remove('active')
+    feet.addEventListener("click", selected(feet, "units_altitude", "feet"))
+});
+
+metres.addEventListener("click", () => {
+    feet.classList.remove('active')
+    metres.addEventListener("click", selected(metres, "units_altitude", "metres"))
+});
+
+//---------------MASS-----------------------
+const kilograms = document.getElementById('kg')
+const pounds = document.getElementById('pounds')
+
+kilograms.addEventListener("click", () => {
+    pounds.classList.remove('active')
+    kilograms.addEventListener("click", selected(kilograms, "units_mass", "kilograms"))
+});
+
+pounds.addEventListener("click", () => {
+    kilograms.classList.remove('active')
+    pounds.addEventListener("click", selected(pounds, "units_mass", "pounds"))
+});
+
+//----------------FUEL-----------------------------
+const litres = document.getElementById('litres')
+const gallons = document.getElementById('gallons')
+
+litres.addEventListener("click", () => {
+    gallons.classList.remove('active')
+    litres.addEventListener("click", selected(litres, "units_fuel", "litres"))
+});
+
+gallons.addEventListener("click", () => {
+    litres.classList.remove('active')
+    gallons.addEventListener("click", selected(gallons, "units_fuel", "gallons"))
+});
+
+//----------------DISTANCE-------------------------
+const NM = document.getElementById('nautical_miles')
+const kilometres = document.getElementById('kilometres')
+const statute_miles = document.getElementById('statute_miles')
+
+NM.addEventListener("click", () => {
+    kilometres.classList.remove('active')
+    statute_miles.classList.remove('active')
+    NM.addEventListener("click", selected(NM, "units_distance", "nauticalMiles"))
+});
+
+kilometres.addEventListener("click", () => {
+    NM.classList.remove('active')
+    statute_miles.classList.remove('active')
+    kilometres.addEventListener("click", selected(kilometres, "units_distance", "kilometres"))
+});
+
+statute_miles.addEventListener("click", () => {
+    NM.classList.remove('active')
+    kilometres.classList.remove('active')
+    statute_miles.addEventListener("click", selected(statute_miles, "units_distance", "statuteMiles"))
+});
