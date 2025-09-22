@@ -66,7 +66,7 @@ data_template = {
                   "units_altitude" : "feet",
                   "units_mass": "kilograms",
                   "units_fuel" : "litres",
-                  "units_distance" : "nautical_miles"},
+                  "units_distance" : "nauticalMiles"},
     "flight" : {
         "departure" : "",
         "departure_name" : ""

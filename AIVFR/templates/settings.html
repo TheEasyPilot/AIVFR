@@ -37,42 +37,42 @@
         <div> <!--AIRSPEED-->
           <button style="display: block;" id="airspeed" class="dropdown">Airspeed</button>
           <div id="airspeed_options" style="display: none;">
-            <button style="display: block;">Knots</button>
-            <button style="display: block;">MPH</button>
-            <button style="display: block;">KM/H</button>
+            <button style="display: block;" id="knots" class="{{ 'active' if settings.units_airspeed == 'knots' else '' }}">Knots</button>
+            <button style="display: block;" id="mph" class="{{ 'active' if settings.units_airspeed == 'milesPerHour' else '' }}">MPH</button>
+            <button style="display: block;" id="kmph" class="{{ 'active' if settings.units_airspeed == 'kilometresPerHour' else '' }}">KM/H</button>
           </div>
         </div>
     
         <div> <!--ALTITUDE-->
           <button style="display: block;" id="altitude" class="dropdown">Altitude</button>
           <div id="altitude_options" style="display: none;">
-            <button style="display: block;">Feet (ft)</button>
-            <button style="display: block;">Metres (m)</button>
+            <button style="display: block;" id="feet" class="{{ 'active' if settings.units_altitude == 'feet' else '' }}">Feet (ft)</button>
+            <button style="display: block;" id="metres" class="{{ 'active' if settings.units_altitude == 'metres' else '' }}">Metres (m)</button>
           </div>
         </div>
   
         <div> <!--MASS-->
           <button style="display: block;" id="mass" class="dropdown">Mass</button>
           <div id="mass_options" style="display: none;">
-            <button style="display: block;">Kilograms (kg)</button>
-            <button style="display: block;">Pounds (lbs)</button>
+            <button style="display: block;" id="kg" class="{{ 'active' if settings.units_mass == 'kilograms' else '' }}">Kilograms (kg)</button>
+            <button style="display: block;" id="pounds" class="{{ 'active' if settings.units_mass == 'pounds' else '' }}">Pounds (lbs)</button>
           </div>
         </div>
   
         <div> <!--FUEL-->
           <button style="display: block;" id="fuel" class="dropdown">Fuel</button>
           <div id="fuel_options" style="display: none;">
-            <button style="display: block;">Litres (l)</button>
-            <button style="display: block;">US Gallons (gal)</button>
+            <button style="display: block;" id="litres" class="{{ 'active' if settings.units_fuel == 'litres' else '' }}">Litres (l)</button>
+            <button style="display: block;" id="gallons" class="{{ 'active' if settings.units_fuel == 'gallons' else '' }}">US Gallons (gal)</button>
           </div>
         </div>
   
         <div> <!--DISTANCE-->
           <button style="display: block;" id="distance" class="dropdown">Distance</button>
           <div id="distance_options" style="display: none;">
-            <button style="display: block;">Nautical Miles (NM)</button>
-            <button style="display: block;">Kilometers (km)</button>
-            <button style="display: block;">Statute Miles</button>
+            <button style="display: block;" id="nautical_miles" class="{{ 'active' if settings.units_distance == 'nauticalMiles' else '' }}">Nautical Miles (NM)</button>
+            <button style="display: block;" id="kilometres" class="{{ 'active' if settings.units_distance == 'kilometres' else '' }}">Kilometers (km)</button>
+            <button style="display: block;" id="statute_miles" class="{{ 'active' if settings.units_distance == 'statuteMiles' else '' }}">Statute Miles</button>
           </div>
         </div>
       </div>

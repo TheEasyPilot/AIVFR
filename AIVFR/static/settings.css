@@ -81,6 +81,18 @@ h2 {
     background-color: var(--primary);
 }
 
-/*surely for the settings back button I can do it so it acts the
-same as the browser back button so it just goes to last page
-it was on? that way no entry state shenannigans*/
+#knots.active,
+#mph.active,
+#kmph.active,
+#feet.active,
+#metres.active,
+#kg.active, 
+#pounds.active,
+#litres.active,
+#gallons.active,
+#nautical_miles.active,
+#kilometres.active,
+#statute_miles.active {
+
+    background-color: var(--primary);
+     }
