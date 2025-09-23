@@ -68,6 +68,7 @@ data_template = {
                   "units_fuel" : "litres",
                   "units_distance" : "nauticalMiles"},
     "flight" : {
+        "saved" : "False",
         "departure" : "",
         "departure_name" : ""
     }
@@ -103,7 +104,6 @@ def get_settings():
 @main.route("/get-flight", methods=["GET"])
 def get_flight():
     return jsonify(session["flight_data"]["flight"])
-
 #---------------IMPORTING DATA-----------------------
 
 
