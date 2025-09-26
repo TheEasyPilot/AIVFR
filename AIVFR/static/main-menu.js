@@ -44,23 +44,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function NewFlight() {
-        disclaimerContinue.onclick = function() {
         fetch('/get-flight')
         .then(response => response.json())
         .then(data => {
         if (data.saved == "False") { //checks if current flight data is saved
-            if (confirm("Your Flight Plan has changes that have not yet been saved onto your device. By pressing 'Continue' on the disclaimer, The current flight data will be erased, which is irreversable!")) {
-                window.open("dashboard", '_self');
-                }
-                
-        } else {
-            window.open("dashboard", '_self')
+            alert("Your Flight Plan has changes that have not yet been saved onto your device. By pressing 'Continue' on the disclaimer, The current flight data will be erased, which is irreversable!")
             }
-        });
-    }
-        
-    }
-
+        })
+        disclaimerContinue.onclick = function() {
+        window.open("dashboard", '_self')
+        }
+    };
 
 
     /*
