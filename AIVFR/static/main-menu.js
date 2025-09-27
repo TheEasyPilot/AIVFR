@@ -58,10 +58,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     function clearSession() {
-    fetch('/new-flight')
-        .then(response => response.text())
-        .then(data => console.log(data)) //logs the confirmation message
-        .catch(error => console.error('Error:', error));
+        fetch('/new-flight')
+        console.log('here')
     }
 
     /*
