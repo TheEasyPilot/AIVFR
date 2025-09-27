@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function() {
     Continue.addEventListener("click", function() {
         displayDisclaimer();
         ContinueFlight(); //determines what happens if the user presses continue on disclaimer
-        
     });
 
     loadFlight.addEventListener("click", function() {
@@ -27,6 +26,10 @@ document.addEventListener("DOMContentLoaded", function() {
     newFlight.addEventListener("click", function() {
         displayDisclaimer();
         NewFlight();
+        disclaimerContinue.onclick = function() {
+        clearSession();
+        window.open("dashboard", '_self')
+        };
     });
 
     //disclaimer
@@ -51,11 +54,15 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Your Flight Plan has changes that have not yet been saved onto your device. By pressing 'Continue' on the disclaimer, The current flight data will be erased, which is irreversable!")
             }
         })
-        disclaimerContinue.onclick = function() {
-        window.open("dashboard", '_self')
-        }
     };
 
+
+    function clearSession() {
+    fetch('/new-flight')
+        .then(response => response.text())
+        .then(data => console.log(data)) //logs the confirmation message
+        .catch(error => console.error('Error:', error));
+    }
 
     /*
     FUNCTION CheckSaved():

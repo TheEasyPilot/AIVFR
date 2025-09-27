@@ -109,6 +109,15 @@ def get_flight():
 
 #---------------EXPORTING DATA-----------------------
 
+
+#-- Starting a new flight --
+
+@main.route("/new-fiight")
+def NewRoute():
+    #resets all route data but does not change any settings
+    session["flight_data"]["settings"] = data_template["settings"]
+    return "Cleared" , 200
+
 #shows any errors on the actual page
 if __name__ in '__main__':
     main.run(debug=True)
