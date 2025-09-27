@@ -81,7 +81,7 @@ body {
 .disclaimerContent {
   position: relative;
   background-color: var(--highlight);
-  margin: 15% auto; 
+  margin: 10% auto; 
   padding: 35px;
   width: 720px;
   border-radius: 15px; 
