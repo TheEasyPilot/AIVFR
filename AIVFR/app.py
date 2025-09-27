@@ -112,11 +112,14 @@ def get_flight():
 
 #-- Starting a new flight --
 
-@main.route("/new-fiight")
-def NewRoute():
-    #resets all route data but does not change any settings
-    session["flight_data"]["settings"] = data_template["settings"]
-    return "Cleared" , 200
+#resets all flight data  but NOT settings
+@main.route("/new-flight")
+def NewFlightRun():
+    session["flight_data"]["flight"] = data_template["flight"]
+    session.modified = True
+
+    
+
 
 #shows any errors on the actual page
 if __name__ in '__main__':
