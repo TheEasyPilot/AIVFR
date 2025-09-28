@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function() {
         })
     };
 
-
     function clearSession() {
         fetch('/new-flight')
         console.log('here')
