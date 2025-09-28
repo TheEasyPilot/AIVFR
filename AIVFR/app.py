@@ -115,7 +115,8 @@ def get_flight():
 #resets all flight data  but NOT settings
 @main.route("/new-flight")
 def NewFlightRun():
-    session["flight_data"]["flight"] = data_template["flight"]
+    #resettting settings data for test (no data in flight to reset)
+    session["flight_data"]["settings"] = data_template["settings"]
     session.modified = True
 
     
