@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, jsonify, request, Response
+from flask import Blueprint, render_template, session, jsonify, request, Response, redirect, url_for
 import json, os, copy
 
 main = Blueprint('app', __name__)
@@ -69,7 +69,7 @@ data_template = {
                   "units_distance" : "nauticalMiles"},
     "flight" : {
         "saved" : "False",
-        "departure" : "",
+        "departure_code" : "",
         "departure_name" : ""
     }
 }
@@ -93,7 +93,6 @@ def update_flight():
     session["flight_data"]["flight"][key] = value
     session.modified = True # To check if change happened successfully
     return jsonify(session["flight_data"])
-
 
 #---------------READING DATA------------------------
 
@@ -123,6 +122,6 @@ def NewFlightRun():
 
 
 #shows any errors on the actual page
-if __name__ in '__main__':
+if __name__ == '__main__':
     main.run(debug=True)
     

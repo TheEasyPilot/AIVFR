@@ -61,16 +61,3 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('here')
     }
 
-    /*
-    FUNCTION CheckSaved():
-    BEGIN    
-        with open("data.json", "r") as file:
-        data = json.load(file)
-        IF data["saved"] == False THEN
-            RETURN False
-        ELSE
-            RETURN True
-        ENDIF
-    END
-    */
-
