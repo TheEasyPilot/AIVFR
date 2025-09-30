@@ -13,20 +13,6 @@
     <div id="title">ROUTE</div>
 
     <div>From:<input id="departure_code" type="text" name="departure_code" placeholder="ICAO Code"></div>
-    <p id="departure_name"></p>
-
-    <script>
-        const departure_code = document.getElementById("departure_code");
-        const departure_name = document.getElementById("departure_name");
-
-        departure_code.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-                update("departure_code", departure_code.value);
-                //at this point we search for the aerodrome
-                const output = departure_code.value;
-                departure_name.innerText = "airport name for code" + output;
-            }
-        });
-    </script>
+    <div id="departure_name">{{ flight.departure_name }}</div>
 
 {% endblock %}
