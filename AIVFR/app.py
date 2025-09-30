@@ -23,7 +23,7 @@ def dashboard():
 #Route tab
 @main.route('/route')
 def routeTab():
-    return render_template('route.html', settings=session["flight_data"]["settings"])
+    return render_template('route.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #weather tab
 @main.route('/weather')
@@ -115,7 +115,7 @@ def get_flight():
 @main.route("/new-flight")
 def NewFlightRun():
     #resettting settings data for test (no data in flight to reset)
-    session["flight_data"]["settings"] = data_template["settings"]
+    session["flight_data"]["flight"] = data_template["flight"]
     session.modified = True
 
     
