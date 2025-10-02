@@ -1,0 +1,1 @@
+const UNIT_distance = document.getElementsByClassName("UNIT_distance")
