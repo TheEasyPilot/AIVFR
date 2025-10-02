@@ -70,7 +70,9 @@ data_template = {
     "flight" : {
         "saved" : "False",
         "departure_code" : "",
-        "departure_name" : ""
+        "departure_name" : "",
+        "distance" : "",
+        "distance_output" : "" #TEST
     }
 }
 
