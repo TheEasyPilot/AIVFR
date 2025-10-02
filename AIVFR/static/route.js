@@ -15,14 +15,15 @@ departureAirport_code.addEventListener("keydown", async (event) => {
         await update("departureAirport_code", departureAirport_code.value);
         //at this point we validate data and then search for the aerodrome
         await update("departureAirport_name", `airport name for ${departureAirport_code.value}`);
-        //ERROR - NOTHING WIL UPDATE WHEN ENTER PRESSED. VALUE NEEDS TO BE UPDATED ONLY??
     }
 });
 
 //-------TESTING------------
 distance.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
-        await update("distance.value", int(distance.value));
+        await update("distance", {class: "distance", value: Number(distance.value),});
+        fetch('/units-update')
+        console.log('hi')
     }
 });
 
