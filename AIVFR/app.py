@@ -8,16 +8,46 @@ main = Blueprint('app', __name__)
 
 #-------------UNITS CHANGING-------------------
 
-#distance
-@main.route("/changeDistanceUnits", methods=["GET"])
-def changeDistanceUnits():
-    pass
+UNIT_MAP = {
+    "distance": {"base": ureg.meter, "settings_key": "units_distance"},
+    "altitude": {"base": ureg.meter, "settings_key": "units_altitude"},
+    "airspeed": {"base": ureg.meter / ureg.second, "settings_key": "units_airspeed"},
+    "mass": {"base": ureg.kilogram, "settings_key": "units_mass"},
+    "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
+}
 
+def update_units(session):
+    for key, item in session["flight_data"]["flight"].items():
+        if isinstance(item, dict) and "class" in item:
+            category = item["class"]
+
+            if category in UNIT_MAP:
+                base_unit = UNIT_MAP[category]["base"]
+                settings_key = UNIT_MAP[category]["settings_key"]
+
+                # Get canonical value (always stored in base)
+                canonical = item["value"] * base_unit
+
+                # Get display unit from settings
+                display_unit = session["flight_data"]["settings"][settings_key]
+                converted = canonical.to(getattr(ureg, display_unit))
+
+                # Store both canonical and converted
+                item["output"] = f"{converted.magnitude:.2f} {converted.units}"
+
+
+@main.route('/units-update')
+def update_unitsRUN():
+    update_units(session)
+    session.modified = True
+
+#-----------WEBTOOL NAVIGATION----------------------
 #main menu
 @main.route('/') #this will be the first to load up
 def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
+        update_units(session)
     return render_template('menu.html', data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
@@ -79,13 +109,11 @@ data_template = {
                   "units_distance" : "nautical_mile"},
     "flight" : {
         "saved" : "False",
-        "departure_code" : "",
-        "departure_name" : "",
-        "distance" : "",
-        "distance_output" : "" #TEST
+        "departureAirport_code" : "",
+        "departureAiport_name" : "",
+        "distance" : {"value" : 0, "class" : "distance"},
     }
 }
-
 #----------UPDATING/MODIFYING DATA------------------
 
 #Updating Settings data
