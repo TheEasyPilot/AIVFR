@@ -3,16 +3,17 @@ const root = document.body
 const lightMode = document.getElementById("lightToggle")
 const darkMode = document.getElementById("darkToggle")
 
-function updateSettings (key, value) {
-    var r = new XMLHttpRequest(); //allows sending HTTP requests (eg POST)
-    r.open("POST", "http://127.0.0.1:5000/update-settings", true);
-    r.setRequestHeader("Content-Type", "application/json");
-    r.onreadystatechange = function () {
-        if (r.readyState !=4 || r.status != 200) return;
-    };
-   r.send(JSON.stringify({ "key": key, "value": value }));
-} 
+ 
     
+function updateSettings(key, value) {
+        fetch("/update-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value,})
+    });
+    }
+
+
 //--DARK MODE---
 darkMode.addEventListener("click", () => {
     root.classList.add("dark-mode");
@@ -191,19 +192,19 @@ NM.addEventListener("click", () => {
     kilometres.classList.remove('active')
     statute_miles.classList.remove('active')
     NM.addEventListener("click", selected(NM, "units_distance", "nautical_mile"))
-    fetch('/units-update')
+    //fetch('/units-update')
 });
 
 kilometres.addEventListener("click", () => {
     NM.classList.remove('active')
     statute_miles.classList.remove('active')
     kilometres.addEventListener("click", selected(kilometres, "units_distance", "kilometer"))
-    fetch('/units-update')
+    //fetch('/units-update')
 });
 
 statute_miles.addEventListener("click", () => {
     NM.classList.remove('active')
     kilometres.classList.remove('active')
     statute_miles.addEventListener("click", selected(statute_miles, "units_distance", "us_statute_mile"))
-    fetch('/units-update')
+    //fetch('/units-update')
 });

@@ -40,6 +40,7 @@ def update_units(session):
 def update_unitsRUN():
     update_units(session)
     session.modified = True
+    return 'updated', 200
 
 #-----------WEBTOOL NAVIGATION----------------------
 #main menu
