@@ -116,19 +116,22 @@ const kmph = document.getElementById('kmph');
 knots.addEventListener("click", () => {
     mph.classList.remove('active')
     kmph.classList.remove('active') //active removed so returns to normal color
-    knots.addEventListener("click", selected(knots, "units_airspeed", "knots"))
+    knots.addEventListener("click", selected(knots, "units_airspeed", "knot"))
+    fetch('/units-update')
 });
 
 mph.addEventListener("click", () => {
     knots.classList.remove('active')
     kmph.classList.remove('active')
-    mph.addEventListener("click", selected(mph, "units_airspeed", "milesPerHour"))
+    mph.addEventListener("click", selected(mph, "units_airspeed", "mile_per_hour"))
+    fetch('/units-update')
 });
 
 kmph.addEventListener("click", () => {
     knots.classList.remove('active')
     mph.classList.remove('active')
-    kmph.addEventListener("click", selected(kmph, "units_airspeed", "kilometersPerHour"))
+    kmph.addEventListener("click", selected(kmph, "units_airspeed", "kilometer_per_hour"))
+    fetch('/units-update')
 });
 
 //-------------------ALTITUDE--------------
@@ -138,11 +141,13 @@ const metres = document.getElementById('metres')
 feet.addEventListener("click", () => {
     metres.classList.remove('active')
     feet.addEventListener("click", selected(feet, "units_altitude", "feet"))
+    fetch('/units-update')
 });
 
 metres.addEventListener("click", () => {
     feet.classList.remove('active')
-    metres.addEventListener("click", selected(metres, "units_altitude", "metres"))
+    metres.addEventListener("click", selected(metres, "units_altitude", "metre"))
+    fetch('/units-update')
 });
 
 //---------------MASS-----------------------
@@ -151,12 +156,14 @@ const pounds = document.getElementById('pounds')
 
 kilograms.addEventListener("click", () => {
     pounds.classList.remove('active')
-    kilograms.addEventListener("click", selected(kilograms, "units_mass", "kilograms"))
+    kilograms.addEventListener("click", selected(kilograms, "units_mass", "kilogram"))
+    fetch('/units-update')
 });
 
 pounds.addEventListener("click", () => {
     kilograms.classList.remove('active')
-    pounds.addEventListener("click", selected(pounds, "units_mass", "pounds"))
+    pounds.addEventListener("click", selected(pounds, "units_mass", "pound"))
+    fetch('/units-update')
 });
 
 //----------------FUEL-----------------------------
@@ -165,12 +172,14 @@ const gallons = document.getElementById('gallons')
 
 litres.addEventListener("click", () => {
     gallons.classList.remove('active')
-    litres.addEventListener("click", selected(litres, "units_fuel", "litres"))
+    litres.addEventListener("click", selected(litres, "units_fuel", "litre"))
+    fetch('/units-update')
 });
 
 gallons.addEventListener("click", () => {
     litres.classList.remove('active')
-    gallons.addEventListener("click", selected(gallons, "units_fuel", "gallons"))
+    gallons.addEventListener("click", selected(gallons, "units_fuel", "US_liquid_gallon"))
+    fetch('/units-update')
 });
 
 //----------------DISTANCE-------------------------
@@ -181,17 +190,20 @@ const statute_miles = document.getElementById('statute_miles')
 NM.addEventListener("click", () => {
     kilometres.classList.remove('active')
     statute_miles.classList.remove('active')
-    NM.addEventListener("click", selected(NM, "units_distance", "nauticalMiles"))
+    NM.addEventListener("click", selected(NM, "units_distance", "nautical_mile"))
+    fetch('/units-update')
 });
 
 kilometres.addEventListener("click", () => {
     NM.classList.remove('active')
     statute_miles.classList.remove('active')
-    kilometres.addEventListener("click", selected(kilometres, "units_distance", "kilometres"))
+    kilometres.addEventListener("click", selected(kilometres, "units_distance", "kilometer"))
+    fetch('/units-update')
 });
 
 statute_miles.addEventListener("click", () => {
     NM.classList.remove('active')
     kilometres.classList.remove('active')
-    statute_miles.addEventListener("click", selected(statute_miles, "units_distance", "statuteMiles"))
+    statute_miles.addEventListener("click", selected(statute_miles, "units_distance", "us_statute_mile"))
+    fetch('/units-update')
 });
