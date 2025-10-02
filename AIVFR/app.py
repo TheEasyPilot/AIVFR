@@ -1,7 +1,17 @@
 from flask import Blueprint, render_template, session, jsonify, request, Response, redirect, url_for
 import json, os, copy, pint
 
+ureg = pint.UnitRegistry()
+ureg.formatter.default_format = "~" #use the shortened version by defaut
+
 main = Blueprint('app', __name__)
+
+#-------------UNITS CHANGING-------------------
+
+#distance
+@main.route("/changeDistanceUnits", methods=["GET"])
+def changeDistanceUnits():
+    pass
 
 #main menu
 @main.route('/') #this will be the first to load up
@@ -62,11 +72,11 @@ def debug_session():
 
 data_template = {
     "settings" : {"theme": "light",
-                  "units_airspeed" : "knots",
+                  "units_airspeed" : "knot",
                   "units_altitude" : "feet",
-                  "units_mass": "kilograms",
-                  "units_fuel" : "litres",
-                  "units_distance" : "nauticalMiles"},
+                  "units_mass": "kilogram",
+                  "units_fuel" : "litre",
+                  "units_distance" : "nautical_mile"},
     "flight" : {
         "saved" : "False",
         "departure_code" : "",
@@ -119,26 +129,12 @@ def NewFlightRun():
     #resettting settings data for test (no data in flight to reset)
     session["flight_data"]["flight"] = data_template["flight"]
     session.modified = True
-
-#-------------UNITS CHANGING-------------------
-
-unit = pint.UnitRegistry()
-
-#distance
-@main.route("/changeDistanceUnits")
-def changeDistanceUnits():
-
-
-
     
-
-
 #shows any errors on the actual page
 if __name__ == '__main__':
     main.run(debug=True)
     
 '''
-
 Installation
 You can install pint via pip:
 pip install pint
@@ -197,5 +193,4 @@ You can add your own units if needed:
 ureg.define("smoot = 1.7018 meter")
 height = 5 * ureg.smoot
 print(f"Height in meters: {height.to(ureg.meter):.2f} m")
-
 '''
