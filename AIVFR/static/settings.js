@@ -192,19 +192,19 @@ NM.addEventListener("click", () => {
     kilometres.classList.remove('active')
     statute_miles.classList.remove('active')
     NM.addEventListener("click", selected(NM, "units_distance", "nautical_mile"))
-    //fetch('/units-update')
+    fetch('/units-update')
 });
 
 kilometres.addEventListener("click", () => {
     NM.classList.remove('active')
     statute_miles.classList.remove('active')
     kilometres.addEventListener("click", selected(kilometres, "units_distance", "kilometer"))
-    //fetch('/units-update')
+    fetch('/units-update')
 });
 
 statute_miles.addEventListener("click", () => {
     NM.classList.remove('active')
     kilometres.classList.remove('active')
     statute_miles.addEventListener("click", selected(statute_miles, "units_distance", "us_statute_mile"))
-    //fetch('/units-update')
+    fetch('/units-update')
 });
