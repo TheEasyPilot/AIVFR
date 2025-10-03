@@ -23,9 +23,5 @@ distance.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
         await update("distance", {class: "distance", value: Number(distance.value),});
         fetch('/units-update')
-        console.log('hi')
     }
 });
-
-//when changing the units we need to go to python and code the change
-//then in JS we should plug the class name into the function??? then that runs and converts all

@@ -1,48 +1,9 @@
 from flask import Blueprint, render_template, session, jsonify, request, Response, redirect, url_for
 import json, os, copy, pint
 
-ureg = pint.UnitRegistry()
-ureg.formatter.default_format = "~" #use the shortened version by defaut
-
 main = Blueprint('app', __name__)
 
-#-------------UNITS CHANGING-------------------
-
-UNIT_MAP = {
-    "distance": {"base": ureg.meter, "settings_key": "units_distance"},
-    "altitude": {"base": ureg.meter, "settings_key": "units_altitude"},
-    "airspeed": {"base": ureg.meter / ureg.second, "settings_key": "units_airspeed"},
-    "mass": {"base": ureg.kilogram, "settings_key": "units_mass"},
-    "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
-}
-
-def update_units(session):
-    for key, item in session["flight_data"]["flight"].items():
-        if isinstance(item, dict) and "class" in item:
-            category = item["class"]
-
-            if category in UNIT_MAP:
-                base_unit = UNIT_MAP[category]["base"]
-                settings_key = UNIT_MAP[category]["settings_key"]
-
-                # Get canonical value (always stored in base)
-                canonical = item["value"] * base_unit
-
-                # Get display unit from settings
-                display_unit = session["flight_data"]["settings"][settings_key]
-                converted = canonical.to(getattr(ureg, display_unit))
-
-                # Store both canonical and converted
-                item["output"] = f"{converted.magnitude:.2f} {converted.units}"
-
-
-@main.route('/units-update')
-def update_unitsRUN():
-    update_units(session)
-    session.modified = True
-    return 'updated', 200
-
-#-----------WEBTOOL NAVIGATION----------------------
+#----------------------WEBTOOL NAVIGATION-------------------------
 #main menu
 @main.route('/') #this will be the first to load up
 def index():
@@ -95,6 +56,48 @@ def performanceTab():
 @main.route('/debug')
 def debug_session():
     return jsonify(session.get("flight_data", {}))
+
+#-----------------UNITS CHANGING------------------------
+
+ureg = pint.UnitRegistry()
+ureg.formatter.default_format = "~" #use the shortened version by default
+
+
+UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding settings key
+    #for the unit that will actually be displayed
+    "distance": {"base": ureg.meter, "settings_key": "units_distance"},
+    "altitude": {"base": ureg.meter, "settings_key": "units_altitude"},
+    "airspeed": {"base": ureg.meter / ureg.second, "settings_key": "units_airspeed"},
+    "mass": {"base": ureg.kilogram, "settings_key": "units_mass"},
+    "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
+}
+
+def update_units(session):
+    for key, item in session["flight_data"]["flight"].items():
+        if isinstance(item, dict) and "class" in item:
+             #each unit gets a category to differentiate between unit groups
+            category = item["class"]
+
+            if category in UNIT_MAP:
+                base_unit = UNIT_MAP[category]["base"]
+                settings_key = UNIT_MAP[category]["settings_key"]
+
+                #get the base value, which is where the conversion starts from
+                canonical = item["value"] * base_unit
+
+                #get the unit to be converted to (and to be displayed) from settings
+                display_unit = session["flight_data"]["settings"][settings_key]
+                converted = canonical.to(getattr(ureg, display_unit))
+
+                #format the output so it has the number plus its units
+                item["output"] = f"{int(converted.magnitude)} {converted.units}"
+
+
+@main.route('/units-update')
+def update_unitsRUN():
+    update_units(session)
+    session.modified = True
+    return 'updated', 200
 
 #----------FLIGHT DATA AND SESSION MANAGEMENT------------------------------------
 
