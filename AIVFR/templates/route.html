@@ -17,5 +17,7 @@
     <div id="departure_name">{{ flight.departure_name }}</div>
 
     <!--Just a test, duration and distance are automatically calculated based on route. No inputs-->
-    <div>distanceTest:<input id="distance" type="text" name="distance" value="{{ flight.distance.output }}" placeholder="Enter a distance"></div>
+    <div>distanceTest:<input id="distanceINP" type="text" name="distance" placeholder="Enter a distance"></div>
+    <div id="distance">{{ flight.distance.output }}</div>
+    
 {% endblock %}

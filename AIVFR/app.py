@@ -65,9 +65,9 @@ ureg.formatter.default_format = "~" #use the shortened version by default
 
 UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding settings key
     #for the unit that will actually be displayed
-    "distance": {"base": ureg.meter, "settings_key": "units_distance"},
-    "altitude": {"base": ureg.meter, "settings_key": "units_altitude"},
-    "airspeed": {"base": ureg.meter / ureg.second, "settings_key": "units_airspeed"},
+    "distance": {"base": ureg.nautical_mile, "settings_key": "units_distance"},
+    "altitude": {"base": ureg.feet, "settings_key": "units_altitude"},
+    "airspeed": {"base": ureg.knot, "settings_key": "units_airspeed"},
     "mass": {"base": ureg.kilogram, "settings_key": "units_mass"},
     "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
 }
@@ -89,8 +89,12 @@ def update_units(session):
                 display_unit = session["flight_data"]["settings"][settings_key]
                 converted = canonical.to(getattr(ureg, display_unit))
 
+                #update the base unit to the current unit
+                base_unit = ureg[display_unit]
+                
+
                 #format the output so it has the number plus its units
-                item["output"] = f"{int(converted.magnitude)} {converted.units}"
+                item["output"] = f"{converted.magnitude:.1f} {converted.units}"
 
 
 @main.route('/units-update')

@@ -1,6 +1,6 @@
 const departureAirport_code = document.getElementById("departure_code");
 const departureAirport_name = document.getElementById("departure_name");
-const distance = document.getElementById("distance")
+const distanceINP = document.getElementById("distanceINP")
 
 async function update(key, value) { //async function allows code to work in quick succession
     await fetch("/update-flight", { //waits for any running fetch to complete
@@ -19,9 +19,9 @@ departureAirport_code.addEventListener("keydown", async (event) => {
 });
 
 //-------TESTING------------
-distance.addEventListener("keydown", async (event) => {
+distanceINP.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
-        await update("distance", {class: "distance", value: Number(distance.value),});
+        await update("distance", {class: "distance", value: Number(distanceINP.value),});
         fetch('/units-update')
     }
 });
