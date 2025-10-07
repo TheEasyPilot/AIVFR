@@ -15,12 +15,12 @@ def index():
 #settings menu
 @main.route('/settings')
 def settingsMenu():
-    return render_template('settings.html', settings=session["flight_data"]["settings"])
+    return render_template('settings.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #dashboard
 @main.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html', settings=session["flight_data"]["settings"])
+    return render_template('dashboard.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #Route tab
 @main.route('/route')
@@ -30,27 +30,27 @@ def routeTab():
 #weather tab
 @main.route('/weather')
 def weatherTab():
-    return render_template('weather.html', settings=session["flight_data"]["settings"])
+    return render_template('weather.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #navigation log tab
 @main.route('/navlog')
 def navlogTab():
-    return render_template('navlog.html', settings=session["flight_data"]["settings"])
+    return render_template('navlog.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #fuel tab
 @main.route('/fuel')
 def fuelTab():
-    return render_template('fuel.html', settings=session["flight_data"]["settings"])
+    return render_template('fuel.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #mass and balance tab
 @main.route('/mass-and-balance')
 def massAndBalanceTab():
-    return render_template('mass_and_balance.html', settings=session["flight_data"]["settings"])
+    return render_template('mass_and_balance.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #performance tab
 @main.route('/performance')
 def performanceTab():
-    return render_template('performance.html', settings=session["flight_data"]["settings"])
+    return render_template('performance.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #debug route that allows me to see the flight data at any time
 @main.route('/debug')
@@ -131,7 +131,7 @@ data_template = {
                   "units_fuel" : "litre",
                   "units_distance" : "nautical_mile"},
     "flight" : {
-        "saved" : "False",
+        "saved" : "True", #TEST
         "departureAirport_code" : "",
         "departureAirport_name" : "",
         "distance" : {"value" : 0, "class" : "distance"},
