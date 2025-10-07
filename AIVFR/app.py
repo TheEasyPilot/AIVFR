@@ -9,7 +9,7 @@ main = Blueprint('app', __name__)
 def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
-        update_units(session)
+        initialise_units(session)
     return render_template('menu.html', data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
@@ -72,7 +72,7 @@ UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding set
     "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
 }
 
-def update_units(session):
+def initialise_units(session):
     for key, item in session["flight_data"]["flight"].items():
         if isinstance(item, dict) and "class" in item:
              #each unit gets a category to differentiate between unit groups
@@ -82,16 +82,25 @@ def update_units(session):
                 base_unit = UNIT_MAP[category]["base"]
                 settings_key = UNIT_MAP[category]["settings_key"]
 
+                #update the base unit to the current unit
+                global display_unit
+                display_unit = session["flight_data"]["settings"][settings_key]
+                base_unit = ureg[display_unit]
+
+def update_units():
+    for key, item in session["flight_data"]["flight"].items():
+        if isinstance(item, dict) and "class" in item:
+             #each unit gets a category to differentiate between unit groups
+            category = item["class"]
+
+            if category in UNIT_MAP:
                 #get the base value, which is where the conversion starts from
+                base_unit = UNIT_MAP[category]["base"]
                 canonical = item["value"] * base_unit
 
                 #get the unit to be converted to (and to be displayed) from settings
-                display_unit = session["flight_data"]["settings"][settings_key]
+                global display_unit
                 converted = canonical.to(getattr(ureg, display_unit))
-
-                #update the base unit to the current unit
-                base_unit = ureg[display_unit]
-                
 
                 #format the output so it has the number plus its units
                 unit_name = str(converted.units)
@@ -114,7 +123,8 @@ CUSTOM_UNITS = {
 
 @main.route('/units-update')
 def update_unitsRUN():
-    update_units(session)
+    update_units()
+    initialise_units(session) #re-initialise to ensure the base unit matches the new unit
     session.modified = True
     return 'updated', 200
 
