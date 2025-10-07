@@ -9,7 +9,7 @@ function updateSettings(key, value) {
         fetch("/update-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key, value,})
+        body: JSON.stringify({ key, value})
     });
     }
 

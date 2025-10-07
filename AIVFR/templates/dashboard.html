@@ -10,5 +10,8 @@
 {% endblock %}
 
 {% block content %} {# edit what's in between the content block #}
-    <div id="title">DASHBOARD</div>
+    <div id="header" display="flex">
+        <div id="title">DASHBOARD</div>
+        <button id="save" class="{{ 'savingOrSaved' if flight.saved == 'True' else '' }}">{{ 'SAVED' if flight.saved == 'True' else 'SAVE FLIGHT' }}</button>
+    </div>
 {% endblock %}

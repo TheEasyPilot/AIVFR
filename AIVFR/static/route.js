@@ -6,9 +6,20 @@ async function update(key, value) { //async function allows code to work in quic
     await fetch("/update-flight", { //waits for any running fetch to complete
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key, value, saved: "False" })
+        body: JSON.stringify({key, value})
     });
+
+    // Mark as unsaved
+    if (key !== "saved") {
+        await fetch("/update-flight", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({key: "saved", value: "False"})
+        });
+    }
 }
+
+//-------Departure Airport (ICAO)------------
 
 departureAirport_code.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
