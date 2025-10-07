@@ -94,8 +94,23 @@ def update_units(session):
                 
 
                 #format the output so it has the number plus its units
-                item["output"] = f"{converted.magnitude:.1f} {converted.units}"
+                unit_name = str(converted.units)
+                unit_name = CUSTOM_UNITS.get(unit_name, unit_name)
+                item["output"] = f"{converted.magnitude:.1f} {unit_name}"
 
+#using custom units cus the default ones are weird
+CUSTOM_UNITS = {
+    'nmi' : "NM",
+    'knot' : "kts",
+    'kg' : "kg",
+    'lb' : "lbs",
+    'litre' : "L",
+    'gallon' : "gal",
+    'feet' : "ft",
+    'meter' : "m",
+    'kilometer' : "km",
+    'smi' : "miles",
+}
 
 @main.route('/units-update')
 def update_unitsRUN():
@@ -118,7 +133,7 @@ data_template = {
     "flight" : {
         "saved" : "False",
         "departureAirport_code" : "",
-        "departureAiport_name" : "",
+        "departureAirport_name" : "",
         "distance" : {"value" : 0, "class" : "distance"},
     }
 }
@@ -169,64 +184,3 @@ def NewFlightRun():
 #shows any errors on the actual page
 if __name__ == '__main__':
     main.run(debug=True)
-    
-'''
-Installation
-You can install pint via pip:
-pip install pint
-Basic Setup
-Before using pint, you need to create a Unit Registry, which maintains all your units and conversions:
-import pint
-
-# Initialize unit registry
-ureg = pint.UnitRegistry()
-Defining Quantities
-Quantities are defined by multiplying a numeric value by a unit from the registry:
-# Define distance and time
-distance = 10 * ureg.mile
-time = 2 * ureg.hour
-
-print(distance)  # 10 mile
-print(time)      # 2 hour
-Converting Units
-Use the .to() method to convert between different units:
-# Distance conversion
-distance_km = distance.to(ureg.kilometer)
-print(f"10 miles is {distance_km:.2f} km")
-
-# Speed calculation
-speed = distance / time       # resulting unit: miles/hour
-speed_in_kph = speed.to(ureg.kilometer / ureg.hour)
-print(f"Speed: {speed_in_kph:.2f} km/h")
-
-Volume Conversion Example
-pint supports a wide variety of units including volume:
-# Define gallons
-volume_gallons = 5 * ureg.gallon
-
-# Convert to liters
-volume_liters = volume_gallons.to(ureg.liter)
-print(f"5 gallons is {volume_liters:.2f} liters")
-
-Combining Units (Derived Units)
-You can perform calculations with multiple units and convert the result:
-# Define speed in miles per hour
-speed_mph = 60 * ureg.mile / ureg.hour
-# Convert to knots (nautical miles per hour)
-speed_knots = speed_mph.to(ureg.knot)
-print(f"60 mph is {speed_knots:.2f} knots")
-
-Arithmetic with Units
-pint allows you to perform arithmetic while keeping track of units:
-distance1 = 3 * ureg.km
-distance2 = 2 * ureg.mile
-
-total_distance = distance1 + distance2.to(ureg.km)
-print(f"Total distance: {total_distance:.2f} km")
-
-Custom Units
-You can add your own units if needed:
-ureg.define("smoot = 1.7018 meter")
-height = 5 * ureg.smoot
-print(f"Height in meters: {height.to(ureg.meter):.2f} m")
-'''

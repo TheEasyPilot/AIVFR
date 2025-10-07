@@ -13,8 +13,8 @@
 {% block content %} {# edit what's in between the content block #}
     <div id="title">ROUTE</div>
 
-    <div>From:<input id="departure_code" type="text" name="departure_code" placeholder="ICAO Code" value="{{ flight.departure_code }}"></div>
-    <div id="departure_name">{{ flight.departure_name }}</div>
+    <div>From:<input id="departure_code" type="text" name="departure_code" placeholder="ICAO Code" value="{{ flight.departureAirport_code }}"></div>
+    <div id="departure_name">{{ flight.departureAirport_name }}</div>
 
     <!--Just a test, duration and distance are automatically calculated based on route. No inputs-->
     <div>distanceTest:<input id="distanceINP" type="text" name="distance" placeholder="Enter a distance"></div>
