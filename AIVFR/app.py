@@ -10,6 +10,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         initialise_units(session)
+        update_units()
     return render_template('menu.html', data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
@@ -72,6 +73,15 @@ UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding set
     "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
 }
 
+#Store previous units in session settings for conversion
+UNIT_SETTINGS_KEYS = {
+    "distance": "units_distance",
+    "altitude": "units_altitude",
+    "airspeed": "units_airspeed",
+    "mass": "units_mass",
+    "fuel": "units_fuel",
+}
+
 def initialise_units(session):
     for key, item in session["flight_data"]["flight"].items():
         if isinstance(item, dict) and "class" in item:
@@ -79,33 +89,49 @@ def initialise_units(session):
             category = item["class"]
 
             if category in UNIT_MAP:
-                base_unit = UNIT_MAP[category]["base"]
                 settings_key = UNIT_MAP[category]["settings_key"]
 
                 #update the base unit to the current unit
-                global display_unit
+                display_unit = session["flight_data"]["settings"][settings_key]
+                UNIT_MAP[category]["base"] = ureg[display_unit]
+
+def update_units():
+    units_changed = session["flight_data"]["settings"].get("units_changed", "False") == "True"
+    for key, item in session["flight_data"]["flight"].items():
+        if isinstance(item, dict) and "class" in item:
+            category = item["class"]
+            if category in UNIT_MAP:
+                settings_key = UNIT_MAP[category]["settings_key"]
                 display_unit = session["flight_data"]["settings"][settings_key]
                 base_unit = ureg[display_unit]
 
-def update_units():
-    for key, item in session["flight_data"]["flight"].items():
-        if isinstance(item, dict) and "class" in item:
-             #each unit gets a category to differentiate between unit groups
-            category = item["class"]
+                #Store previous unit in session settings if not present
+                prev_unit_key = f"prev_{settings_key}"
+                if prev_unit_key not in session["flight_data"]["settings"]:
+                    session["flight_data"]["settings"][prev_unit_key] = display_unit
 
-            if category in UNIT_MAP:
-                #get the base value, which is where the conversion starts from
-                base_unit = UNIT_MAP[category]["base"]
+                if units_changed:
+                    #Convert value from previous unit to new unit
+                    prev_unit = session["flight_data"]["settings"].get(prev_unit_key, display_unit)
+                    try:
+                        prev_quantity = item["value"] * ureg[prev_unit]
+                        new_quantity = prev_quantity.to(base_unit)
+                        item["value"] = float(new_quantity.magnitude)
+                    except Exception:
+                        pass 
+                    #Update previous unit to current
+                    session["flight_data"]["settings"][prev_unit_key] = display_unit
+
+                #Always update output
                 canonical = item["value"] * base_unit
-
-                #get the unit to be converted to (and to be displayed) from settings
-                global display_unit
-                converted = canonical.to(getattr(ureg, display_unit))
-
-                #format the output so it has the number plus its units
+                converted = canonical.to(base_unit)
                 unit_name = str(converted.units)
                 unit_name = CUSTOM_UNITS.get(unit_name, unit_name)
                 item["output"] = f"{converted.magnitude:.1f} {unit_name}"
+
+    #Reset the flag to show units have been updated
+    session["flight_data"]["settings"]["units_changed"] = "False"
+    session.modified = True
 
 #using custom units cus the default ones are weird
 CUSTOM_UNITS = {
@@ -123,10 +149,17 @@ CUSTOM_UNITS = {
 
 @main.route('/units-update')
 def update_unitsRUN():
-    update_units()
-    initialise_units(session) #re-initialise to ensure the base unit matches the new unit
-    session.modified = True
-    return 'updated', 200
+    if session["flight_data"]["settings"]["units_changed"] == "True":
+        update_units()
+        initialise_units(session) #re-initialise to ensure the base unit matches the new unit
+        session["flight_data"]["settings"]["units_changed"] = "False"
+        session.modified = True
+        return 'updated', 200
+    
+    else:
+        update_units()
+        return 'no change', 200
+
 
 #----------FLIGHT DATA AND SESSION MANAGEMENT------------------------------------
 
@@ -135,19 +168,20 @@ def update_unitsRUN():
 
 data_template = {
     "settings" : {"theme": "light",
+                  "units_changed": "False", #check if units have been changed
                   "units_airspeed" : "knot",
                   "units_altitude" : "feet",
                   "units_mass": "kilogram",
                   "units_fuel" : "litre",
                   "units_distance" : "nautical_mile"},
     "flight" : {
-        "saved" : "True", #TEST
+        "saved" : "False",
         "departureAirport_code" : "",
         "departureAirport_name" : "",
         "distance" : {"value" : 0, "class" : "distance"},
     }
 }
-#----------UPDATING/MODIFYING DATA------------------
+#-------------UPDATING/MODIFYING DATA-----------------
 
 #Updating Settings data
 @main.route("/update-settings", methods=["POST"])
@@ -155,7 +189,10 @@ def update_settings():
     key = request.json.get("key")
     value = request.json.get("value")
     session["flight_data"]["settings"][key] = value
-    session.modified = True # To check if change happened successfully
+    if key.startswith("units_"):
+        session["flight_data"]["settings"]["units_changed"] = "True" #flag to show units have changed
+    session.modified = True
+
     return jsonify(session["flight_data"])
 
 #Updating flight data
@@ -164,7 +201,8 @@ def update_flight():
     key = request.json.get("key")
     value = request.json.get("value")
     session["flight_data"]["flight"][key] = value
-    session.modified = True # To check if change happened successfully
+    update_units() #update units in case a unit value was changed
+    session.modified = True
     return jsonify(session["flight_data"])
 
 #---------------READING DATA------------------------
