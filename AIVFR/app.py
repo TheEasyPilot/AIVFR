@@ -9,7 +9,6 @@ main = Blueprint('app', __name__)
 def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
-        initialise_units(session)
         update_units()
     return render_template('menu.html', data=session["flight_data"], settings=session["flight_data"]["settings"])
 
@@ -73,28 +72,6 @@ UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding set
     "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
 }
 
-#Store previous units in session settings for conversion
-UNIT_SETTINGS_KEYS = {
-    "distance": "units_distance",
-    "altitude": "units_altitude",
-    "airspeed": "units_airspeed",
-    "mass": "units_mass",
-    "fuel": "units_fuel",
-}
-
-def initialise_units(session):
-    for key, item in session["flight_data"]["flight"].items():
-        if isinstance(item, dict) and "class" in item:
-             #each unit gets a category to differentiate between unit groups
-            category = item["class"]
-
-            if category in UNIT_MAP:
-                settings_key = UNIT_MAP[category]["settings_key"]
-
-                #update the base unit to the current unit
-                display_unit = session["flight_data"]["settings"][settings_key]
-                UNIT_MAP[category]["base"] = ureg[display_unit]
-
 def update_units():
     units_changed = session["flight_data"]["settings"].get("units_changed", "False") == "True"
     for key, item in session["flight_data"]["flight"].items():
@@ -103,7 +80,7 @@ def update_units():
             if category in UNIT_MAP:
                 settings_key = UNIT_MAP[category]["settings_key"]
                 display_unit = session["flight_data"]["settings"][settings_key]
-                base_unit = ureg[display_unit]
+                current_unit = ureg[display_unit]
 
                 #Store previous unit in session settings if not present
                 prev_unit_key = f"prev_{settings_key}"
@@ -115,7 +92,7 @@ def update_units():
                     prev_unit = session["flight_data"]["settings"].get(prev_unit_key, display_unit)
                     try:
                         prev_quantity = item["value"] * ureg[prev_unit]
-                        new_quantity = prev_quantity.to(base_unit)
+                        new_quantity = prev_quantity.to(current_unit)
                         item["value"] = float(new_quantity.magnitude)
                     except Exception:
                         pass 
@@ -123,8 +100,8 @@ def update_units():
                     session["flight_data"]["settings"][prev_unit_key] = display_unit
 
                 #Always update output
-                canonical = item["value"] * base_unit
-                converted = canonical.to(base_unit)
+                canonical = item["value"] * current_unit
+                converted = canonical.to(current_unit)
                 unit_name = str(converted.units)
                 unit_name = CUSTOM_UNITS.get(unit_name, unit_name)
                 item["output"] = f"{converted.magnitude:.1f} {unit_name}"
@@ -151,7 +128,6 @@ CUSTOM_UNITS = {
 def update_unitsRUN():
     if session["flight_data"]["settings"]["units_changed"] == "True":
         update_units()
-        initialise_units(session) #re-initialise to ensure the base unit matches the new unit
         session["flight_data"]["settings"]["units_changed"] = "False"
         session.modified = True
         return 'updated', 200
@@ -168,7 +144,7 @@ def update_unitsRUN():
 
 data_template = {
     "settings" : {"theme": "light",
-                  "units_changed": "False", #check if units have been changed
+                  "units_changed": "False",
                   "units_airspeed" : "knot",
                   "units_altitude" : "feet",
                   "units_mass": "kilogram",
