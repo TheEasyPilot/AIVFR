@@ -23,17 +23,18 @@
     font-weight: 600;
     padding: 8px 26px;
     border-radius: 5px;
-    border:1px solid var(--text);
-    background-color: var(--bg);
+    border: none;
+    background-color: var(--highlight);
 }
 
 #save:hover {
     cursor: pointer;
-    background-color: var(--onhover);
+    background-color: var(--primary);
 }
 
 #save.savingOrSaved { /*user feedback when saving/saved */
-    border: 1px solid gray;
+    background-color: var(--onhover);
+    border: none;
     color: gray;
     cursor: not-allowed;
     pointer-events: none;
