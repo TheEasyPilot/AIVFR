@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, jsonify, request, Response, redirect, url_for
+from flask import Blueprint, render_template, session, jsonify, request, Response, make_response, redirect, url_for
 import json, os, copy, pint
 
 main = Blueprint('app', __name__)
@@ -154,6 +154,8 @@ data_template = {
         "saved" : "False",
         "departureAirport_code" : "",
         "departureAirport_name" : "",
+        "destinationAirport_code" : "",
+        "destinationAirport_name" : "",
         "distance" : {"value" : 0, "class" : "distance"},
     }
 }
@@ -195,6 +197,10 @@ def get_flight():
 
 #---------------EXPORTING DATA-----------------------
 
+#saves the current flight data as a json file
+@main.route("/save-flight")
+def save_flight():
+    return jsonify(dict(session))
 
 #------------STARTING A NEW FLIGHT------------------
 
