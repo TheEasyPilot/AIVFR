@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //---------------------------LOAD FLIGHT
 
+    //saves the name of the uploaded file to display in the popup
     document.getElementById('flightFile').addEventListener('change', function() {
     var fileName = this.files[0] ? this.files[0].name : '';
     document.getElementById('fileName').textContent = fileName;
