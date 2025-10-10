@@ -194,6 +194,19 @@ def get_flight():
     return jsonify(session["flight_data"]["flight"])
 #---------------IMPORTING DATA-----------------------
 
+@main.route("/load-flight", methods=["POST"])
+def load_flight():
+    if 'loaded_flight' not in request.files:
+        return jsonify({"error": "No file loaded"}), 400
+    file = request.files['loaded_flight']
+    try:
+        flight_data = json.load(file)
+        session["flight_data"] = flight_data
+        session.modified = True
+        update_units() #update units in case the loaded flight has different units
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 #---------------EXPORTING DATA-----------------------
 

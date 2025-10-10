@@ -1,17 +1,23 @@
 //ensuring the HTML has loaded properly before runing the script
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("JS LOADED") //confirming the script has now loaded
     //linking the buttons and disclaimer to the script
-    var disclaimer = document.getElementById("disclaimer");
-    var Continue = document.getElementById("continue");
-    var loadFlight = document.getElementById("loadFlight");
-    var newFlight = document.getElementById("newFlight");
-    var disclaimerContinue = document.getElementById("disclaimerACCEPT");
-    var disclaimerGoBack = document.getElementById("disclaimerEXIT");
+    const uploadFlight = document.getElementById("uploadFlight");
+    const disclaimer = document.getElementById("disclaimer");
+    const Continue = document.getElementById("continue");
+    const loadFlight = document.getElementById("loadFlight");
+    const newFlight = document.getElementById("newFlight");
+    const disclaimerContinue = document.getElementById("disclaimerACCEPT");
+    const disclaimerGoBack = document.getElementById("disclaimerEXIT");
+    const uploadFlightGoBack = document.getElementById("uploadFlightEXIT");
 
     //display the disclaimer
     function displayDisclaimer() { 
     disclaimer.style.display = "block";
+    }
+
+    //display the upload flight modal
+    function displayUploadFlight() {
+    uploadFlight.style.display = "block";
     }
 
     Continue.addEventListener("click", function() {
@@ -21,6 +27,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     loadFlight.addEventListener("click", function() {
         displayDisclaimer();
+        disclaimerContinue.onclick = function() {
+            disclaimer.style.display = "none";
+            displayUploadFlight();
+            }
     });
 
     newFlight.addEventListener("click", function() {
@@ -37,7 +47,12 @@ document.addEventListener("DOMContentLoaded", function() {
     disclaimer.style.display = "none";
     }
 
-    //---------------------------Continue, load, make new flight
+    //upload flight
+    uploadFlightGoBack.onclick = function() {
+    uploadFlight.style.display = "none";
+    }
+
+    //---------------------------CONTINUE FLIGHT
     
     function ContinueFlight() {
         disclaimerContinue.onclick = function() {
@@ -46,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    //---------------------------NEW FLIGHT
     function NewFlight() {
         fetch('/get-flight')
         .then(response => response.json())
@@ -59,4 +75,12 @@ document.addEventListener("DOMContentLoaded", function() {
     function clearSession() {
         fetch('/new-flight')
     }
+
+    //---------------------------LOAD FLIGHT
+
+    document.getElementById('flightFile').addEventListener('change', function() {
+    var fileName = this.files[0] ? this.files[0].name : '';
+    document.getElementById('fileName').textContent = fileName;
+    });
+
 

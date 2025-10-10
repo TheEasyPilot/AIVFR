@@ -43,5 +43,22 @@
     </div>
   </div>
   
+  <!--Upload Flight Modal-->
+  <div id="uploadFlight" class="modalUpload">
+    <div class="disclaimerContent">
+      <h1 id="disclaimerHeader">LOAD FLIGHT</h1>
+      <p>Select a valid flight file (.json) to load your previously saved flight.</p>
+      <form id="uploadFlightForm" enctype="multipart/form-data">
+        <!--form to allow the user to pick a JSON file from their device-->
+        <input  type="file" id="flightFile" name="flightFile" accept=".json" style="display:none;" />
+        <label for="flightFile" class="browse">BROWSE</label>
+        <span id="fileName">No file chosen</span> <!--separate file name element to allow custom button styling-->
+        <button type="submit" class="uploadFlightButton TARGET">LOAD FLIGHT</button>
+      </form>
+      <hr width="80%">
+      <button class="uploadFlightButton" id="uploadFlightEXIT">CANCEL</button>
+    </div>
+  </div>
+
   </body>
 </html>
