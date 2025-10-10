@@ -83,4 +83,3 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('fileName').textContent = fileName;
     });
 
-
