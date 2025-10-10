@@ -196,17 +196,21 @@ def get_flight():
 
 @main.route("/load-flight", methods=["POST"])
 def load_flight():
-    if 'loaded_flight' not in request.files:
-        return jsonify({"error": "No file loaded"}), 400
-    file = request.files['loaded_flight']
-    try:
-        flight_data = json.load(file)
-        session["flight_data"] = flight_data
+    try: #try block allows me to catch any errors and display them on the page
+        New_data = request.get_json()
+        if not isinstance(New_data, dict):
+            #raise an error if the data is not a dictionary
+            raise ValueError("Invalid data format")
+        
+        #replace the current session data with the new data
+        session.clear()
+        session.update(New_data)
+        update_units() #update units in case the loaded data has different units
         session.modified = True
-        update_units() #update units in case the loaded flight has different units
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
+
+        return jsonify({"status": "success", "message": "Flight data loaded successfully."}), 200
+    except Exception as error:
+        return jsonify({"status": "error", "message": str(error)}), 400
 
 #---------------EXPORTING DATA-----------------------
 

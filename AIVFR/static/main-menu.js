@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const disclaimerContinue = document.getElementById("disclaimerACCEPT");
     const disclaimerGoBack = document.getElementById("disclaimerEXIT");
     const uploadFlightGoBack = document.getElementById("uploadFlightEXIT");
+    const uploadFlightButton = document.getElementById("uploadFlightButton");
 
     //display the disclaimer
     function displayDisclaimer() { 
@@ -77,6 +78,32 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     //---------------------------LOAD FLIGHT
+
+    async function loadSession() {
+        const input = document.getElementById('flightFile');
+
+         //check if a file has been selected
+        if (!input.files.length) return alert("Please select a file to upload.");
+
+        //read the file as text
+        const file = input.files[0];
+        const text = await file.text();
+        let flightData;
+        try {
+            flightData = JSON.parse(text); //parse the text as JSON
+        } catch (error) { //return an error if the file is not valid JSON
+            return alert("Invalid file format. Please upload a valid JSON file.");
+        }
+
+        //send the flight data to the server
+        const response = await fetch('/load-flight', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(flightData)
+        });
+    }
 
     //saves the name of the uploaded file to display in the popup
     document.getElementById('flightFile').addEventListener('change', function() {
