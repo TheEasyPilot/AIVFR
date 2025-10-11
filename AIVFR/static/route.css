@@ -7,3 +7,43 @@
     background-color: var(--primary);
     pointer-events: none;
 }
+
+/*Main content*/
+#content {
+    grid-template-columns: 5fr 5fr;
+    display: grid; /* grid allows flexible layout */
+    gap: 10px;
+    border-radius: 10px;
+}
+
+.routeItem { /* all items in the route page */
+    margin: 2px;
+    background-color: var(--highlight);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* all these three items are in the first column */
+#route_setup, #ICAO_route, #route_generator {
+    grid-column: 1 / span 1; 
+}
+
+/*map remains in the second column but spans three rows*/
+#map {
+    grid-column: 2 / span 2;
+    grid-row: 1 / span 3;
+}
+
+/*splitting the route items to take fractions of the viewport height*/
+#route_setup {
+    height: 30vh;
+}
+
+#ICAO_route {
+    height: 20vh;
+}
+
+#route_generator {
+    height: 50vh;
+}
+

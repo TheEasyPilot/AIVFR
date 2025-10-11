@@ -15,9 +15,16 @@ header {
     justify-content: space-between;
     padding-left: 12px;
     padding-right: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
 }
 
 main {
+    position: relative;
+    top: 50px;
     margin-left: 60px;
     border: 1px none black;
     padding: 10px;
@@ -50,6 +57,7 @@ main {
   list-style-type: none;
   margin: 0;
   padding: 10px;
+  top: 50px;
   width: 60px;
   height: 100vh;
   background-color: var(--highlight);
@@ -97,6 +105,7 @@ hr  {
     padding-top: 8px;
     background-image: linear-gradient(to right, rgba(0,0,0,50%), rgba(0,0,0,0%));
     display: none;
+    z-index: 50;
 }
 
 /*all labels*/
@@ -112,10 +121,10 @@ hr  {
 }
 
 /*adjusting the label's absolute positions*/
-#dashboardLABEL { top: 10px; left: 10px; }
-#routeLABEL     { top: 75px; left: 10px; }
-#weatherLABEL   { top: 140px; left: 10px; }
-#navLABEL       { top: 210px; left: 10px; }
-#fuelLABEL      { top: 278px; left: 10px; }
-#mass_and_balanceLABEL   { top: 346px; left: 10px; }
-#performanceLABEL        { top: 414px; left: 10px; }
+#dashboardLABEL { top: 60px; left: 10px; }
+#routeLABEL     { top: 125px; left: 10px; }
+#weatherLABEL   { top: 192px; left: 10px; }
+#navLABEL       { top: 260px; left: 10px; }
+#fuelLABEL      { top: 327px; left: 10px; }
+#mass_and_balanceLABEL   { top: 395px; left: 10px; }
+#performanceLABEL        { top: 463px; left: 10px; }
