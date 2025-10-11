@@ -53,10 +53,11 @@
         <input  type="file" id="flightFile" name="flightFile" accept=".json" style="display:none;" />
         <label for="flightFile" class="browse">BROWSE</label>
         <span id="fileName">No file chosen</span> <!--separate file name element to allow custom button styling-->
-        <button type="submit" class="uploadFlightButton TARGET" onclick="loadSession()">LOAD FLIGHT</button>
+        <button type="submit" class="uploadFlightButton TARGET">LOAD FLIGHT</button>
       </form>
       <hr width="80%">
       <button class="uploadFlightButton" id="uploadFlightEXIT">CANCEL</button>
+      <div id="uploadStatus"></div>
     </div>
   </div>
 
