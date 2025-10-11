@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="../static/base.css"/>
     <link rel="stylesheet" href="../static/components.css"/>
     <link rel="stylesheet" href="../static/basePage.css"/>
-    <link rel="stylesheet" href="../static/dashboard.css"/> <!--specific page css-->
+    <link rel="stylesheet" href="../static/route.css"/> <!--specific page css-->
     <link rel="icon" type="image/png" href="../static/FPWT_images/logoAIVFR.png">
     <script src="../static/basePage.js" defer></script>
-    <script src="../static/dashboard.js" defer></script> <!--specific page js-->
+    <script src="../static/route.js" defer></script> <!--specific page js-->
 
   </head>
   
@@ -63,12 +63,41 @@
     </nav>
 
     <main>
-    <div id="header" display="flex">
-        <div id="title">DASHBOARD</div>
-        <button id="save" class="{{ 'savingOrSaved' if flight.saved == 'True' else '' }}">SAVE FLIGHT <!--temporary fix to avoid jinja2Clash--></button>
-    </div>
+      <div id="title">ROUTE</div>
+      <div id="content" display="grid">
+        
+        <!--ROUTE SETUP-->
+        <div id="route_setup" class="routeItem">
+          ROUTE SETUP
+        </div>
+    
+        <!--ROUTE IN ICAO FORMAT-->
+        <div id="ICAO_route" class="routeItem">
+          ICAO ROUTE
+        </div>
+        
+        <!--AI ROUTE GENERATOR-->
+        <div id="route_generator" class="routeItem">
+          ROUTE GENERATOR
+        </div>
+        
+        <!--MAP-->
+        <div id="map" class="routeItem">
+          MAP
+        </div>
+      </div>
+
     </main>
   </body>
 </html>
 
 
+<!--
+
+    <div>From:<input id="departure_code" type="text" name="departure_code" placeholder="ICAO Code" value="{{ flight.departureAirport_code }}"></div>
+    <div id="departure_name">{{ flight.departureAirport_name }}</div>
+
+    Just a test, duration and distance are automatically calculated based on route. No inputs
+    <div>distanceTest:<input id="distanceINP" type="text" name="distance" placeholder="Enter a distance"></div>
+    <div id="distance">{{ flight.distance.output }}</div>
+  -->
