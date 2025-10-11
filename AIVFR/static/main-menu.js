@@ -9,7 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const disclaimerContinue = document.getElementById("disclaimerACCEPT");
     const disclaimerGoBack = document.getElementById("disclaimerEXIT");
     const uploadFlightGoBack = document.getElementById("uploadFlightEXIT");
-    const uploadFlightButton = document.getElementById("uploadFlightButton");
+    const uploadFlightForm = document.getElementById("uploadFlightForm");
+    const uploadStatus = document.getElementById("uploadStatus");
+    
 
     //display the disclaimer
     function displayDisclaimer() { 
@@ -79,11 +81,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //---------------------------LOAD FLIGHT
 
+    uploadFlightForm.addEventListener('submit', function(event) {
+        uploadStatus.textContent = ""; 
+        uploadStatus.textContent = "Uploading...";
+        
+        event.preventDefault(); //prevent the default form submission (so the URL doesn't change)
+        loadSession(); //call the function to load the session
+    });
+
     async function loadSession() {
         const input = document.getElementById('flightFile');
 
          //check if a file has been selected
-        if (!input.files.length) return alert("Please select a file to upload.");
+        if (!input.files.length) return uploadStatus.textContent = "Please select a file to upload.";
 
         //read the file as text
         const file = input.files[0];
@@ -92,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
         try {
             flightData = JSON.parse(text); //parse the text as JSON
         } catch (error) { //return an error if the file is not valid JSON
-            return alert("Invalid file format. Please upload a valid JSON file.");
+            return uploadStatus.textContent = "Invalid file format. Please upload a valid JSON file.";
         }
 
         //send the flight data to the server
@@ -103,6 +113,18 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(flightData)
         });
+
+        if (response.ok) { //check if the response is okay (it passed the server-side validation)
+            uploadStatus.style.color = "green";
+            uploadStatus.textContent = "Flight loaded successfully, redirecting to dashboard...";
+            setTimeout(() => {
+                window.open("dashboard", '_self'); //redirect to dashboard after a short delay
+            }, 1000);
+        }  else { //if the response is not okay, display the error message from the server
+            const errorData = await response.json();
+            uploadStatus.style.color = "red";
+            uploadStatus.textContent = errorData.error || "An error occurred while loading the flight.";
+        }
     }
 
     //saves the name of the uploaded file to display in the popup
