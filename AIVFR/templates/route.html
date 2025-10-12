@@ -11,13 +11,27 @@
 {% endblock %}
 
 {% block content %} {# edit what's in between the content block #}
-    <div id="title">ROUTE</div>
-
-    <div>From:<input id="departure_code" type="text" name="departure_code" placeholder="ICAO Code" value="{{ flight.departureAirport_code }}"></div>
-    <div id="departure_name">{{ flight.departureAirport_name }}</div>
-
-    <!--Just a test, duration and distance are automatically calculated based on route. No inputs-->
-    <div>distanceTest:<input id="distanceINP" type="text" name="distance" placeholder="Enter a distance"></div>
-    <div id="distance">{{ flight.distance.output }}</div>
+      <div id="title">ROUTE</div>
+      <div id="content" display="grid">
+        
+        <!--ROUTE SETUP-->
+        <div id="route_setup" class="routeItem">
+          ROUTE SETUP
+        </div>
     
+        <!--ROUTE IN ICAO FORMAT-->
+        <div id="ICAO_route" class="routeItem">
+          ICAO ROUTE
+        </div>
+        
+        <!--AI ROUTE GENERATOR-->
+        <div id="route_generator" class="routeItem">
+          ROUTE GENERATOR
+        </div>
+        
+        <!--MAP-->
+        <div id="map" class="routeItem">
+          MAP
+        </div>
+      </div>
 {% endblock %}

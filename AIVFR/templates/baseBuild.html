@@ -65,22 +65,49 @@
     <main>
       <div id="title">ROUTE</div>
       <div id="content" display="grid">
-        
-        <!--ROUTE SETUP-->
+<!----------------------------------------------------------ROUTE SETUP-->
         <div id="route_setup" class="routeItem">
-          ROUTE SETUP
+
+          <!----------HEADER-------------->
+          <div id="route_setup_header">
+            <div> <!--Title with tooltip-->
+              <h3>Route Setup<svg xmlns="http://www.w3.org/2000/svg" id="routeSetupTooltip" width="20" xmlns:xlink="http://www.w3.org/1999/xlink" style="enable-background:new 0 0 16 16;" fill="currentColor" version="1.1" viewBox="0 0 16 16" xml:space="preserve"><g id="Guide"/><g id="Layer_2"><g><path d="M8,2C4.69,2,2,4.69,2,8s2.69,6,6,6s6-2.69,6-6S11.31,2,8,2z M8,13c-2.76,0-5-2.24-5-5s2.24-5,5-5s5,2.24,5,5    S10.76,13,8,13z"/><path d="M8,6.85c-0.28,0-0.5,0.22-0.5,0.5v3.4c0,0.28,0.22,0.5,0.5,0.5s0.5-0.22,0.5-0.5v-3.4C8.5,7.08,8.28,6.85,8,6.85z"/><path d="M8.01,4.8C7.75,4.78,7.51,5.05,7.5,5.32c0,0.01,0,0.07,0,0.08c0,0.27,0.21,0.47,0.49,0.48c0,0,0.01,0,0.01,0    c0.27,0,0.49-0.24,0.5-0.5c0-0.01,0-0.11,0-0.11C8.5,4.98,8.29,4.8,8.01,4.8z"/></g></g></svg></h3>
+            </div>
+            
+            <div> <!--Route time & distance-->
+              TIME | DISTANCE
+            </div>
+          </div>
+          <!----------BODY-------------->
+          <div id="route_setup_body">
+            <div>
+            <!--DEPARTURE--> From: <input id="departure_code" type="text" name="departure_code" placeholder="ICAO Code" value="EGSX">
+            <!--DEPARTURE_NAME--> <span id="departure_name">North Weald</span>
+
+            <!--ARROW--> <span><svg xmlns="http://www.w3.org/2000/svg" id="toArrow" width="40" viewBox="0 0 32 32"><defs><style>.cls-1{fill:none;}</style></defs><title/><g data-name="Layer 2" id="Layer_2"><path d="M13,26a1,1,0,0,1-.71-.29l-9-9a1,1,0,0,1,0-1.42l9-9a1,1,0,1,1,1.42,1.42L5.41,16l8.3,8.29a1,1,0,0,1,0,1.42A1,1,0,0,1,13,26Z"/><path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z"/></g><g id="frame"><rect class="cls-1" height="32" width="32"/></g></svg></span>
+
+            <!--ARRIVAL--> <span>To: <input id="arrival_code" type="text" name="arrival_code" placeholder="ICAO Code" value="EGKA"></span>
+            <!--ARRIVAL_NAME--> <span id="arrival_name">Shoreham</span>
+            </div>
+
+            <!--VIA--> Via: <input id="via_code" type="text" name="via_code" placeholder="ICAO Code" value="">
+            <!--VIA_LIST--> <span id="via_list">NAME</span>
+            <br>
+            <!--ALTERNATE--> Alternate: <input id="alternate_code" type="text" name="alternate_code" placeholder="ICAO Code" value=""></>
+            <!--ALTERNATE_NAME--> <span id="alternate_name">NAME</span>
+            
+          </div>
         </div>
-    
-        <!--ROUTE IN ICAO FORMAT-->
+<!---------------------------------------ROUTE IN ICAO FORMAT----->
         <div id="ICAO_route" class="routeItem">
           ICAO ROUTE
         </div>
-        
+<!------------------------------------------------------------>
         <!--AI ROUTE GENERATOR-->
         <div id="route_generator" class="routeItem">
           ROUTE GENERATOR
         </div>
-        
+<!------------------------------------------------------------>
         <!--MAP-->
         <div id="map" class="routeItem">
           MAP
