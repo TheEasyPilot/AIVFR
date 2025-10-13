@@ -37,6 +37,7 @@
 /*splitting the route items to take fractions of the viewport height*/
 #route_setup {
     height: 30vh;
+    padding: 15px
 }
 
 #ICAO_route {
@@ -52,6 +53,7 @@
 #route_setup_header {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 #routeSetupTooltip {
@@ -65,6 +67,31 @@
     vertical-align: middle;
     color: var(--text);
     transform: scaleX(-1); /* flip the arrow horizontally */
+    margin: 0 15px;
 
 }
 
+#departureArrival, #via, #alternate {
+    color: var(--text);
+    font-weight: 600;
+}
+
+#departure_name, #arrival_name, #via_list, #alternate_name {
+    font-weight: 400;
+    margin-left: 10px;
+    color: var(--text);
+    background-color: var(--bg);
+    padding: 5px 10px;
+}
+
+input {
+    border: 1px solid var(--text);
+    border-radius: 5px;
+    padding: 3px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Manrope';
+    font-size: 16px;
+}

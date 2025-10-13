@@ -156,7 +156,10 @@ data_template = {
         "departureAirport_name" : "",
         "destinationAirport_code" : "",
         "destinationAirport_name" : "",
+        "alternateAirport_code" : "",
+        "alternateAirport_name" : "",
         "distance" : {"value" : 0, "class" : "distance"},
+        "time" : "",
     }
 }
 #-------------UPDATING/MODIFYING DATA-----------------
