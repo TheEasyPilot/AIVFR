@@ -1,6 +1,4 @@
-const departureAirport_code = document.getElementById("departure_code");
-const departureAirport_name = document.getElementById("departure_name");
-const distanceINP = document.getElementById("distanceINP")
+
 
 async function update(key, value) { //async function allows code to work in quick succession
     await fetch("/update-flight", { //waits for any running fetch to complete
@@ -20,6 +18,8 @@ async function update(key, value) { //async function allows code to work in quic
 }
 
 //-------Departure Airport (ICAO)------------
+const departureAirport_code = document.getElementById("departure_code");
+const departureAirport_name = document.getElementById("departure_name");
 
 departureAirport_code.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
@@ -29,10 +29,27 @@ departureAirport_code.addEventListener("keydown", async (event) => {
     }
 });
 
-//-------TESTING------------
-distanceINP.addEventListener("keydown", async (event) => {
+//-------Arrival Airport (ICAO)------------
+
+const arrivalAirport_code = document.getElementById("arrival_code");
+const arrivalAirport_name = document.getElementById("arrival_name");
+
+arrivalAirport_code.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
-        await update("distance", {class: "distance", value: Number(distanceINP.value),});
-        fetch('/units-update')
+        await update("destinationAirport_code", arrivalAirport_code.value);
+        //at this point we validate data and then search for the aerodrome
+        await update("destinationAirport_name", `airport name for ${arrivalAirport_code.value}`);
+    }
+});
+
+//-------Alternate Airport (ICAO)------------
+const alternateAirport_code = document.getElementById("alternate_code");
+const alternateAirport_name = document.getElementById("alternate_name");
+
+alternateAirport_code.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+        await update("alternateAirport_code", alternateAirport_code.value);
+        //at this point we validate data and then search for the aerodrome
+        await update("alternateAirport_name", `airport name for ${alternateAirport_code.value}`);
     }
 });
