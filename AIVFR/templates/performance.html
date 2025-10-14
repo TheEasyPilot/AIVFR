@@ -2,7 +2,7 @@
 
 {% block head %}  {{ super() }} {# inherit everything from the head but add this too #}
 <link rel="stylesheet" href="{{ url_for('static', filename='performance.css') }}">
-<script src="{{ url_for('static', filename='performance.js') }}" defer></script>
+<script type='module' src="{{ url_for('static', filename='performance.js') }}" defer></script>
 {% endblock %}
 
 {% block title %} {# edit whats in the title block #}
@@ -10,5 +10,8 @@
 {% endblock %}
 
 {% block content %} {# edit what's in between the content block #}
-    <div id="title">PERFORMANCE</div>
+    <div class="pageTitle" style="display: flex; align-items: center; gap: 10px;">
+        <div id="title">PERFORMANCE</div>
+        <span id="alertBox"></span>
+    </div>
 {% endblock %}

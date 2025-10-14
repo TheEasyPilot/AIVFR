@@ -128,3 +128,18 @@ hr  {
 #fuelLABEL      { top: 327px; left: 10px; }
 #mass_and_balanceLABEL   { top: 395px; left: 10px; }
 #performanceLABEL        { top: 463px; left: 10px; }
+
+/*alert box*/
+#alertBox {
+    display: none;
+    background-color: hsla(0 100% 50% / 0.6);
+    color: var(--highlight);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, -50%); /*center the box*/
+}
