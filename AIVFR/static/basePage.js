@@ -53,5 +53,35 @@ for (let buttonId in pairs) {
   }
 }
 
+//----------------------Updating data---------------------
+export async function update(key, value) { //async function allows code to work in quick succession
+    await fetch("/update-flight", { //waits for any running fetch to complete
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({key, value})
+    });
+
+    // Mark as unsaved
+    if (key !== "saved") {
+        await fetch("/update-flight", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({key: "saved", value: "False"})
+        });
+    }
+}
+
+//-------Alert Box--------------
+const alertBox = document.getElementById("alertBox");
+
+export function showAlert(message) {
+    alertBox.textContent = message;
+    alertBox.style.display = "inline";
+    setTimeout(() => {
+        alertBox.style.display = "none";
+        alertBox.textContent = "";
+    }, 3000);
+}
+
 
 

@@ -234,3 +234,47 @@ def NewFlightRun():
 #shows any errors on the actual page
 if __name__ == '__main__':
     main.run(debug=True)
+
+
+#----------------FETCHING AIRPORT NAME FROM API---------------------
+
+@main.route("/fetch-airport-name", methods=["POST"])
+def fetch_airport_name():
+    code = request.json.get("code")
+
+
+
+
+'''
+FUNCTION fetchAirportName(code):
+BEGIN
+    IF verifyICAO(code) THEN
+
+        headers = {
+            "x-openaip-api-key": api_key_openaip
+        }
+        params = {
+            "search": str(code)
+        }
+        url = "https://api.core.openaip.net/api/airports"
+
+        response = requests.get(url, headers=headers, params=params)
+
+        data = response.json()
+        airport = data["items"][0]
+
+        *to be parsed, then:*
+
+        Code = airport["ICAOcode"]
+        Name = airport["name"]
+
+        IF error ocurred OR Code != code THEN
+        RETURN False
+
+        ELSEIF Code == code THEN
+            RETURN name
+        ENDIF
+    ENDIF
+END
+
+'''
