@@ -13,7 +13,7 @@ headers = {
 }
 
 params = {
-    "search": "KDEN"
+    "search": "EGSS"
 }
 
 url = "https://api.core.openaip.net/api/airports"
@@ -53,7 +53,6 @@ for rw in airport["runways"]:
 
 '''
 
-'''
 url = "https://api.checkwx.com/taf/EGLL/decoded"
 
 response = requests.request("GET", url, headers={'X-API-Key': api_key_wx})
@@ -84,3 +83,4 @@ airport = data["items"][0]  # We searched EGSS, so only one result
 name = airport["name"]
 icao = airport["icaoCode"]
 print(f"Airport: {name} / {icao}")
+'''
