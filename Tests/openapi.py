@@ -6,7 +6,7 @@ import json
 load_dotenv()
 api_key_openaip = os.getenv("OPENAIP_API_KEY")
 api_key_wx = os.getenv("CHECKWXAPI_API_KEY")
-'''
+
 # Correct header for public API
 headers = {
     "x-openaip-api-key": api_key_openaip
@@ -59,7 +59,7 @@ url = "https://api.checkwx.com/taf/EGLL/decoded"
 response = requests.request("GET", url, headers={'X-API-Key': api_key_wx})
 
 print(response.json())
-'''
+
 
 # Correct header for public API
 header = {

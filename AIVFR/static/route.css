@@ -82,6 +82,12 @@
     color: var(--text);
     background-color: var(--bg);
     padding: 5px 10px;
+    display: none; /* hide the airport names until they are available */
+}
+
+/*when the airport names are available, show them*/
+#departure_name.active, #arrival_name.active, #via_list.active, #alternate_name.active {
+    display: inline-block;
 }
 
 input {
