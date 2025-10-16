@@ -262,8 +262,11 @@ def fetch_airport_details():
     #taking just the relevant information
     icao_code = airport["icaoCode"]
     name = airport["name"]
+    country = airport["country"]
 
     if icao_code != code:
         return jsonify({"error": "ICAO code does not match"}), 400
 
-    return jsonify({"name": name}), 200
+    return jsonify({"name": name, "country": country}), 200
+
+

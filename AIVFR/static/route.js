@@ -25,15 +25,15 @@ async function fetchAirportDetails(code) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ code: code }), /*sends off the code to the backend*/
+            body: JSON.stringify({ code: code }), //sends off the code to the backend
         });
 
         if (!response.ok) {
-            throw new Error("Network response was not ok"); /*for non-200 errors*/
+            throw new Error("Network response was not ok"); //for non-200 errors
         }
 
         const data = await response.json();
-        return data; /*returns the airport details*/
+        return data; //returns the airport details
 
     } catch (error) {
         showAlert("Error fetching airport details. Please make sure the ICAO code is correct.");
@@ -47,19 +47,23 @@ const departureAirport_name = document.getElementById("departure_name");
 
 departureAirport_code.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
-        departureAirport_name.style.display = "inline"; /*make the name div visible*/
-        departureAirport_name.textContent = "..."; /*simulate loading*/
+        departureAirport_name.style.display = "inline"; //make the name div visible
+        departureAirport_name.textContent = "..."; //simulate loading
 
         //validating data
         if (verifyICAO(departureAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(departureAirport_code.value);
-            if (airportDetails) {
+            if (airportDetails.country == "GB") { //restrict to UK airports only
                 await update("departureAirport_code", departureAirport_code.value);
                 await update("departureAirport_name", airportDetails.name);
                 departureAirport_name.textContent = airportDetails.name;
-            }
+            } else  if (airportDetails.country != "GB") {
+                showAlert("Only UK aerodromes are supported");
+                departureAirport_name.style.display = "none";
+            } 
         } else {
             showAlert("Invalid ICAO code");
+            departureAirport_name.style.display = "none";
         }
     }
 });
@@ -77,13 +81,17 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
         //validating data
         if (verifyICAO(arrivalAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(arrivalAirport_code.value);
-            if (airportDetails) {
+            if (airportDetails.country == "GB") {
                 await update("destinationAirport_code", arrivalAirport_code.value);
                 await update("destinationAirport_name", airportDetails.name);
                 arrivalAirport_name.textContent = airportDetails.name;
+            } else if (airportDetails.country != "GB") {
+                showAlert("Only UK aerodromes are supported");
+                arrivalAirport_name.style.display = "none";
             }
         } else {
             showAlert("Invalid ICAO code");
+            arrivalAirport_name.style.display = "none";
         }
     }
 });
@@ -100,13 +108,17 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
         //validating data
         if (verifyICAO(alternateAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(alternateAirport_code.value);
-            if (airportDetails) {
+            if (airportDetails.country == "GB") {
                 await update("alternateAirport_code", alternateAirport_code.value);
                 await update("alternateAirport_name", airportDetails.name);
                 alternateAirport_name.textContent = airportDetails.name;
+            } else if (airportDetails.country != "GB") {
+                showAlert("Only UK aerodromes are supported");
+                alternateAirport_name.style.display = "none";
             }
         } else {
             showAlert("Invalid ICAO code");
+            alternateAirport_name.style.display = "none";
         }
     }
 });
