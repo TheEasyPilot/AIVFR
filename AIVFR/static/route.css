@@ -3,6 +3,7 @@
     font-weight: 300;
 }
 
+
 #route {
     background-color: var(--primary);
     pointer-events: none;
@@ -14,6 +15,7 @@
     display: grid; /* grid allows flexible layout */
     gap: 10px;
     border-radius: 10px;
+    z-index: 1;
 }
 
 .routeItem { /* all items in the route page */
@@ -65,10 +67,8 @@
 
 #toArrow {
     vertical-align: middle;
-    color: var(--text);
     transform: scaleX(-1); /* flip the arrow horizontally */
     margin: 0 15px;
-
 }
 
 #departureArrival, #via, #alternate {

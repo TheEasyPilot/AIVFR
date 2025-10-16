@@ -17,7 +17,7 @@
         <span id="alertBox"></span>
       </div>
 
-      <div id="content" display="grid">
+      <div id="content">
 
 <!----------------------------------------------------------ROUTE SETUP-->
         <div id="route_setup" class="routeItem">
@@ -38,7 +38,7 @@
             <!--DEPARTURE--> From: <input id="departure_code" type="text" name="departure_code" placeholder="ICAO Code" value="{{ flight.departureAirport_code }}">
             <!--DEPARTURE_NAME--> <span id="departure_name">{{ flight.departureAirport_name }}</span>
 
-            <!--ARROW--> <span><svg xmlns="http://www.w3.org/2000/svg" id="toArrow" width="40" viewBox="0 0 32 32"><defs><style>.cls-1{fill:none;}</style></defs><title/><g data-name="Layer 2" id="Layer_2"><path d="M13,26a1,1,0,0,1-.71-.29l-9-9a1,1,0,0,1,0-1.42l9-9a1,1,0,1,1,1.42,1.42L5.41,16l8.3,8.29a1,1,0,0,1,0,1.42A1,1,0,0,1,13,26Z"/><path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z"/></g><g id="frame"><rect class="cls-1" height="32" width="32"/></g></svg></span>
+            <!--ARROW--> <span><svg xmlns="http://www.w3.org/2000/svg" id="toArrow" width="40" viewBox="0 0 32 32"><title/><g data-name="Layer 2" id="Layer_2"><path d="M13,26a1,1,0,0,1-.71-.29l-9-9a1,1,0,0,1,0-1.42l9-9a1,1,0,1,1,1.42,1.42L5.41,16l8.3,8.29a1,1,0,0,1,0,1.42A1,1,0,0,1,13,26Z"/><path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z"/></g><g id="frame"><rect fill="none" height="32" width="32"/></g></svg></span>
 
             <!--ARRIVAL--> <span>To: <input id="arrival_code" type="text" name="arrival_code" placeholder="ICAO Code" value="{{ flight.destinationAirport_code }}"></span>
             <!--ARRIVAL_NAME--> <span id="arrival_name">{{ flight.destinationAirport_name }}</span>
@@ -48,7 +48,6 @@
             <!--VIA--> <span id="via">Via:</span> <input id="via_code" type="text" name="via_code" placeholder="ICAO Code" value="">
             <!--VIA_LIST--> <span id="via_list">NAME</span>
 
-            <br>
             <br>
             <br>
 
