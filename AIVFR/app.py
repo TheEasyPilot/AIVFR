@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, jsonify, request, Response, make_response, redirect, url_for
-import json, os, copy, pint
+import json, os, copy, pint, requests
+from dotenv import load_dotenv
 
 main = Blueprint('app', __name__)
 
@@ -236,45 +237,33 @@ if __name__ == '__main__':
     main.run(debug=True)
 
 
-#----------------FETCHING AIRPORT NAME FROM API---------------------
+#----------------FETCHING AIRPORT DETAILS FROM API---------------------
 
-@main.route("/fetch-airport-name", methods=["POST"])
-def fetch_airport_name():
-    code = request.json.get("code")
+load_dotenv()
+api_key_openaip = os.getenv("OPENAIP_API_KEY")
 
+@main.route("/fetch-airport-details", methods=["POST"])
+def fetch_airport_details():
+    code = request.json.get("code") #get the ICAO code from the request
 
+    headers = {
+        "x-openaip-api-key": api_key_openaip #correct header for OpenAIP API
+    }
+    params = {
+        "search": str(code) #using the code from the request
+    }
 
+    url = "https://api.core.openaip.net/api/airports"
 
-'''
-FUNCTION fetchAirportName(code):
-BEGIN
-    IF verifyICAO(code) THEN
+    response = requests.get(url, headers=headers, params=params) #make the request to the API
+    data = response.json() #parse the response as JSON
+    airport = data["items"][0]
 
-        headers = {
-            "x-openaip-api-key": api_key_openaip
-        }
-        params = {
-            "search": str(code)
-        }
-        url = "https://api.core.openaip.net/api/airports"
+    #taking just the relevant information
+    icao_code = airport["icaoCode"]
+    name = airport["name"]
 
-        response = requests.get(url, headers=headers, params=params)
+    if icao_code != code:
+        return jsonify({"error": "ICAO code does not match"}), 400
 
-        data = response.json()
-        airport = data["items"][0]
-
-        *to be parsed, then:*
-
-        Code = airport["ICAOcode"]
-        Name = airport["name"]
-
-        IF error ocurred OR Code != code THEN
-        RETURN False
-
-        ELSEIF Code == code THEN
-            RETURN name
-        ENDIF
-    ENDIF
-END
-
-'''
+    return jsonify({"name": name}), 200
