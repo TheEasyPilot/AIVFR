@@ -74,20 +74,21 @@
             .then(data => {
               const apiKey = data.api_key;
 
+              //Basemap layer from OpenStreetMap
               const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               });
 
-
+              //OpenAIP layer for airspace, airports, navaids, etc.
               const OpenAIP = L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
                 maxZoom: 18,
                 attribution: '<a href="https://www.openaip.net">OpenAIP</a>'
               });
               
-
-              const map = L.map('routeMAP', { //crafting the map
-                center: [51.505, -0.09], 
+              //crafting the map
+              const map = L.map('routeMAP', { 
+                center: [51.505, -0.09], //Initial center coords (set to London)
                 zoom: 9,
                 layers: [Basemap, OpenAIP]
               });
