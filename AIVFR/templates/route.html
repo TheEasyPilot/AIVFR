@@ -64,8 +64,40 @@
 <!------------------------------------------------------------>
         <!--MAP-->
         <div id="map" class="routeItem">
-          MAP
+
+        <div id="routeMAP"></div> <!--setting up the actual map-->
+        <style>#routeMAP { height: 100%; border-radius: 10px; z-index: 90;}</style>
+        <script>
+         //getting API key from backend
+          fetch('/get-api-key')
+            .then(response => response.json())
+            .then(data => {
+              const apiKey = data.api_key;
+
+              const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              });
+
+
+              const OpenAIP = L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
+                maxZoom: 18,
+                attribution: '<a href="https://www.openaip.net">OpenAIP</a>'
+              });
+              
+
+              const map = L.map('routeMAP', { //crafting the map
+                center: [51.505, -0.09], 
+                zoom: 9,
+                layers: [Basemap, OpenAIP]
+              });
+            })
+          .catch(error => {
+              console.error('Error fetching API key:', error);
+              showAlert('Error fetching map data. Please try again later.');
+            });
+        </script>
         </div>
       </div>
 
-{% endblock %}
+{% endblock %} 

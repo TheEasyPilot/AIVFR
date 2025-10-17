@@ -271,3 +271,7 @@ def fetch_airport_details():
 
 #--------------------ROUTE MAP-------------------------
 
+#Send the API key to frontend
+@main.route("/get-api-key")
+def get_api_key():
+    return jsonify({"api_key": api_key_openaip}), 200
