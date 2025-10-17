@@ -19,6 +19,11 @@ function verifyICAO(code) {
 //-------Fetching Airport Details from API------------
 
 async function fetchAirportDetails(code) {
+    try {code = code.toUpperCase();} catch (error) {
+        showAlert("Invalid ICAO code");
+        return null;
+    }
+
     try {
         const response = await fetch("/fetch-airport-details", {
             method: "POST",
@@ -54,8 +59,9 @@ departureAirport_code.addEventListener("keydown", async (event) => {
         if (verifyICAO(departureAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(departureAirport_code.value);
             if (airportDetails.country == "GB") { //restrict to UK airports only
-                await update("departureAirport_code", departureAirport_code.value);
+                await update("departureAirport_code", departureAirport_code.value.toUpperCase());
                 await update("departureAirport_name", airportDetails.name);
+                departureAirport_code.style.textTransform = "uppercase";
                 departureAirport_name.textContent = airportDetails.name;
             } else  if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
@@ -82,8 +88,9 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
         if (verifyICAO(arrivalAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(arrivalAirport_code.value);
             if (airportDetails.country == "GB") {
-                await update("destinationAirport_code", arrivalAirport_code.value);
+                await update("destinationAirport_code", arrivalAirport_code.value.toUpperCase());
                 await update("destinationAirport_name", airportDetails.name);
+                arrivalAirport_code.style.textTransform = "uppercase";
                 arrivalAirport_name.textContent = airportDetails.name;
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
@@ -109,8 +116,9 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
         if (verifyICAO(alternateAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(alternateAirport_code.value);
             if (airportDetails.country == "GB") {
-                await update("alternateAirport_code", alternateAirport_code.value);
+                await update("alternateAirport_code", alternateAirport_code.value.toUpperCase());
                 await update("alternateAirport_name", airportDetails.name);
+                alternateAirport_code.style.textTransform = "uppercase";
                 alternateAirport_name.textContent = airportDetails.name;
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");

@@ -21,11 +21,13 @@ url = "https://api.core.openaip.net/api/airports"
 response = requests.get(url, headers=headers, params=params)
 
 print("Status Code:", response.status_code)
-print("Raw Response:", response.text)
 
 data = response.json()
+print(json.dumps(data, indent=4))
 airport = data["items"][0]  # We searched EGSS, so only one result
+print(airport)
 
+'''
 # Basic info
 name = airport["name"]
 icao = airport["icaoCode"]
@@ -50,7 +52,7 @@ for freq in airport["frequencies"]:
 print("\nRunways:")
 for rw in airport["runways"]:
     print(f" - Runway {rw['designator']}: {rw['dimension']['length']['value']}m x {rw['dimension']['width']['value']}m")
-
+'''
 '''
 
 url = "https://api.checkwx.com/taf/EGLL/decoded"

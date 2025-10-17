@@ -38,12 +38,12 @@
 
 /*splitting the route items to take fractions of the viewport height*/
 #route_setup {
-    height: 30vh;
-    padding: 15px
+    height: 22vh;
+    padding: 15px;
 }
 
 #ICAO_route {
-    height: 20vh;
+    height: 30vh;
 }
 
 #route_generator {
