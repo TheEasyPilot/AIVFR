@@ -15,6 +15,12 @@
     <link rel="icon" type="image/png" href="../static/FPWT_images/logoAIVFR.png">
     <script src="../static/basePage.js" defer></script>
     <script src="../static/route.js" defer></script> <!--specific page js-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
 
   </head>
   
@@ -95,9 +101,7 @@
             </div>
 
             <br>
-            <br>
-            <br>
-
+            
             <!--ALTERNATE--> <span id="alternate">Alternate:</span> <input id="alternate_code" type="text" name="alternate_code" placeholder="ICAO Code" value="">
             <!--ALTERNATE_NAME--> <span id="alternate_name">NAME</span>
             
@@ -115,7 +119,17 @@
 <!------------------------------------------------------------>
         <!--MAP-->
         <div id="map" class="routeItem">
-          MAP
+
+        <div id="routeMAP"></div> <!--setting up the actual map-->
+        <style>#routeMAP { height: 100%; border-radius: 10px; z-index: 90;}</style>
+        <script>
+          var map = L.map('routeMAP').setView([51.505, -0.09], 13);
+          L.tileLayer('https://api.tiles.openaip.net/api/data/openaip/7/269/1733.png', {
+          maxZoom: 19,
+         attribution: '<a href="https://www.openaip.net">OpenAIP</a>'
+          }).addTo(map);
+        </script>
+
         </div>
       </div>
 
