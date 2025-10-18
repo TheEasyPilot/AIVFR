@@ -157,10 +157,10 @@ fetch('/get-api-keys')
     mapTilerLogo.src = 'https://latestlogo.com/wp-content/uploads/2024/04/maptiler-logo.png';
     mapTilerLogo.style.width = '70px';
     mapTilerLogo.style.marginTop = '3px';
-    
+
     const Satellite = L.tileLayer(`https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${apiKeyMaptiler}`, {
     maxZoom: 19,
-    attribution: `<a href="https://www.maptiler.com">${mapTilerLogo.outerHTML}</a>`
+    attribution: ` &copy; <a href="https://www.maptiler.com">${mapTilerLogo.outerHTML}</a>`
     });
     //finding the Basemap style from settings
     fetch('/get-settings')
