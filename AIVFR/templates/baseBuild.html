@@ -72,6 +72,12 @@
       <div class="pageTitle" style="display: flex; align-items: center; gap: 10px;">
         <div id="title">ROUTE</div>
         <span id="alertBox"></span>
+        <span>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+          </label>
+        </span>
       </div>
 
       <div id="content" display="grid">
@@ -119,33 +125,7 @@
 <!------------------------------------------------------------>
         <!--MAP-->
         <div id="map" class="routeItem">
-
         <div id="routeMAP"></div> <!--setting up the actual map-->
-        <style>#routeMAP { height: 100%; border-radius: 10px; z-index: 90;}</style>
-        <script>
-          var map = L.map('routeMAP').setView([51.505, -0.09], 13);
-          
-          //getting API key from backend
-          fetch('/get-api-key')
-            .then(response => response.json())
-            .then(data => {
-              const apiKey = data.api_key;
-            })
-            .catch(error => {
-              console.error('Error fetching API key:', error);
-            });
-
-            L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/7/269/1733.png?apiKey=${apiKey}`, {
-            maxZoom: 19,
-            attribution: '<a href="https://www.openaip.net">OpenAIP</a>'
-            }).addTo(map);
-
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-        </script>
-
         </div>
       </div>
 

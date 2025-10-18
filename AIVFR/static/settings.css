@@ -96,3 +96,76 @@ h2 {
 
     background-color: var(--primary);
      }
+
+/*Satellite toggle*/
+
+/*satellite toggle*/
+
+#toggleSatellite {
+    align-items: center;
+    right: 20px;
+    top: 10px;
+    color: var(--text);
+}
+
+/*switch*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/*Hide default HTML checkbox*/
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/*slider*/
+.slider {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 34px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--onhover);
+  -webkit-transition: .4s;
+  transition: .4s;
+  align-items: center;
+}
+
+.slider:before {
+  position: absolute;
+  border-radius: 50%;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--highlight);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: var(--primary);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--primary);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px); /*move the circle to the right*/
+  -ms-transform: translateX(26px); 
+  transform: translateX(26px);
+}
+
+#Satellite {
+    color: var(--text);
+    font-weight: 500;
+}

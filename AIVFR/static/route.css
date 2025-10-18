@@ -103,3 +103,11 @@ input {
     font-size: 13px;
     max-width: 80px;
 }
+
+/*MAP*/
+
+#routeMAP {
+     height: 100%; 
+     border-radius: 10px; 
+     z-index: 90;
+}
