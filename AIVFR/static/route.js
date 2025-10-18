@@ -130,3 +130,41 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
         }
     }
 });
+
+//------------------------------ROUTE MAP------------------------------
+
+//getting API key from backend
+fetch('/get-api-key')
+.then(response => response.json())
+.then(data => {
+    const apiKey = data.api_key;
+
+    //Basemap layer from OpenStreetMap
+    const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    //OpenAIP layer for airspace, airports, navaids, etc.
+    const OpenAIP = L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
+    maxZoom: 18,
+    attribution: '<a href="https://www.openaip.net/">OpenAIP Data</a> (<a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC 4.0</a>)'
+    });
+
+    //satellite map from Google
+    const Satellite = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.google.com/copyright">2025 Google</a>'
+    });
+
+    //crafting the map
+    const map = L.map('routeMAP', { 
+    center: [51.505, -0.09], //Initial center coords (set to London)
+    zoom: 9,
+    layers: [Basemap, OpenAIP]
+    });
+})
+.catch(error => {
+    console.error('Error fetching API key:', error);
+    showAlert('Error fetching map data. Please try again later.');
+});
