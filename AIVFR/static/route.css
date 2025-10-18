@@ -69,6 +69,7 @@
     vertical-align: middle;
     transform: scaleX(-1); /* flip the arrow horizontally */
     margin: 0 15px;
+    fill: var(--text);
 }
 
 #departureArrival, #via, #alternate {
@@ -94,7 +95,7 @@
 #departure_code, #arrival_code, #alternate_code {
     border: 1px solid var(--text);
     border-radius: 5px;
-    padding: 3px;
+    padding: 5px;
     margin-left: 10px;
     width: 100px;
     text-align: center;
@@ -102,6 +103,8 @@
     font-family: 'Manrope';
     font-size: 13px;
     max-width: 80px;
+    background-color: var(--bg);
+    border: 1px solid var(--onhover);
 }
 
 /*MAP*/
@@ -110,6 +113,7 @@
      height: 100%; 
      border-radius: 10px; 
      z-index: 90;
+     background-color: var(--highlight);
 }
 
 a {
@@ -125,10 +129,10 @@ a {
     height: 100%;
     width: 100%;
     border-radius: 10px;
-    resize: none;
+    resize: none;/*do not allow resizing*/
     font-family: 'Manrope';
     font-size: 14px;
-    border: none;
+    border: 1px solid var(--onhover);
 }
 
 #AI_twinkle {
@@ -146,7 +150,7 @@ a {
     font-family: 'Manrope';
     font-size: 14px;
     width: 100%;
-    height: 90%;
+    height: 76.5%;
 }
 
 #route_generator {
@@ -159,8 +163,26 @@ a {
     background-color: var(--bg);
     color: var(--text);
     border-radius: 10px;
-    resize: none;
+    resize: none; 
     font-family: 'Manrope';
     font-size: 14px;
     width: 100%;
+    border: 1px solid var(--onhover);
+}
+
+#generateRoute {
+    color: var(--text);
+    background-color: var(--onhover);
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    font-family: 'Manrope';
+    margin-top: 5px;
+}
+
+#generateRoute:hover {
+    background-color: var(--primary);
 }

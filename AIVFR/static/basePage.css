@@ -138,8 +138,9 @@ hr  {
     border-radius: 5px;
     font-weight: 600;
     cursor: pointer;
-    position: absolute;
-    top: 30px;
+    position: fixed;
+    top: 75px;
     left: 50%;
     transform: translate(-50%, -50%); /*center the box*/
+    z-index: 200;
 }
