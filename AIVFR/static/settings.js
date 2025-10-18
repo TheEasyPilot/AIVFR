@@ -26,6 +26,24 @@ lightMode.addEventListener("click", () => {
     updateSettings("theme", "light"); }
 );
 
+//-----------Map style toggle----------------
+const normalMap = document.getElementById("Normal")
+const satelliteMap = document.getElementById("Satellite")
+
+//--SATELLITE---
+satelliteMap.addEventListener("click", () => {
+    satelliteMap.classList.add('active');
+    normalMap.classList.remove('active');
+    updateSettings("map_style", "satellite");
+});
+
+//--NORMAL---
+normalMap.addEventListener("click", () => {
+    normalMap.classList.add('active');
+    satelliteMap.classList.remove('active');    
+    updateSettings("map_style", "normal");
+});
+
 //-----------Choosing units----------------------------------
 const airspeed = document.getElementById("airspeed")
 const airspeed_options = document.getElementById("airspeed_options")

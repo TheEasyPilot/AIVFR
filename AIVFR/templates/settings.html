@@ -32,16 +32,11 @@
       <button id="lightToggle">Light</button>
       <span><button id="darkToggle">Dark</button></span>
 
-      <!--Satellite map toggle-->
-      <h2>SATELLITE MAP</h2>
-      <span id="toggleSatellite">
-        <label class="switch">
-          <input type="checkbox">
-          <span class="slider"></span>
-        </label>
-      </span>
+      <!--Map style toggle-->
+      <h2>MAP STYLE</h2>
+      <button id="Normal" class="{{ 'active' if settings.map_style == 'normal' else '' }}">Normal</button>
+      <span><button id="Satellite" class="{{ 'active' if settings.map_style == 'satellite' else '' }}">Satellite</button></span>
 
-      <br>
       <br>
       <!--Units-->
       <h2>UNITS</h2>
@@ -92,5 +87,4 @@
     </div>
   </body>
 </html>
-  
 

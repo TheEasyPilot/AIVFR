@@ -145,6 +145,7 @@ def update_unitsRUN():
 
 data_template = {
     "settings" : {"theme": "light",
+                  "map_style": "normal",
                   "units_changed": "False",
                   "units_airspeed" : "knot",
                   "units_altitude" : "feet",
@@ -241,6 +242,7 @@ if __name__ == '__main__':
 
 load_dotenv()
 api_key_openaip = os.getenv("OPENAIP_API_KEY")
+api_key_maptiler = os.getenv("MAPTILER_API_KEY")
 
 @main.route("/fetch-airport-details", methods=["POST"])
 def fetch_airport_details():
@@ -269,9 +271,9 @@ def fetch_airport_details():
 
     return jsonify({"name": name, "country": country}), 200
 
-#--------------------ROUTE MAP-------------------------
+#--------------------ROUTE MAP----------------------------------
 
-#Send the API key to frontend
-@main.route("/get-api-key")
-def get_api_key():
-    return jsonify({"api_key": api_key_openaip}), 200
+#Send the API keys to frontend
+@main.route("/get-api-keys")
+def get_api_keys():
+    return jsonify({"openaip": api_key_openaip, "maptiler": api_key_maptiler}), 200

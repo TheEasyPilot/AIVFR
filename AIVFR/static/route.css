@@ -111,3 +111,9 @@ input {
      border-radius: 10px; 
      z-index: 90;
 }
+
+a {
+    vertical-align: middle;
+    margin-right: 5px;
+    height: 12px;
+}
