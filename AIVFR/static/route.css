@@ -110,6 +110,7 @@
 /*MAP*/
 
 #routeMAP {
+    position: relative;
      height: 100%; 
      border-radius: 10px; 
      z-index: 90;
@@ -185,4 +186,18 @@ a {
 
 #generateRoute:hover {
     background-color: var(--primary);
+}
+
+#mapTilerLogo {
+    position: absolute;
+    display: none;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    width: 90px;
+    z-index: 1000;
+    opacity: 0.8;
+    background-color: hsla(0, 0%, 100%, 0.7);
+    padding: 5px;
+    border-radius: 5px;
 }
