@@ -132,6 +132,7 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
 });
 
 //------------------------------ROUTE MAP------------------------------
+const mapTilerLogo = document.getElementById("mapTilerLogo");
 
 //getting API keys from backend
 fetch('/get-api-keys')
@@ -153,14 +154,9 @@ fetch('/get-api-keys')
     });
 
     //satellite map from mapTiler
-    const mapTilerLogo = document.createElement('img');
-    mapTilerLogo.src = 'https://latestlogo.com/wp-content/uploads/2024/04/maptiler-logo.png';
-    mapTilerLogo.style.width = '70px';
-    mapTilerLogo.style.marginTop = '3px';
-
     const Satellite = L.tileLayer(`https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${apiKeyMaptiler}`, {
     maxZoom: 19,
-    attribution: ` &copy; <a href="https://www.maptiler.com">${mapTilerLogo.outerHTML}</a>`
+    attribution: ` &copy; <a href="https://www.maptiler.com">maptiler</a>`
     });
     //finding the Basemap style from settings
     fetch('/get-settings')
@@ -168,6 +164,7 @@ fetch('/get-api-keys')
     .then(settingsData => {
         const mapStyle = settingsData.map_style;
         if (mapStyle == 'normal') {
+            mapTilerLogo.style.display = "none";
             //crafting the map
             const map = L.map('routeMAP', { 
             center: [51.505, -0.09], //Initial center coords (set to London)
@@ -175,6 +172,7 @@ fetch('/get-api-keys')
             layers: [Basemap, OpenAIP]
         });
         } else if (mapStyle == 'satellite') {
+            mapTilerLogo.style.display = "inline";
             //crafting the map
             const map = L.map('routeMAP', { 
             center: [51.505, -0.09], //Initial center coords (set to London)
@@ -183,6 +181,7 @@ fetch('/get-api-keys')
         });
         }
     })
+
 .catch(error => {
     console.error('Error fetching API key:', error);
     showAlert('Error fetching map data. Please try again later.');
