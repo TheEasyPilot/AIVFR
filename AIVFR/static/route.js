@@ -180,8 +180,7 @@ fetch('/get-api-keys')
             center: [51.505, -0.09], //Initial center coords (set to London)
             zoom: 9,
             layers: [Basemap, OpenAIP]
-        });
-        addline(); //example line added to map
+        }); const line = L.polyline([[51.722000, 0.154000], [51.571000, 0.696000], [50.835556, -0.297222]], { color: '#f0F' }).addTo(map);
 
         } else if (mapStyle == 'normal' && theme == 'dark') {
             mapTilerLogo.style.display = "none";
@@ -209,11 +208,3 @@ fetch('/get-api-keys')
 });
 
 
-//function to add a marker/line to the map
-
-export function addline() {
-    const line = L.polyline([
-                [51.509, -0.08],
-                [51.503, -0.06],
-            ]).addTo(map).bindPopup('I am a polygon.');
-}
