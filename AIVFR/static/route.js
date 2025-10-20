@@ -181,6 +181,8 @@ fetch('/get-api-keys')
             zoom: 9,
             layers: [Basemap, OpenAIP]
         });
+        addline(); //example line added to map
+
         } else if (mapStyle == 'normal' && theme == 'dark') {
             mapTilerLogo.style.display = "none";
             //crafting the map
@@ -201,7 +203,17 @@ fetch('/get-api-keys')
     })
 
     .catch(error => {
-        console.error('Error fetching API key:', error);
-        showAlert('Error fetching map data. Please try again later.');
+        console.error('MapCreationError', error);
+        showAlert('An error occurred while fetching map data. Please try again later.');
     });
 });
+
+
+//function to add a marker/line to the map
+
+export function addline() {
+    const line = L.polyline([
+                [51.509, -0.08],
+                [51.503, -0.06],
+            ]).addTo(map).bindPopup('I am a polygon.');
+}
