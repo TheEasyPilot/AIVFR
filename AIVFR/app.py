@@ -243,6 +243,7 @@ if __name__ == '__main__':
 load_dotenv()
 api_key_openaip = os.getenv("OPENAIP_API_KEY")
 api_key_maptiler = os.getenv("MAPTILER_API_KEY")
+api_key_jawg = os.getenv("JAWG_API_KEY")
 
 @main.route("/fetch-airport-details", methods=["POST"])
 def fetch_airport_details():
@@ -276,4 +277,4 @@ def fetch_airport_details():
 #Send the API keys to frontend
 @main.route("/get-api-keys")
 def get_api_keys():
-    return jsonify({"openaip": api_key_openaip, "maptiler": api_key_maptiler}), 200
+    return jsonify({"openaip": api_key_openaip, "maptiler": api_key_maptiler, "jawg": api_key_jawg}), 200

@@ -140,11 +140,18 @@ fetch('/get-api-keys')
 .then(data => {
     const apiKey = data.openaip;
     const apiKeyMaptiler = data.maptiler;
+    const apiKeyJawg = data.jawg;
 
     //Basemap layer from OpenStreetMap
     const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors'
+    });
+
+    //dark mode map from jawg.io
+    const Darkmode = L.tileLayer(`https://tile.jawg.io/e292ef5c-3844-4eef-83ad-a14b12e76451/{z}/{x}/{y}{r}.png?access-token=${apiKeyJawg}`, {
+    maxZoom: 19,
+    attribution: `<a href="https://maplibre.org">MapLibre</a> &copy; <a href="http://www.jawg.io">JawgMaps</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`
     });
 
     //OpenAIP layer for airspace, airports, navaids, etc.
@@ -158,18 +165,29 @@ fetch('/get-api-keys')
     maxZoom: 19,
     attribution: ` &copy; <a href="https://www.maptiler.com">maptiler</a>`
     });
+
     //finding the Basemap style from settings
     fetch('/get-settings')
     .then(response => response.json())
     .then(settingsData => {
         const mapStyle = settingsData.map_style;
-        if (mapStyle == 'normal') {
+        const theme = settingsData.theme;
+
+        if (mapStyle == 'normal' && theme == 'light') {
             mapTilerLogo.style.display = "none";
             //crafting the map
             const map = L.map('routeMAP', { 
             center: [51.505, -0.09], //Initial center coords (set to London)
             zoom: 9,
             layers: [Basemap, OpenAIP]
+        });
+        } else if (mapStyle == 'normal' && theme == 'dark') {
+            mapTilerLogo.style.display = "none";
+            //crafting the map
+            const map = L.map('routeMAP', { 
+            center: [51.505, -0.09], //Initial center coords (set to London)
+            zoom: 12,
+            layers: [Darkmode, OpenAIP]
         });
         } else if (mapStyle == 'satellite') {
             mapTilerLogo.style.display = "inline";
@@ -182,8 +200,8 @@ fetch('/get-api-keys')
         }
     })
 
-.catch(error => {
-    console.error('Error fetching API key:', error);
-    showAlert('Error fetching map data. Please try again later.');
+    .catch(error => {
+        console.error('Error fetching API key:', error);
+        showAlert('Error fetching map data. Please try again later.');
     });
 });
