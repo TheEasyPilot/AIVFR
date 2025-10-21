@@ -297,7 +297,7 @@ def find_city():
     if response.status_code == requests.codes.ok:
         data = response.json()
         if data:
-            city_info = data[0]  # Get the first matching city
+            city_info = data[0]  #Get the first matching city
             name = city_info.get('name')
             country = city_info.get('country')
             latitude = city_info.get('latitude')
