@@ -133,7 +133,8 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
 
 //------------------------------ROUTE MAP------------------------------
 const mapTilerLogo = document.getElementById("mapTilerLogo");
-var route = [];
+
+//as soon as the arrival aerodrome is set, create the map witht just the two aerodromes (we start there)
 
 //getting API keys from backend
 fetch('/get-api-keys')
