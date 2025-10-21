@@ -6,7 +6,9 @@ import json
 load_dotenv()
 api_key_openaip = os.getenv("OPENAIP_API_KEY")
 api_key_wx = os.getenv("CHECKWXAPI_API_KEY")
+api_key_api_ninjas = os.getenv("API_NINJAS_API_KEY")
 
+'''
 # Correct header for public API
 headers = {
     "x-openaip-api-key": api_key_openaip
@@ -26,7 +28,7 @@ data = response.json()
 print(json.dumps(data, indent=4))
 airport = data["items"][0]  # We searched EGSS, so only one result
 print(airport)
-
+'''
 '''
 # Basic info
 name = airport["name"]

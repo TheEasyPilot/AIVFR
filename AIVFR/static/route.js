@@ -133,6 +133,7 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
 
 //------------------------------ROUTE MAP------------------------------
 const mapTilerLogo = document.getElementById("mapTilerLogo");
+var route = [];
 
 //getting API keys from backend
 fetch('/get-api-keys')
@@ -208,3 +209,4 @@ fetch('/get-api-keys')
 });
 
 
+//----------route testing------
