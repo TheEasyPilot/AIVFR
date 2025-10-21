@@ -238,13 +238,16 @@ if __name__ == '__main__':
     main.run(debug=True)
 
 
-#----------------FETCHING AIRPORT DETAILS FROM API---------------------
+#--------------------------------------API SYSTEMS----------------------------
 
 load_dotenv()
 api_key_openaip = os.getenv("OPENAIP_API_KEY")
 api_key_maptiler = os.getenv("MAPTILER_API_KEY")
 api_key_jawg = os.getenv("JAWG_API_KEY")
+api_key_api_ninjas = os.getenv("API_NINJAS_API_KEY")
 
+
+#-------------------------------------FETCHING AIRPORT DETAILS
 @main.route("/fetch-airport-details", methods=["POST"])
 def fetch_airport_details():
     code = request.json.get("code") #get the ICAO code from the request
@@ -272,9 +275,41 @@ def fetch_airport_details():
 
     return jsonify({"name": name, "country": country}), 200
 
-#--------------------ROUTE MAP----------------------------------
+#------------------------------------------ROUTE MAP
 
 #Send the API keys to frontend
 @main.route("/get-api-keys")
 def get_api_keys():
-    return jsonify({"openaip": api_key_openaip, "maptiler": api_key_maptiler, "jawg": api_key_jawg}), 200
+    return jsonify({
+        "openaip": api_key_openaip,
+        "maptiler": api_key_maptiler,
+        "jawg": api_key_jawg
+    }), 200
+
+#----------------------------------------CITY FINDING
+
+@main.route("/find-city", methods=["POST"])
+def find_city():
+    city = request.json.get("city")
+    api_url = 'https://api.api-ninjas.com/v1/city?name={}'.format(city)
+    response = requests.get(api_url, headers={'X-Api-Key': api_key_api_ninjas})
+
+    if response.status_code == requests.codes.ok:
+        data = response.json()
+        if data:
+            city_info = data[0]  # Get the first matching city
+            name = city_info.get('name')
+            country = city_info.get('country')
+            latitude = city_info.get('latitude')
+            longitude = city_info.get('longitude')
+
+            if name == city and country == "GB":
+                return jsonify({
+                    "name": name,
+                    "latitude": latitude,
+                    "longitude": longitude
+                }), 200
+        else:
+            return jsonify({"error": "City not found"}), 400
+    else:
+        return jsonify({"error": "City not found"}), 400
