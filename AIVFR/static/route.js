@@ -63,6 +63,7 @@ departureAirport_code.addEventListener("keydown", async (event) => {
                 await update("departureAirport_name", airportDetails.name);
                 departureAirport_code.style.textTransform = "uppercase";
                 departureAirport_name.textContent = airportDetails.name;
+
             } else  if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
                 departureAirport_name.style.display = "none";
@@ -92,6 +93,7 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
                 await update("destinationAirport_name", airportDetails.name);
                 arrivalAirport_code.style.textTransform = "uppercase";
                 arrivalAirport_name.textContent = airportDetails.name;
+
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
                 arrivalAirport_name.style.display = "none";
@@ -120,6 +122,7 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
                 await update("alternateAirport_name", airportDetails.name);
                 alternateAirport_code.style.textTransform = "uppercase";
                 alternateAirport_name.textContent = airportDetails.name;
+
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
                 alternateAirport_name.style.display = "none";
@@ -134,7 +137,7 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
 //------------------------------ROUTE MAP------------------------------
 const mapTilerLogo = document.getElementById("mapTilerLogo");
 
-//as soon as the arrival aerodrome is set, create the map witht just the two aerodromes (we start there)
+
 
 //getting API keys from backend
 fetch('/get-api-keys')
@@ -168,12 +171,13 @@ fetch('/get-api-keys')
     attribution: ` &copy; <a href="https://www.maptiler.com">maptiler</a>`
     });
 
-    //finding the Basemap style from settings
-    fetch('/get-settings')
+    //finding the Basemap style from settings, and the route data from route
+    fetch('/get-all')
     .then(response => response.json())
-    .then(settingsData => {
-        const mapStyle = settingsData.map_style;
-        const theme = settingsData.theme;
+    .then(FlightData => {
+        const mapStyle = FlightData.settings.map_style;
+        const theme = FlightData.settings.theme;
+        const route = FlightData.flight.route
 
         if (mapStyle == 'normal' && theme == 'light') {
             mapTilerLogo.style.display = "none";
@@ -182,7 +186,7 @@ fetch('/get-api-keys')
             center: [51.505, -0.09], //Initial center coords (set to London)
             zoom: 9,
             layers: [Basemap, OpenAIP]
-        }); const line = L.polyline([[51.722000, 0.154000], [51.571000, 0.696000], [50.835556, -0.297222]], { color: '#f0F' }).addTo(map);
+        }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
 
         } else if (mapStyle == 'normal' && theme == 'dark') {
             mapTilerLogo.style.display = "none";
@@ -191,7 +195,8 @@ fetch('/get-api-keys')
             center: [51.505, -0.09], //Initial center coords (set to London)
             zoom: 12,
             layers: [Darkmode, OpenAIP]
-        });
+        }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+
         } else if (mapStyle == 'satellite') {
             mapTilerLogo.style.display = "inline";
             //crafting the map
@@ -199,7 +204,7 @@ fetch('/get-api-keys')
             center: [51.505, -0.09], //Initial center coords (set to London)
             zoom: 9,
             layers: [Satellite, OpenAIP]
-        });
+        });const line = L.polyline(route, { color: '#f0F' }).addTo(map);
         }
     })
 
@@ -210,4 +215,46 @@ fetch('/get-api-keys')
 });
 
 
-//----------route testing------
+//-----------------------ROUTING
+
+async function addWaypoint(city) {
+    //first, check the city is in the cities database
+    try {
+            const response = await fetch("/find-city", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ city: city }), //sends off the city to the backend
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok"); //for non-200 errors
+            }
+
+            const data = await response.json();
+
+            //then, add the city to the route
+            try {
+                const response = await fetch("/add-waypoint", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ data: data }), //sends off the corrdinates to the backend
+                });
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok"); //for non-200 errors
+                }
+
+            } catch (error) {
+                showAlert("An error occured whilst adding the waypoint. Please try again.");
+                return null;
+            }
+
+        } catch (error) {
+            showAlert("Error fetching city details. Please make sure the city name is correct.");
+            return null;
+        }
+    }

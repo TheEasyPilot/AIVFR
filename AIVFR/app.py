@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 main = Blueprint('app', __name__)
 
-#----------------------WEBTOOL NAVIGATION-------------------------
+#------------------------------------------WEBTOOL NAVIGATION-------------------------------------
 #main menu
 @main.route('/') #this will be the first to load up
 def index():
@@ -58,7 +58,7 @@ def performanceTab():
 def debug_session():
     return jsonify(session.get("flight_data", {}))
 
-#-----------------UNITS CHANGING------------------------
+#-------------------------------------------------UNITS CHANGING-------------------------------------
 
 ureg = pint.UnitRegistry()
 ureg.formatter.default_format = "~" #use the shortened version by default
@@ -138,7 +138,7 @@ def update_unitsRUN():
         return 'no change', 200
 
 
-#----------FLIGHT DATA AND SESSION MANAGEMENT------------------------------------
+#-------------------------------------------FLIGHT DATA AND SESSION MANAGEMENT------------------------------------
 
 #making the template to store flight data during a session
 #also allows setting default values
@@ -160,11 +160,12 @@ data_template = {
         "destinationAirport_name" : "",
         "alternateAirport_code" : "",
         "alternateAirport_name" : "",
+        "route" : [[51.722000, 0.154000], [51.571000, 0.696000], [50.835556, -0.297222]],
         "distance" : {"value" : 0, "class" : "distance"},
         "time" : "",
     }
 }
-#-------------UPDATING/MODIFYING DATA-----------------
+#--------------------------------UPDATING/MODIFYING DATA
 
 #Updating Settings data
 @main.route("/update-settings", methods=["POST"])
@@ -188,7 +189,7 @@ def update_flight():
     session.modified = True
     return jsonify(session["flight_data"])
 
-#---------------READING DATA------------------------
+#--------------------------------------------READING DATA
 
 @main.route("/get-settings", methods=["GET"])
 def get_settings():
@@ -197,7 +198,12 @@ def get_settings():
 @main.route("/get-flight", methods=["GET"])
 def get_flight():
     return jsonify(session["flight_data"]["flight"])
-#---------------IMPORTING DATA-----------------------
+
+@main.route("/get-all", methods=["GET"])
+def get_all():
+    return jsonify(session["flight_data"])
+
+#--------------------------------------------IMPORTING DATA
 
 @main.route("/load-flight", methods=["POST"])
 def load_flight():
@@ -217,14 +223,14 @@ def load_flight():
     except Exception as error:
         return jsonify({"status": "error", "message": str(error)}), 400
 
-#---------------EXPORTING DATA-----------------------
+#----------------------------------------------EXPORTING DATA
 
 #saves the current flight data as a json file
 @main.route("/save-flight")
 def save_flight():
     return jsonify(dict(session))
 
-#------------STARTING A NEW FLIGHT------------------
+#-----------------------------------------STARTING A NEW FLIGHT
 
 #resets all flight data  but NOT settings
 @main.route("/new-flight")
@@ -238,7 +244,7 @@ if __name__ == '__main__':
     main.run(debug=True)
 
 
-#--------------------------------------API SYSTEMS----------------------------
+#--------------------------------------------------API SYSTEMS------------------------------------------------
 
 load_dotenv()
 api_key_openaip = os.getenv("OPENAIP_API_KEY")
@@ -269,11 +275,13 @@ def fetch_airport_details():
     icao_code = airport["icaoCode"]
     name = airport["name"]
     country = airport["country"]
+    latitude = airport["latitude"]
+    longitude = airport["longitude"]
 
     if icao_code != code:
         return jsonify({"error": "ICAO code does not match"}), 400
 
-    return jsonify({"name": name, "country": country}), 200
+    return jsonify({"name": name, "country": country, "latitude": latitude, "longitude": longitude}), 200
 
 #------------------------------------------ROUTE MAP
 
@@ -303,7 +311,7 @@ def find_city():
             latitude = city_info.get('latitude')
             longitude = city_info.get('longitude')
 
-            if name == city and country == "GB":
+            if name.lower() == city.lower() and country == "GB":
                 return jsonify({
                     "name": name,
                     "latitude": latitude,
@@ -313,3 +321,24 @@ def find_city():
             return jsonify({"error": "City not found"}), 400
     else:
         return jsonify({"error": "City not found"}), 400
+    
+#------------------------------------------------ROUTING-----------------------------------------------------
+
+#-----------------------------------ADDING/REMOVING WAYPOINTS
+
+@main.route("/add-waypoint", methods=["POST"])
+def add_waypoint():
+    waypoint = request.json.get("waypoint") #expecting a list [latitude, longitude]
+    session["flight_data"]["flight"]["route"].append(waypoint)
+    session.modified = True
+    return jsonify(session["flight_data"]["flight"]["route"]), 200
+
+@main.route("/remove-waypoint", methods=["POST"])
+def remove_waypoint():
+    index = request.json.get("index") #expecting the index of the waypoint to remove
+    try:
+        session["flight_data"]["flight"]["route"].pop(index)
+        session.modified = True
+        return jsonify(session["flight_data"]["flight"]["route"]), 200
+    except IndexError:
+        return jsonify({"error": "Invalid waypoint index"}), 400
