@@ -41,7 +41,7 @@ async function fetchAirportDetails(code) {
         return data; //returns the airport details
 
     } catch (error) {
-        showAlert("Error fetching airport details. Please make sure the ICAO code is correct.");
+        showAlert("Airport not found. Please make sure the ICAO code is correct.");
         return null;
     }
 }
@@ -93,6 +93,14 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
                 await update("destinationAirport_name", airportDetails.name);
                 arrivalAirport_code.style.textTransform = "uppercase";
                 arrivalAirport_name.textContent = airportDetails.name;
+
+                /*when arrival aerodrome is entered, fetch the coords for departure and
+                 arrival for intial route drawing*/
+                const departureCoords = fetchAvCoords(departureAirport_code.value);
+                const arrivalCoords = fetchAvCoords(arrivalAirport_code.value);
+
+                await add_waypoint(departureCoords);
+                await add_waypoint(arrivalCoords);
 
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
@@ -215,12 +223,35 @@ fetch('/get-api-keys')
 });
 
 
-//-----------------------ROUTING
+//-------------------------------------------ROUTING--------------------------
 
-async function addWaypoint(city) {
+//------------------------adding a waypoint
+
+async function add_waypoint(waypoint) {
+    try {
+    const response = await fetch("/add-waypoint", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ waypoint: waypoint }), //sends off the corrdinates to the backend
+    });
+
+    if (!response.ok) {
+        throw new Error("Network response was not ok"); //for non-200 errors
+    }
+
+    } catch (error) {
+        showAlert("An error occured whilst adding the waypoint. Please try again.");
+        return null;
+    }
+}
+
+//------------------------adding a city or town as a waypoint
+async function add_city(city) {
     //first, check the city is in the cities database
     try {
-            const response = await fetch("/find-city", {
+            const response = await fetch("/get-cityCoords", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -235,26 +266,42 @@ async function addWaypoint(city) {
             const data = await response.json();
 
             //then, add the city to the route
-            try {
-                const response = await fetch("/add-waypoint", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ data: data }), //sends off the corrdinates to the backend
-                });
-
-                if (!response.ok) {
-                    throw new Error("Network response was not ok"); //for non-200 errors
-                }
-
-            } catch (error) {
-                showAlert("An error occured whilst adding the waypoint. Please try again.");
-                return null;
-            }
+            await add_waypoint(data);
 
         } catch (error) {
             showAlert("Error fetching city details. Please make sure the city name is correct.");
             return null;
         }
     }
+
+//-------------Fetching the coords for airport related features-----------
+
+async function fetchAvCoords(point) {
+    try {
+    const response = await fetch("/get-avCoords", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ waypoint: point }), //sends off the code to the backend
+    });
+
+    if (!response.ok) {
+        throw new Error("Network response was not ok"); //for non-200 errors
+    }
+
+    const data = await response.json();
+    return data; //returns the coordinates
+
+    } catch (error) {
+        showAlert("Waypoint not found. Please check the name and location of your waypoint and try again.");
+        return null;
+    }
+}
+
+//----------------Adding an aviation feature as a waypoint
+
+async function add_av(avPoint) {
+    AvCoords = await fetchAvCoords(avPoint);
+    await add_waypoint(AvCoords);
+}

@@ -3,7 +3,7 @@
 {% block head %}  {{ super() }} {# inherit everything from the head but add this too #}
 <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
-<script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+<script type="module" src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
 {% endblock %}
 
 {% block title %} {# edit whats in the title block #}

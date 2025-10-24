@@ -160,7 +160,7 @@ data_template = {
         "destinationAirport_name" : "",
         "alternateAirport_code" : "",
         "alternateAirport_name" : "",
-        "route" : [[51.722000, 0.154000], [51.571000, 0.696000], [50.835556, -0.297222]],
+        "route" : [],
         "distance" : {"value" : 0, "class" : "distance"},
         "time" : "",
     }
@@ -244,14 +244,14 @@ if __name__ == '__main__':
     main.run(debug=True)
 
 
-#--------------------------------------------------API SYSTEMS------------------------------------------------
+#--------------------------------------------------API FUNCTIONS------------------------------------------------
 
+#get all the relevant API keys from the .env file
 load_dotenv()
 api_key_openaip = os.getenv("OPENAIP_API_KEY")
 api_key_maptiler = os.getenv("MAPTILER_API_KEY")
 api_key_jawg = os.getenv("JAWG_API_KEY")
 api_key_api_ninjas = os.getenv("API_NINJAS_API_KEY")
-
 
 #-------------------------------------FETCHING AIRPORT DETAILS
 @main.route("/fetch-airport-details", methods=["POST"])
@@ -275,13 +275,11 @@ def fetch_airport_details():
     icao_code = airport["icaoCode"]
     name = airport["name"]
     country = airport["country"]
-    latitude = airport["latitude"]
-    longitude = airport["longitude"]
 
     if icao_code != code:
         return jsonify({"error": "ICAO code does not match"}), 400
 
-    return jsonify({"name": name, "country": country, "latitude": latitude, "longitude": longitude}), 200
+    return jsonify({"name": name, "country": country}), 200
 
 #------------------------------------------ROUTE MAP
 
@@ -294,10 +292,10 @@ def get_api_keys():
         "jawg": api_key_jawg
     }), 200
 
-#----------------------------------------CITY FINDING
+#----------------------------------------FINDING CITY COORDS
 
-@main.route("/find-city", methods=["POST"])
-def find_city():
+@main.route("/get-cityCoords", methods=["POST"])
+def get_cityCoords():
     city = request.json.get("city")
     api_url = 'https://api.api-ninjas.com/v1/city?name={}'.format(city)
     response = requests.get(api_url, headers={'X-Api-Key': api_key_api_ninjas})
@@ -314,13 +312,77 @@ def find_city():
             if name.lower() == city.lower() and country == "GB":
                 return jsonify({
                     "name": name,
-                    "latitude": latitude,
-                    "longitude": longitude
+                    "coordinates" : [latitude, longitude]
                 }), 200
         else:
             return jsonify({"error": "City not found"}), 400
     else:
         return jsonify({"error": "City not found"}), 400
+    
+#---------------------------------------FINDING COORDINATES OF AIRPORTS, NAVAIDS AND VRPs
+
+@main.route("/get-avCoords", methods=["POST"])
+def get_avCoords():
+    data = request.json.get("data")
+
+    headers = {
+        "x-openaip-api-key": api_key_openaip #correct header for OpenAIP API
+    }
+    params = {
+        "search": str(data)
+    }
+
+    #search for all 3 items
+    urlAirports = "https://api.core.openaip.net/api/airports"
+    urlNavaids = "https://api.core.openaip.net/api/navaids"
+    urlVrps = "https://api.core.openaip.net/api/reporting-points"
+
+    response_airports = requests.get(urlAirports, headers=headers, params=params)
+    response_navaids = requests.get(urlNavaids, headers=headers, params=params)
+    response_vrps = requests.get(urlVrps, headers=headers, params=params)
+
+    data_airports = response_airports.json() #parse the response as JSON
+    data_navaids = response_navaids.json()
+    data_vrps = response_vrps.json()
+
+    airport = data_airports["items"][0]
+    navaid = data_navaids["items"][0]
+    vrp = data_vrps["items"][0]
+
+    #collecting relevant info
+    icao_code = airport["icaoCode"]
+
+    navaid_name = navaid["name"]
+    navaid_country = navaid["country"]
+
+    vrp_name = vrp["name"]
+    vrp_country = vrp["country"]
+
+
+    #first, check if the entered data is an airport
+    if icao_code == data:
+        return jsonify({"coordinates" : airport["geometry"]["coordinates"]}), 200
+    #^^no need to verify country as already done in Verify ICAO
+    
+    #if that doesnt work check if its a navaid
+    elif navaid_name == data:
+        if navaid_country == 'GB':
+            return jsonify({"coordinates" : navaid["geometry"]["coordinates"]}), 200
+        else:
+            return jsonify({"error": "Point not found in UK database"}), 400
+    
+    #if that doesnt work check if its a reporting point
+    elif vrp_name == data:
+        if vrp_country == 'GB':
+            return jsonify({"coordinates" : vrp["geometry"]["coordinates"]}), 200
+        else:
+            return jsonify({"error": "Point not found in UK database"}), 400
+    
+    #if that doesnt work, throw an error as point hasnt been found
+    else:
+        return jsonify({"error": "Point not found in UK database"}), 400
+    
+
     
 #------------------------------------------------ROUTING-----------------------------------------------------
 
