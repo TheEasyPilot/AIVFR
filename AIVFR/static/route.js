@@ -96,8 +96,12 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
 
                 /*when arrival aerodrome is entered, fetch the coords for departure and
                  arrival for intial route drawing*/
-                const departureCoords = fetchAvCoords(departureAirport_code.value);
-                const arrivalCoords = fetchAvCoords(arrivalAirport_code.value);
+                const departureCoords = await fetchAvCoords(departureAirport_code.value);
+                const arrivalCoords = await fetchAvCoords(arrivalAirport_code.value);
+
+                [departureCoords[0], departureCoords[1]] = [departureCoords[1], departureCoords[0]]; //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
+                [arrivalCoords[0], arrivalCoords[1]] = [arrivalCoords[1], arrivalCoords[0]]; 
+
 
                 await add_waypoint(departureCoords);
                 await add_waypoint(arrivalCoords);
@@ -277,13 +281,14 @@ async function add_city(city) {
 //-------------Fetching the coords for airport related features-----------
 
 async function fetchAvCoords(point) {
+    point = point.toUpperCase()
     try {
     const response = await fetch("/get-avCoords", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ waypoint: point }), //sends off the code to the backend
+        body: JSON.stringify({ data: point }), //sends off the code to the backend
     });
 
     if (!response.ok) {
@@ -291,7 +296,7 @@ async function fetchAvCoords(point) {
     }
 
     const data = await response.json();
-    return data; //returns the coordinates
+    return data.coordinates; //returns the coordinates
 
     } catch (error) {
         showAlert("Waypoint not found. Please check the name and location of your waypoint and try again.");
@@ -302,6 +307,11 @@ async function fetchAvCoords(point) {
 //----------------Adding an aviation feature as a waypoint
 
 async function add_av(avPoint) {
-    AvCoords = await fetchAvCoords(avPoint);
+    try {
+        AvCoords = await fetchAvCoords(avPoint);
+        } catch (error) {
+        showAlert("Waypoint not found. Please check the name and location of your waypoint and try again.");
+        return null;
+        }
     await add_waypoint(AvCoords);
 }
