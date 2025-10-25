@@ -345,45 +345,42 @@ def get_avCoords():
     data_navaids = response_navaids.json()
     data_vrps = response_vrps.json()
 
-    airport = data_airports["items"][0]
-    navaid = data_navaids["items"][0]
-    vrp = data_vrps["items"][0]
-
-    #collecting relevant info
-    icao_code = airport["icaoCode"]
-
-    navaid_name = navaid["name"]
-    navaid_country = navaid["country"]
-
-    vrp_name = vrp["name"]
-    vrp_country = vrp["country"]
-
-
     #first, check if the entered data is an airport
-    if icao_code == data:
-        return jsonify({"coordinates" : airport["geometry"]["coordinates"]}), 200
+    try:
+        airport = data_airports["items"][0]
+        icao_code = airport["icaoCode"]
+        if icao_code == data:
+            return jsonify({"coordinates" : airport["geometry"]["coordinates"]}), 200
     #^^no need to verify country as already done in Verify ICAO
     
     #if that doesnt work check if its a navaid
-    elif navaid_name == data:
-        if navaid_country == 'GB':
-            return jsonify({"coordinates" : navaid["geometry"]["coordinates"]}), 200
-        else:
-            return jsonify({"error": "Point not found in UK database"}), 400
-    
-    #if that doesnt work check if its a reporting point
-    elif vrp_name == data:
-        if vrp_country == 'GB':
-            return jsonify({"coordinates" : vrp["geometry"]["coordinates"]}), 200
-        else:
-            return jsonify({"error": "Point not found in UK database"}), 400
-    
-    #if that doesnt work, throw an error as point hasnt been found
-    else:
-        return jsonify({"error": "Point not found in UK database"}), 400
-    
+    except IndexError:
+        try:
+            navaid = data_navaids["items"][0]
+            navaid_name = navaid["name"]
+            navaid_country = navaid["country"]
+            if navaid_name == data:
+                if navaid_country == 'GB':
+                    return jsonify({"coordinates" : navaid["geometry"]["coordinates"]}), 200
+                else:
+                    return jsonify({"error": "Point not found in UK database"}), 400
+                
+        #if that doesnt work check if its a reporting point        
+        except IndexError:
+            try:
+                vrp = data_vrps["items"][0]
+                vrp_name = vrp["name"]
+                vrp_country = vrp["country"]
+                if vrp_name == data:
+                    if vrp_country == 'GB':
+                        return jsonify({"coordinates" : vrp["geometry"]["coordinates"]}), 200
+                    else:
+                        return jsonify({"error": "Point not found in UK database"}), 400
+                    
+            #if that doesnt work, throw an error as point hasnt been found
+            except IndexError:
+                return jsonify({"error": "Point not found in UK database"}), 400
 
-    
 #------------------------------------------------ROUTING-----------------------------------------------------
 
 #-----------------------------------ADDING/REMOVING WAYPOINTS
