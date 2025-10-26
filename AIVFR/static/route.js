@@ -1,5 +1,6 @@
 import { update, showAlert } from "./basePage.js";
-
+let map = null;
+load_map()
 //-------------------------------------ROUTE SETUP---------------------------------
 //-------Verifying ICAO code--------------
 
@@ -101,10 +102,10 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
 
                 [departureCoords[0], departureCoords[1]] = [departureCoords[1], departureCoords[0]]; //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
                 [arrivalCoords[0], arrivalCoords[1]] = [arrivalCoords[1], arrivalCoords[0]]; 
-
-
                 await add_waypoint(departureCoords);
                 await add_waypoint(arrivalCoords);
+
+                //reload_map();
 
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
@@ -149,84 +150,83 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
 //------------------------------ROUTE MAP------------------------------
 const mapTilerLogo = document.getElementById("mapTilerLogo");
 
-
-
-//getting API keys from backend
-fetch('/get-api-keys')
-.then(response => response.json())
-.then(data => {
-    const apiKey = data.openaip;
-    const apiKeyMaptiler = data.maptiler;
-    const apiKeyJawg = data.jawg;
-
-    //Basemap layer from OpenStreetMap
-    const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors'
-    });
-
-    //dark mode map from jawg.io
-    const Darkmode = L.tileLayer(`https://tile.jawg.io/e292ef5c-3844-4eef-83ad-a14b12e76451/{z}/{x}/{y}{r}.png?access-token=${apiKeyJawg}`, {
-    maxZoom: 19,
-    attribution: `<a href="https://maplibre.org">MapLibre</a> &copy; <a href="http://www.jawg.io">JawgMaps</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`
-    });
-
-    //OpenAIP layer for airspace, airports, navaids, etc.
-    const OpenAIP = L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
-    maxZoom: 18,
-    attribution: '<a href="https://www.openaip.net/">OpenAIP Data</a>(<a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC 4.0</a>)'
-    });
-
-    //satellite map from mapTiler
-    const Satellite = L.tileLayer(`https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${apiKeyMaptiler}`, {
-    maxZoom: 19,
-    attribution: ` &copy; <a href="https://www.maptiler.com">maptiler</a>`
-    });
-
-    //finding the Basemap style from settings, and the route data from route
-    fetch('/get-all')
+async function load_map() {
+    //getting API keys from backend
+    fetch('/get-api-keys')
     .then(response => response.json())
-    .then(FlightData => {
-        const mapStyle = FlightData.settings.map_style;
-        const theme = FlightData.settings.theme;
-        const route = FlightData.flight.route
+    .then(data => {
+        const apiKey = data.openaip;
+        const apiKeyMaptiler = data.maptiler;
+        const apiKeyJawg = data.jawg;
 
-        if (mapStyle == 'normal' && theme == 'light') {
-            mapTilerLogo.style.display = "none";
-            //crafting the map
-            const map = L.map('routeMAP', { 
-            center: [51.505, -0.09], //Initial center coords (set to London)
-            zoom: 9,
-            layers: [Basemap, OpenAIP]
-        }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+        //Basemap layer from OpenStreetMap
+        const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors'
+        });
 
-        } else if (mapStyle == 'normal' && theme == 'dark') {
-            mapTilerLogo.style.display = "none";
-            //crafting the map
-            const map = L.map('routeMAP', { 
-            center: [51.505, -0.09], //Initial center coords (set to London)
-            zoom: 12,
-            layers: [Darkmode, OpenAIP]
-        }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+        //dark mode map from jawg.io
+        const Darkmode = L.tileLayer(`https://tile.jawg.io/e292ef5c-3844-4eef-83ad-a14b12e76451/{z}/{x}/{y}{r}.png?access-token=${apiKeyJawg}`, {
+        maxZoom: 19,
+        attribution: `<a href="https://maplibre.org">MapLibre</a> &copy; <a href="http://www.jawg.io">JawgMaps</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`
+        });
 
-        } else if (mapStyle == 'satellite') {
-            mapTilerLogo.style.display = "inline";
-            //crafting the map
-            const map = L.map('routeMAP', { 
-            center: [51.505, -0.09], //Initial center coords (set to London)
-            zoom: 9,
-            layers: [Satellite, OpenAIP]
-        });const line = L.polyline(route, { color: '#f0F' }).addTo(map);
-        }
-    })
+        //OpenAIP layer for airspace, airports, navaids, etc.
+        const OpenAIP = L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
+        maxZoom: 18,
+        attribution: '<a href="https://www.openaip.net/">OpenAIP Data</a>(<a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC 4.0</a>)'
+        });
 
-    .catch(error => {
-        console.error('MapCreationError', error);
-        showAlert('An error occurred while fetching map data. Please try again later.');
+        //satellite map from mapTiler
+        const Satellite = L.tileLayer(`https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${apiKeyMaptiler}`, {
+        maxZoom: 19,
+        attribution: ` &copy; <a href="https://www.maptiler.com">maptiler</a>`
+        });
+
+        //finding the Basemap style from settings, and the route data from route
+        fetch('/get-all')
+        .then(response => response.json())
+        .then(FlightData => {
+            const mapStyle = FlightData.settings.map_style;
+            const theme = FlightData.settings.theme;
+            const route = FlightData.flight.route
+
+            if (mapStyle == 'normal' && theme == 'light') {
+                mapTilerLogo.style.display = "none";
+                //crafting the map
+                 map = L.map('routeMAP', { 
+                center: [51.505, -0.09], //Initial center coords (set to London)
+                zoom: 9,
+                layers: [Basemap, OpenAIP]
+            }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+
+            } else if (mapStyle == 'normal' && theme == 'dark') {
+                mapTilerLogo.style.display = "none";
+                //crafting the map
+                 map = L.map('routeMAP', { 
+                center: [51.505, -0.09], //Initial center coords (set to London)
+                zoom: 12,
+                layers: [Darkmode, OpenAIP]
+            }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+
+            } else if (mapStyle == 'satellite') {
+                mapTilerLogo.style.display = "inline";
+                //crafting the map
+                 map = L.map('routeMAP', { 
+                center: [51.505, -0.09], //Initial center coords (set to London)
+                zoom: 9,
+                layers: [Satellite, OpenAIP]
+            });const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+            }
+        })
+
+        .catch(error => {
+            console.error('MapCreationError', error);
+            showAlert('An error occurred while fetching map data. Please try again later.');
+        });
     });
-});
 
-
+}
 //-------------------------------------------ROUTING--------------------------
 
 //------------------------adding a waypoint
@@ -315,3 +315,22 @@ async function add_av(avPoint) {
         }
     await add_waypoint(AvCoords);
 }
+
+//----------------------Updating map without realoading page
+
+/*
+function reload_map() {
+    //removes map instance without removing the whole container
+    if (map) {
+      try {
+        map.off(); //detaches any event listeners (i dont have any here anyways)
+        map.remove(); //removes the whole contaier
+      } catch (error) {
+        console.warn("Error removing map during reload:", error);
+        showAlert('An error occured. Please reload the page')
+      }
+      map = null; //container then re innitalized but set to null
+    }
+    load_map();
+} 
+*/
