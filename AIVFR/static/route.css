@@ -38,16 +38,13 @@
 
 /*splitting the route items to take fractions of the viewport height*/
 #route_setup {
-    height: 22vh;
+    min-height: 22vh;
     padding: 15px;
 }
 
-#ICAO_route {
-    height: 20vh;
-}
 
 #route_generator {
-    height: 50vh;
+    min-height: 50vh;
 }
 
 /*-------Route setup-------*/
@@ -127,13 +124,13 @@ a {
     padding: 5px;
     background-color: var(--bg);
     color: var(--text);
-    height: 100%;
     width: 100%;
     border-radius: 10px;
     resize: none;/*do not allow resizing*/
     font-family: 'Manrope';
     font-size: 14px;
     border: 1px solid var(--onhover);
+    pointer-events: none;
 }
 
 #AI_twinkle {
@@ -184,7 +181,7 @@ a {
     margin-top: 5px;
 }
 
-#generateRoute:hover {
+#generateRoute:hover, #addWaypoint:hover {
     background-color: var(--primary);
 }
 
@@ -200,4 +197,55 @@ a {
     background-color: hsla(0, 0%, 100%, 0.7);
     padding: 5px;
     border-radius: 5px;
+}
+
+#ICAO_route {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 10px;
+    height: 160px;
+
+}
+
+#addWaypointContainer {
+    padding: 10px
+}
+
+.waypoint_choice, #addWaypoint {
+    width: auto;
+    font-family: 'Manrope';
+    height: auto;
+    font-size: 13px;
+    padding: 7px;
+    border-radius: 8px;
+}
+
+.waypoint_choice {
+    background-color: var(--onhover);
+    margin-bottom: 10px;
+    padding-left: 11px;
+    padding-right: 11px;
+}
+
+#addWaypoint{
+    width: 100%;
+    background-color: var(--bg);
+}
+
+#searchWaypoint {
+    width: 100%;
+    margin-bottom: 10px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid var(--onhover);
+    background-color: var(--bg);
+    font-family: 'Manrope';
+}
+
+#route_plan {
+    margin-bottom: 10px;
+}
+
+#CityOrTown.active, #avFeature.active {
+    background-color: var(--primary);
 }

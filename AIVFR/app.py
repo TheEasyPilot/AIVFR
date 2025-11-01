@@ -151,7 +151,9 @@ data_template = {
                   "units_altitude" : "feet",
                   "units_mass": "kilogram",
                   "units_fuel" : "litre",
-                  "units_distance" : "nautical_mile"},
+                  "units_distance" : "nautical_mile",
+                  "waypoint_addType" : "City/Town"
+                  },
     "flight" : {
         "saved" : "False",
         "departureAirport_code" : "",
