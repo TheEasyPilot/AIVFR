@@ -52,9 +52,19 @@
             <!--ALTERNATE_NAME--> <span id="alternate_name" class="{{ 'active' if flight.alternateAirport_name != '' else '' }}">{{ flight.alternateAirport_name }}</span>
           </div>
         </div>
-<!---------------------------------------ROUTE IN ICAO FORMAT----->
+<!---------------------------------------ROUTE----->
         <div id="ICAO_route" class="routeItem">
-          <textarea id="ICAOroute" name="ICAOroute" rows="4" cols="50" placeholder="Start typing a route in ICAO format, or generate a route below."></textarea>
+          <div>
+            <h3 id="route_plan">Route Plan</h3>
+            <textarea id="ICAOroute" name="ICAOroute" rows="4" cols="50" placeholder="Your route will appear here."></textarea>
+          </div>
+
+          <div id="addWaypointContainer">
+            <button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'City/Town' else '' }}" id="CityOrTown">City/Town</button>
+            <span><button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'VRP/NAVAID/Airport' else '' }}" id='avFeature'>VRP/NAVAID/Airport</button></span>
+            <input id="searchWaypoint" type="text" name="searchWaypoint" placeholder="{{ 'Enter a City or Town name' if settings.waypoint_addType == 'City/Town' else 'Enter ICAO code, Navaid or VRP' }}" value="">
+            <span><button class="button TARGET" id="addWaypoint">Add to Route</button></span>
+          </div>
         </div>
 <!------------------------------------------------------------>
         <!--AI ROUTE GENERATOR-->

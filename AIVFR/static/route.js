@@ -105,7 +105,7 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
                 await add_waypoint(departureCoords);
                 await add_waypoint(arrivalCoords);
 
-                //reload_map();
+                reload_map();
 
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
@@ -318,7 +318,7 @@ async function add_av(avPoint) {
 
 //----------------------Updating map without realoading page
 
-/*
+
 function reload_map() {
     //removes map instance without removing the whole container
     if (map) {
@@ -333,4 +333,33 @@ function reload_map() {
     }
     load_map();
 } 
-*/
+
+//-------------------------Picking a waypoint------------------------
+
+//switching between city/town or an aviation feature:
+
+function updateSettings(key, value) {
+        fetch("/update-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value})
+    });
+    }
+
+const CityOrTown = document.getElementById('CityOrTown')
+const avFeature = document.getElementById('avFeature')
+const searchWaypoint = document.getElementById('searchWaypoint')
+
+CityOrTown.addEventListener('click', () => {
+    CityOrTown.classList.add('active')
+    avFeature.classList.remove('active')
+    searchWaypoint.placeholder = 'Enter a City or Town name'
+    updateSettings("waypoint_addType", "City/Town")
+})
+
+avFeature.addEventListener('click', () => {
+    CityOrTown.classList.remove('active')
+    avFeature.classList.add('active')
+    searchWaypoint.placeholder = 'Enter ICAO code, Navaid or VRP'
+    updateSettings("waypoint_addType", 'VRP/NAVAID/Airport')
+})
