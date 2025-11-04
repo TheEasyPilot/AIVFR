@@ -270,7 +270,7 @@ async function add_city(city) {
             const data = await response.json();
 
             //then, add the city to the route
-            await add_waypoint(data);
+            await add_waypoint(data.coordinates);
 
         } catch (error) {
             showAlert("Error fetching city details. Please make sure the city name is correct.");
@@ -308,15 +308,17 @@ async function fetchAvCoords(point) {
 
 async function add_av(avPoint) {
     try {
-        AvCoords = await fetchAvCoords(avPoint);
+        var AvCoords = await fetchAvCoords(avPoint);
         } catch (error) {
         showAlert("Waypoint not found. Please check the name and location of your waypoint and try again.");
         return null;
         }
+
+    [AvCoords[0], AvCoords[1]] = [AvCoords[1], AvCoords[0]];
     await add_waypoint(AvCoords);
 }
 
-//----------------------Updating map without realoading page
+//----------------------Updating map without reloading page
 
 
 function reload_map() {
@@ -363,3 +365,29 @@ avFeature.addEventListener('click', () => {
     searchWaypoint.placeholder = 'Enter ICAO code, Navaid or VRP'
     updateSettings("waypoint_addType", 'VRP/NAVAID/Airport')
 })
+
+//-------------------dealing with user-inputted wawypoint--------
+
+const waypoint = document.getElementById('searchWaypoint')
+const waypointForm = document.getElementById('addWaypointForm')
+
+waypointForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    fetch('/get-settings')
+    .then(response => response.json())
+    .then(async data => {
+        const addType = data.waypoint_addType;
+
+        if (addType == 'City/Town') {
+            await add_city(waypoint.value);
+            waypoint.value = '';
+            reload_map();
+
+        } else if (addType == 'VRP/NAVAID/Airport') {
+            await add_av(waypoint.value);
+            waypoint.value = '';
+            reload_map();
+        }
+    });
+});

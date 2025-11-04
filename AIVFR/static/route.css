@@ -240,6 +240,7 @@ a {
     border: 1px solid var(--onhover);
     background-color: var(--bg);
     font-family: 'Manrope';
+    padding-left: 5px;
 }
 
 #route_plan {
