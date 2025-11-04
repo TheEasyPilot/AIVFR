@@ -356,7 +356,7 @@ def get_avCoords():
     #^^no need to verify country as already done in Verify ICAO
     
     #if that doesnt work check if its a navaid
-    except IndexError:
+    except (IndexError, KeyError):
         try:
             navaid = data_navaids["items"][0]
             navaid_name = navaid["name"]
@@ -366,9 +366,9 @@ def get_avCoords():
                     return jsonify({"coordinates" : navaid["geometry"]["coordinates"]}), 200
                 else:
                     return jsonify({"error": "Point not found in UK database"}), 400
-                
-        #if that doesnt work check if its a reporting point        
-        except IndexError:
+
+        #if that doesnt work check if its a reporting point
+        except (IndexError, KeyError):
             try:
                 vrp = data_vrps["items"][0]
                 vrp_name = vrp["name"]
@@ -380,7 +380,7 @@ def get_avCoords():
                         return jsonify({"error": "Point not found in UK database"}), 400
                     
             #if that doesnt work, throw an error as point hasnt been found
-            except IndexError:
+            except (IndexError, KeyError):
                 return jsonify({"error": "Point not found in UK database"}), 400
 
 #------------------------------------------------ROUTING-----------------------------------------------------

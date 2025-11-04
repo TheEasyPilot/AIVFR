@@ -62,8 +62,12 @@
           <div id="addWaypointContainer">
             <button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'City/Town' else '' }}" id="CityOrTown">City/Town</button>
             <span><button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'VRP/NAVAID/Airport' else '' }}" id='avFeature'>VRP/NAVAID/Airport</button></span>
-            <input id="searchWaypoint" type="text" name="searchWaypoint" placeholder="{{ 'Enter a City or Town name' if settings.waypoint_addType == 'City/Town' else 'Enter ICAO code, Navaid or VRP' }}" value="">
-            <span><button class="button TARGET" id="addWaypoint">Add to Route</button></span>
+
+            <form id="addWaypointForm" enctype="multipart/form-data">
+              <input id="searchWaypoint" type="text" name="searchWaypoint" placeholder="{{ 'Enter a City or Town name' if settings.waypoint_addType == 'City/Town' else 'Enter ICAO code, Navaid or VRP' }}" value="">
+              <span><button type="submit" class="button TARGET" id="addWaypoint">Add to Route</button></span>
+            </form>
+
           </div>
         </div>
 <!------------------------------------------------------------>
