@@ -366,14 +366,17 @@ avFeature.addEventListener('click', () => {
     updateSettings("waypoint_addType", 'VRP/NAVAID/Airport')
 })
 
-//-------------------dealing with user-inputted wawypoint--------
+//-------------------dealing with user-inputted waypoint--------
 
 const waypoint = document.getElementById('searchWaypoint')
 const waypointForm = document.getElementById('addWaypointForm')
 
+//wait for a submission by the user
 waypointForm.addEventListener('submit', function(event) {
     event.preventDefault();
     
+    //get the current waypoint type from settings
+    //(to know whether to add a city or an aviation feature)
     fetch('/get-settings')
     .then(response => response.json())
     .then(async data => {

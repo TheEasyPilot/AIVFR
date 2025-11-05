@@ -201,7 +201,7 @@ a {
 
 #ICAO_route {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1.3fr 1fr;
     gap: 10px;
     height: 160px;
 

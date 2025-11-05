@@ -80,10 +80,10 @@ button {
 }
 
 #settings {
-    position: absolute;
-    bottom: 90px;
+    position: relative;
+    margin-top: 15px;
     width: 30px;
-    left: 14px;
+    left: 5px;
 }
 
 hr, #dashboard {

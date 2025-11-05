@@ -306,11 +306,13 @@ def get_cityCoords():
         data = response.json()
         if data:
             city_info = data[0]  #Get the first matching city
+            #get the necessary info
             name = city_info.get('name')
             country = city_info.get('country')
             latitude = city_info.get('latitude')
             longitude = city_info.get('longitude')
 
+            #check for a matching city in the UK
             if name.lower() == city.lower() and country == "GB":
                 return jsonify({
                     "name": name,
