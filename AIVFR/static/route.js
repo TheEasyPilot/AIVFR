@@ -255,27 +255,27 @@ async function add_waypoint(waypoint) {
 async function add_city(city) {
     //first, check the city is in the cities database
     try {
-            const response = await fetch("/get-cityCoords", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ city: city }), //sends off the city to the backend
-            });
+        const response = await fetch("/get-cityCoords", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            },
+        body: JSON.stringify({ city: city }), //sends off the city to the backend
+        });
 
-            if (!response.ok) {
-                throw new Error("Network response was not ok"); //for non-200 errors
-            }
+        if (!response.ok) {
+            throw new Error("Network response was not ok"); //for non-200 errors
+        }
 
-            const data = await response.json();
+        const data = await response.json();
 
-            //then, add the city to the route
-            await add_waypoint(data.coordinates);
+        //then, add the city to the route
+        await add_waypoint(data.coordinates);
 
         } catch (error) {
             showAlert("Error fetching city details. Please make sure the city name is correct.");
             return null;
-        }
+            }
     }
 
 //-------------Fetching the coords for airport related features-----------
@@ -385,12 +385,12 @@ waypointForm.addEventListener('submit', function(event) {
         if (addType == 'City/Town') {
             await add_city(waypoint.value);
             waypoint.value = '';
-            reload_map();
 
         } else if (addType == 'VRP/NAVAID/Airport') {
             await add_av(waypoint.value);
-            waypoint.value = '';
-            reload_map();
+            waypoint.value = ''; 
         }
+
+        reload_map();
     });
 });
