@@ -56,7 +56,7 @@
         <div id="ICAO_route" class="routeItem">
           <div>
             <h3 id="route_plan">Route Plan</h3>
-            <textarea id="ICAOroute" name="ICAOroute" rows="4" cols="50" placeholder="Your route will appear here."></textarea>
+            <textarea id="ICAOroute" name="ICAOroute" rows="4" cols="50" placeholder="Your route will appear here.">{{ ' ➔ '.join(flight.route_names) if flight.route_names else '' }}</textarea>
           </div>
 
           <div id="addWaypointContainer">

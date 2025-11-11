@@ -131,6 +131,7 @@ a {
     font-size: 14px;
     border: 1px solid var(--onhover);
     pointer-events: none;
+    vertical-align: middle;
 }
 
 #AI_twinkle {

@@ -163,6 +163,7 @@ data_template = {
         "alternateAirport_code" : "",
         "alternateAirport_name" : "",
         "route" : [],
+        "route_names" : [],
         "distance" : {"value" : 0, "class" : "distance"},
         "time" : "",
     }
@@ -354,7 +355,7 @@ def get_avCoords():
         airport = data_airports["items"][0]
         icao_code = airport["icaoCode"]
         if icao_code == data:
-            return jsonify({"coordinates" : airport["geometry"]["coordinates"]}), 200
+            return jsonify({"name": airport["icaoCode"], "coordinates" : airport["geometry"]["coordinates"]}), 200
     #^^no need to verify country as already done in Verify ICAO
     
     #if that doesnt work check if its a navaid
@@ -365,7 +366,7 @@ def get_avCoords():
             navaid_country = navaid["country"]
             if navaid_name == data:
                 if navaid_country == 'GB':
-                    return jsonify({"coordinates" : navaid["geometry"]["coordinates"]}), 200
+                    return jsonify({"name": navaid["name"], "coordinates" : navaid["geometry"]["coordinates"]}), 200
                 else:
                     return jsonify({"error": "Point not found in UK database"}), 400
 
@@ -377,7 +378,7 @@ def get_avCoords():
                 vrp_country = vrp["country"]
                 if vrp_name == data:
                     if vrp_country == 'GB':
-                        return jsonify({"coordinates" : vrp["geometry"]["coordinates"]}), 200
+                        return jsonify({"name": vrp["name"], "coordinates" : vrp["geometry"]["coordinates"]}), 200
                     else:
                         return jsonify({"error": "Point not found in UK database"}), 400
                     
@@ -392,6 +393,8 @@ def get_avCoords():
 @main.route("/add-waypoint", methods=["POST"])
 def add_waypoint():
     waypoint = request.json.get("waypoint") #expecting a list [latitude, longitude]
+    name = request.json.get("name") #expecting the name of the waypoint
+    session["flight_data"]["flight"]["route_names"].append(name)
     session["flight_data"]["flight"]["route"].append(waypoint)
     session.modified = True
     return jsonify(session["flight_data"]["flight"]["route"]), 200
@@ -399,6 +402,7 @@ def add_waypoint():
 @main.route("/remove-waypoint", methods=["POST"])
 def remove_waypoint():
     index = request.json.get("index") #expecting the index of the waypoint to remove
+    session["flight_data"]["flight"]["route_names"].pop(index)
     try:
         session["flight_data"]["flight"]["route"].pop(index)
         session.modified = True
