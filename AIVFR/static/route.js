@@ -100,8 +100,8 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
                 const departureCoords = await fetchAvCoords(departureAirport_code.value);
                 const arrivalCoords = await fetchAvCoords(arrivalAirport_code.value);
 
-                [departureCoords[0], departureCoords[1]] = [departureCoords[1], departureCoords[0]]; //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
-                [arrivalCoords[0], arrivalCoords[1]] = [arrivalCoords[1], arrivalCoords[0]]; 
+                [departureCoords[0][0], departureCoords[0][1]] = [departureCoords[0][1], departureCoords[0][0]]; //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
+                [arrivalCoords[0][0], arrivalCoords[0][1]] = [arrivalCoords[0][1], arrivalCoords[0][0]];
                 await add_waypoint(departureCoords);
                 await add_waypoint(arrivalCoords);
 
@@ -231,14 +231,14 @@ async function load_map() {
 
 //------------------------adding a waypoint
 
-async function add_waypoint(waypoint) {
+async function add_waypoint(waypoint, name) {
     try {
     const response = await fetch("/add-waypoint", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ waypoint: waypoint }), //sends off the corrdinates to the backend
+        body: JSON.stringify({ waypoint: waypoint , name: name}), //sends off the corrdinates to the backend
     });
 
     if (!response.ok) {
@@ -270,7 +270,7 @@ async function add_city(city) {
         const data = await response.json();
 
         //then, add the city to the route
-        await add_waypoint(data.coordinates);
+        await add_waypoint(data.coordinates, data.name.toUpperCase());
 
         } catch (error) {
             showAlert("Error fetching city details. Please make sure the city name is correct.");
@@ -296,7 +296,7 @@ async function fetchAvCoords(point) {
     }
 
     const data = await response.json();
-    return data.coordinates; //returns the coordinates
+    return [data.coordinates, data.name]; //returns the coordinates
 
     } catch (error) {
         showAlert("Waypoint not found. Please check the name and location of your waypoint and try again.");
@@ -314,8 +314,8 @@ async function add_av(avPoint) {
         return null;
         }
 
-    [AvCoords[0], AvCoords[1]] = [AvCoords[1], AvCoords[0]];
-    await add_waypoint(AvCoords);
+    [AvCoords[0][0], AvCoords[0][1]] = [AvCoords[0][1], AvCoords[0][0]];
+    await add_waypoint(AvCoords[0], AvCoords[1]);
 }
 
 //----------------------Updating map without reloading page
