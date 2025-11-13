@@ -52,24 +52,33 @@
             <!--ALTERNATE_NAME--> <span id="alternate_name" class="{{ 'active' if flight.alternateAirport_name != '' else '' }}">{{ flight.alternateAirport_name }}</span>
           </div>
         </div>
-<!---------------------------------------ROUTE----->
-        <div id="ICAO_route" class="routeItem">
-          <div>
+<!---------------------------------------------------------ROUTE PLAN----->
+        <div id="routePlan" class="routeItem">
+          <!--------------------HEADER-------------->
+          <div><!--Title-->
             <h3 id="route_plan">Route Plan</h3>
-            <textarea id="ICAOroute" name="ICAOroute" rows="4" cols="50" placeholder="Your route will appear here.">{{ ' ➔ '.join(flight.route_names) if flight.route_names else '' }}</textarea>
+            <!-------------------BODY--------------->
+            <!--READABLE ROUTE--><textarea id="route_names" name="route_names" rows="4" cols="50" placeholder="Your route will appear here.">{{ ' ➔ '.join(flight.route_names) if flight.route_names else '' }}</textarea>
           </div>
-
+          <!--MANUAL ROUTE MAKING-->
           <div id="addWaypointContainer">
             <button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'City/Town' else '' }}" id="CityOrTown">City/Town</button>
             <span><button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'VRP/NAVAID/Airport' else '' }}" id='avFeature'>VRP/NAVAID/Airport</button></span>
 
+            <!--Submission form for waypoints-->
             <form id="addWaypointForm" enctype="multipart/form-data">
               <input id="searchWaypoint" type="text" name="searchWaypoint" placeholder="{{ 'Enter a City or Town name' if settings.waypoint_addType == 'City/Town' else 'Enter ICAO code, Navaid or VRP' }}" value="">
-              <span><button type="submit" class="button TARGET" id="addWaypoint">Add to Route</button></span>
+
+              <!--Submission buttons to either add/remove waypoints-->
+              <div id="addOrRemoveWaypoints">
+                <button type="submit" class="button TARGET" id="addWaypoint" name="action" value="add">Add waypoint</button>
+                <span><button type="submit" class="button TARGET" id="removeWaypoint" name="action" value="remove">Remove waypoint</button></span>
+              </div>
             </form>
 
           </div>
         </div>
+
 <!------------------------------------------------------------>
         <!--AI ROUTE GENERATOR-->
         <div id="route_generator" class="routeItem">
