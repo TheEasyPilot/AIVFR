@@ -394,14 +394,25 @@ def get_avCoords():
 def add_waypoint():
     waypoint = request.json.get("waypoint") #expecting a list [latitude, longitude]
     name = request.json.get("name") #expecting the name of the waypoint
-    session["flight_data"]["flight"]["route_names"].append(name)
-    session["flight_data"]["flight"]["route"].append(waypoint)
+
+    add_index = len(session["flight_data"]["flight"]["route_names"]) - 1
+
+    #allow the inital addition of departure and destination airports
+    if add_index <= 0:
+        session["flight_data"]["flight"]["route_names"].append(name)
+        session["flight_data"]["flight"]["route"].append(waypoint)
+
+    #for adding waypoints in between departure and destination
+    else:
+        session["flight_data"]["flight"]["route_names"].insert(add_index, name)
+        session["flight_data"]["flight"]["route"].insert(add_index, waypoint)
+
     session.modified = True
     return jsonify(session["flight_data"]["flight"]["route"]), 200
 
 @main.route("/remove-waypoint", methods=["POST"])
 def remove_waypoint():
-    index = request.json.get("index") #expecting the index of the waypoint to remove
+    index = request.json.get("waypointIndex") #expecting the index of the waypoint to remove
     session["flight_data"]["flight"]["route_names"].pop(index)
     try:
         session["flight_data"]["flight"]["route"].pop(index)

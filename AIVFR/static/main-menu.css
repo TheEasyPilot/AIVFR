@@ -167,6 +167,7 @@ hr {
     color: hsla(0, 0%, 0%, 0.1);
 }
 
+/*browse button*/
 .browse {
     position: relative;
     font-family: 'Manrope';
@@ -185,6 +186,7 @@ hr {
     background-color: var(--primary);
 }
 
+/*file name display*/
 #fileName {
     font-family: 'Manrope';
     font-size: 18px;

@@ -97,15 +97,31 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
 
                 /*when arrival aerodrome is entered, fetch the coords for departure and
                  arrival for intial route drawing*/
-                const departureCoords = await fetchAvCoords(departureAirport_code.value);
-                const arrivalCoords = await fetchAvCoords(arrivalAirport_code.value);
 
-                [departureCoords[0][0], departureCoords[0][1]] = [departureCoords[0][1], departureCoords[0][0]]; //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
-                [arrivalCoords[0][0], arrivalCoords[0][1]] = [arrivalCoords[0][1], arrivalCoords[0][0]];
-                await add_waypoint(departureCoords);
-                await add_waypoint(arrivalCoords);
+                /*checking if both departure and arrival aerodromes are set already*/
+                fetch('/get-flight')
+                    .then(response => response.json())
+                    .then(async data => {
+                        const route = data.route;
+                        if (route.length <= 1) { //if there are no waypoints yet
+                            const departureCoords = await fetchAvCoords(departureAirport_code.value);
+                            const arrivalCoords = await fetchAvCoords(arrivalAirport_code.value);
 
-                reload_map();
+                            [departureCoords[0][0], departureCoords[0][1]] = [departureCoords[0][1], departureCoords[0][0]]; //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
+                            [arrivalCoords[0][0], arrivalCoords[0][1]] = [arrivalCoords[0][1], arrivalCoords[0][0]];
+
+                            await add_waypoint(departureCoords[0], departureCoords[1]);
+                            await add_waypoint(arrivalCoords[0], arrivalCoords[1]);
+
+                            reload_map();
+                            update_route_names();
+                        } else {
+                            showAlert("Both aerodromes are set already. Clear the route to reset them.");
+                        }
+                    });
+
+                /*BIG LIMITATION - departure/arrival cant be updated instantly
+                 if both aerodromes are already set, user has to clear the route first*/
 
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
@@ -366,31 +382,126 @@ avFeature.addEventListener('click', () => {
     updateSettings("waypoint_addType", 'VRP/NAVAID/Airport')
 })
 
-//-------------------dealing with user-inputted waypoint--------
 
+
+//updating the route names list
+const route_names = document.getElementById('route_names')
+
+function update_route_names() {
+    fetch('/get-flight')
+        .then(response => response.json())
+        .then(FlightData => {
+            const route = FlightData.route_names;
+
+            route_names.value = route.join(' ➔ ');
+        });
+
+}
+
+//-------------------ADDING AND REMOVING WAYPOINTS MANUALLY----------------
+//adding event listener to the waypoint form
 const waypoint = document.getElementById('searchWaypoint')
-const waypointForm = document.getElementById('addWaypointForm')
 
 //wait for a submission by the user
-waypointForm.addEventListener('submit', function(event) {
+document.getElementById('addWaypointForm').onsubmit = async function(event) {
     event.preventDefault();
-    
-    //get the current waypoint type from settings
-    //(to know whether to add a city or an aviation feature)
-    fetch('/get-settings')
-    .then(response => response.json())
-    .then(async data => {
-        const addType = data.waypoint_addType;
 
-        if (addType == 'City/Town') {
-            await add_city(waypoint.value);
+    //determine whether to add or remove a waypoint (by reading what is stored in the value)
+    const actionValue = (event.submitter && event.submitter.value) || new FormData(this).get('action');
+
+    //**************REMOVING A WAYPOINT*****************
+    if (actionValue === 'remove') {
+        //first, get the index of the waypoint to be removed
+        fetch('/get-flight')
+        .then(response => response.json())
+        .then(async data => {
+            const route_names = data.route_names;
+            const WaypointIndex = route_names.indexOf(waypoint.value.toUpperCase());
+            
+            //if the waypoint is not found, alert the user
+            if (WaypointIndex == -1) {
+                showAlert("Waypoint not found in the current route. Please check the name and try again.");
+                waypoint.value = '';
+                return;
+
+                //prevent removing departure or arrival aerodrome
+            } else if (waypoint.value.toUpperCase() == data.departureAirport_code || waypoint.value.toUpperCase() == data.destinationAirport_code) {
+                showAlert("You cannot remove the departure or arrival aerodrome from here.");
+                waypoint.value = '';
+                return;
+            }
+
+            //then, remove the waypoint using the index
+            try {
+            const response = await fetch("/remove-waypoint", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ waypointIndex: WaypointIndex }), //sends off the index to the backend
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok"); //for non-200 errors
+            }
+
+            } catch (error) {
+                showAlert("An error occured whilst removing the waypoint. Please try again.");
+                return null;
+            }
+            
             waypoint.value = '';
+            reload_map();
+            update_route_names();
+            });
+        
+      
+        
+        //*************ADDING A WAYPOINT*****************
+    } else if (actionValue === 'add') {
 
-        } else if (addType == 'VRP/NAVAID/Airport') {
-            await add_av(waypoint.value);
-            waypoint.value = ''; 
-        }
+        //get the current waypoint type from settings
+        //(to know whether to add a city or an aviation feature)
+        fetch('/get-all')
+        .then(response => response.json())
+        .then(async data => {
+            const addType = data.settings.waypoint_addType;
+            const departureAirport = data.flight.departureAirport_code;
+            const destinationAirport = data.flight.destinationAirport_code;
+            const route_names = data.flight.route_names;
 
-        reload_map();
-    });
-});
+            //prevent adding duplicate waypoints
+            if (route_names.includes(waypoint.value.toUpperCase())) {
+                showAlert("This waypoint is already in the current route. Please choose another waypoint.");
+                waypoint.value = '';
+                return;
+            }
+
+            //prevent adding departure or arrival airport as a waypoint
+            if (waypoint.value.toUpperCase() == departureAirport || waypoint.value.toUpperCase() == destinationAirport) {
+                showAlert("You cannot add the departure or arrival aerodrome as a waypoint.");
+                waypoint.value = '';
+                return;
+
+            } else if (departureAirport == '' || destinationAirport == '') {
+                showAlert("Please make sure both departure and arrival aerodromes are set before adding waypoints.");
+                waypoint.value = '';
+                return;
+            }
+
+            //if all is valid a waypoint can be added
+            if (addType == 'City/Town') {
+                await add_city(waypoint.value);
+                waypoint.value = '';
+
+            } else if (addType == 'VRP/NAVAID/Airport') {
+                await add_av(waypoint.value);
+                waypoint.value = ''; 
+            }
+
+            reload_map();
+            update_route_names();
+        });
+    }
+    
+};
