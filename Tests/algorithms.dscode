@@ -19,7 +19,7 @@ FUNCTION prompt(type, text):
 BEGIN
     model = "gpt-3.5-turbo",
     instructions = [
-        "role": fetchPrompt(type),
+        "role": fetchRole(type),
         "user's prompt": text
         ]
     RETURN response
