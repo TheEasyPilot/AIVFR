@@ -364,9 +364,10 @@ def get_avCoords():
             navaid = data_navaids["items"][0]
             navaid_name = navaid["name"]
             navaid_country = navaid["country"]
-            if navaid_name == data:
+            navaid_identifier = navaid["identifier"]
+            if navaid_name == data or navaid_identifier == data:
                 if navaid_country == 'GB':
-                    return jsonify({"name": navaid["name"], "coordinates" : navaid["geometry"]["coordinates"]}), 200
+                    return jsonify({"name": navaid["identifier"], "coordinates" : navaid["geometry"]["coordinates"]}), 200
                 else:
                     return jsonify({"error": "Point not found in UK database"}), 400
 
@@ -395,6 +396,7 @@ def add_waypoint():
     waypoint = request.json.get("waypoint") #expecting a list [latitude, longitude]
     name = request.json.get("name") #expecting the name of the waypoint
 
+    #waypoints are always added before the destination airport (so one before the end)
     add_index = len(session["flight_data"]["flight"]["route_names"]) - 1
 
     #allow the inital addition of departure and destination airports
@@ -413,8 +415,9 @@ def add_waypoint():
 @main.route("/remove-waypoint", methods=["POST"])
 def remove_waypoint():
     index = request.json.get("waypointIndex") #expecting the index of the waypoint to remove
-    session["flight_data"]["flight"]["route_names"].pop(index)
     try:
+        #remove the waypoint at the specified index
+        session["flight_data"]["flight"]["route_names"].pop(index)
         session["flight_data"]["flight"]["route"].pop(index)
         session.modified = True
         return jsonify(session["flight_data"]["flight"]["route"]), 200
