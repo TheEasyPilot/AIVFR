@@ -426,7 +426,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
 
                 //prevent removing departure or arrival aerodrome
             } else if (waypoint.value.toUpperCase() == data.departureAirport_code || waypoint.value.toUpperCase() == data.destinationAirport_code) {
-                showAlert("You cannot remove the departure or arrival aerodrome from here.");
+                showAlert("You cannot remove the departure or arrival aerodrome from here. Please start a new flight.");
                 waypoint.value = '';
                 return;
             }
