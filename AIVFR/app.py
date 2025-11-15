@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, session, jsonify, request, Response, make_response, redirect, url_for
-import json, os, copy, pint, requests
+from flask import Blueprint, render_template, session, jsonify, request
+import os, pint, requests
+from openai import OpenAI
 from dotenv import load_dotenv
 
 main = Blueprint('app', __name__)
@@ -423,3 +424,40 @@ def remove_waypoint():
         return jsonify(session["flight_data"]["flight"]["route"]), 200
     except IndexError:
         return jsonify({"error": "Invalid waypoint index"}), 400
+
+#-----------------------------------------------AI------------------------------------------------------------
+#-----------Making the role for the AI
+def fetchRole(type):
+    if type == 'Route':
+        role = 'ROLE FOR ROUTE'
+
+    elif type == 'Brief':
+        role = 'ROLE FOR BRIEF'
+    
+    elif type == 'Navlog':
+        role = 'ROLE FOR NAVLOG'
+    
+    return role
+
+
+#-----------Making a prompt
+@main.route('/prompt', methods=["POST"])
+def prompt():
+    type = request.json.get("type")
+    text = request.json.get("text")
+    try:
+        client = OpenAI()
+
+        response = client.responses.create(
+            model="gpt-4.1",
+            input=[
+                {
+                    "role" : fetchRole(type),
+                    "content" : text
+                }
+            ]
+        )
+        
+        return jsonify({'response' : response.output_text}), 200
+    except:
+        return jsonify({"error": "An error occured."}), 400

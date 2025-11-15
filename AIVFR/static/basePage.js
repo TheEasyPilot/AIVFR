@@ -83,5 +83,25 @@ export function showAlert(message) {
     }, 3000);
 }
 
+//--------------------AI Prompting------
+export async function prompt(type, text) {
+    try {
+        const response = await fetch("/prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({type: type, text: text}) //sends prompt to backend
+      });
+  
 
+        if (!response.ok) {
+            throw new Error("Network response was not ok"); //for non-200 errors
+        }
 
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        showAlert("An Error occured whilst generating the response. Check your connection and try again.");
+        return null;
+    }
+}
