@@ -91,16 +91,16 @@ export async function prompt(type, text) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({type: type, text: text}) //sends prompt to backend
       });
-  
 
         if (!response.ok) {
-            throw new Error("Network response was not ok"); //for non-200 errors
-        }
+                throw new Error("Network response was not ok"); //for non-200 errors
+            }
 
         const data = await response.json();
-        return data;
+        return data.response; //contains the full response
 
     } catch (error) {
+        console.log(error);
         showAlert("An Error occured whilst generating the response. Check your connection and try again.");
         return null;
     }

@@ -1,4 +1,4 @@
-import { update, showAlert } from "./basePage.js";
+import { update, showAlert, prompt } from "./basePage.js";
 let map = null;
 load_map()
 //-------------------------------------ROUTE SETUP---------------------------------
@@ -243,7 +243,7 @@ async function load_map() {
     });
 
 }
-//-------------------------------------------ROUTING--------------------------
+//-------------------------------------------ROUTE PLAN-----------------------------------------------------
 
 //------------------------adding a waypoint
 
@@ -505,3 +505,20 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
     }
     
 };
+
+//---------------------------------------------ROUTE GENERATOR----------------------------------------
+
+const generate = document.getElementById('generateRoute');
+const output = document.getElementById('routeOutput');
+const routePrompt = document.getElementById('routePrompt');
+
+generate.addEventListener('click',  async () => {
+    generate.disabled = true; //preventing multiple clicks
+    generate.textContent = "Generating...";
+
+    const response = await prompt('Route', routePrompt.value)
+    output.textContent = response; //displaying the result in the box
+
+    generate.disabled = false; //allow clicking again
+    generate.textContent = "Generate Route";
+});

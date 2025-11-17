@@ -267,3 +267,7 @@ a {
 #CityOrTown.active, #avFeature.active {
     background-color: var(--primary);
 }
+
+#routeOutput {
+    padding: 10px;
+}

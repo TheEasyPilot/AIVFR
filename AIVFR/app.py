@@ -426,10 +426,12 @@ def remove_waypoint():
         return jsonify({"error": "Invalid waypoint index"}), 400
 
 #-----------------------------------------------AI------------------------------------------------------------
+
 #-----------Making the role for the AI
 def fetchRole(type):
+    #the role is dependent on the type of prompt being made
     if type == 'Route':
-        role = 'ROLE FOR ROUTE'
+        role = 'user' #TEST
 
     elif type == 'Brief':
         role = 'ROLE FOR BRIEF'
@@ -443,11 +445,12 @@ def fetchRole(type):
 #-----------Making a prompt
 @main.route('/prompt', methods=["POST"])
 def prompt():
-    type = request.json.get("type")
-    text = request.json.get("text")
+    type = request.json.get("type") #expecting 'Route', 'Brief' or 'Navlog'
+    text = request.json.get("text") #the actual prompt text by user
+
+    #making the OpenAI client and making the request
     try:
         client = OpenAI()
-
         response = client.responses.create(
             model="gpt-4.1",
             input=[
@@ -457,7 +460,9 @@ def prompt():
                 }
             ]
         )
+        response = response.output[0].content[0].text #parsing the response to just the text
         
-        return jsonify({'response' : response.output_text}), 200
-    except:
-        return jsonify({"error": "An error occured."}), 400
+        return jsonify({"response": response}), 200 #sends back the AI response
+    
+    except Exception as error:
+        return jsonify({"error": str(error)}), 400
