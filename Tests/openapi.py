@@ -17,45 +17,25 @@ response = requests.request("GET", url, headers={'X-API-Key': api_key_wx})
 
 print(response.json())
 
-
+'''
 # Correct header for public API
 header = {
     "x-openaip-api-key": api_key_openaip
 }
 
 params = {
-    "search": "EGSS"
+    "country": "GB",
+    "fields" : "name,geometry.coordinates",
+    "pos" : "51.722,0.154",
+    "pos" : "51.5074,-0.1278",
+    "dist" : 37040
 }
 
-url = "https://api.core.openaip.net/api/airports"
+url = "https://api.core.openaip.net/api/reporting-points"
 
 response = requests.get(url, headers=header, params=params)
 
-print("Status Code:", response.status_code)
-
-
 data = response.json()
-airport = data["items"][0]  # We searched EGSS, so only one result
 
 # Basic info
-name = airport["name"]
-icao = airport["icaoCode"]
-print(f"Airport: {name} / {icao}")
-'''
-
-from openai import OpenAI
-
-client = OpenAI()
-response = client.responses.create(
-    model="gpt-4.1",
-    input=[
-        {
-            "role" : "user",
-            "content" : "Hey! I'm testing your functionality. Say something! :)"
-        }
-    ]
-)
-
-response = response.output[0].content[0].text
-print(response)
-
+print(data)

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, session, jsonify, request
 import os, pint, requests
 from openai import OpenAI
 from dotenv import load_dotenv
+from .ai_roles import fetchRole
 
 main = Blueprint('app', __name__)
 
@@ -427,21 +428,6 @@ def remove_waypoint():
 
 #-----------------------------------------------AI------------------------------------------------------------
 
-#-----------Making the role for the AI
-def fetchRole(type):
-    #the role is dependent on the type of prompt being made
-    if type == 'Route':
-        role = 'user' #TEST
-
-    elif type == 'Brief':
-        role = 'ROLE FOR BRIEF'
-    
-    elif type == 'Navlog':
-        role = 'ROLE FOR NAVLOG'
-    
-    return role
-
-
 #-----------Making a prompt
 @main.route('/prompt', methods=["POST"])
 def prompt():
@@ -455,8 +441,8 @@ def prompt():
             model="gpt-4.1",
             input=[
                 {
-                    "role" : fetchRole(type),
-                    "content" : text
+                    "role" : 'system', "content" : 'You are a helpful flight planning assistant.',
+                    "role" : 'user', "content" : (fetchRole(type) + "\n\n" + text) #user prompt with role instructions
                 }
             ]
         )

@@ -516,9 +516,37 @@ generate.addEventListener('click',  async () => {
     generate.disabled = true; //preventing multiple clicks
     generate.textContent = "Generating...";
 
-    const response = await prompt('Route', routePrompt.value)
-    output.textContent = response; //displaying the result in the box
+    fetch('/get-flight')
+    .then(response => response.json())
+    .then(async FlightData => {
+        const departureAirport = FlightData.departureAirport_code;
+        const destinationAirport = FlightData.destinationAirport_code;
+        const route_names = FlightData.route_names;
 
-    generate.disabled = false; //allow clicking again
-    generate.textContent = "Generate Route";
-});
+        //if there is a prompt provided by the user, use that to generate the route
+        if (routePrompt.value) {
+            var text = `Generate a VFR route within the UK based on the user’s instructions and the provided departure, arrival, and any partial existing route as given below.
+                    You must strictly follow all rules from your global instructions.
+                    Interpret the user’s intent precisely while maintaining VFR legality and airspace awareness.
+                    Departure Airport: ${departureAirport}
+                    Arrival Airport: ${destinationAirport}
+                    Existing Route Waypoints: ${route_names.join(', ')}
+                    User Instructions: ${routePrompt.value}`
+        //if there is no prompt, generate a route based on the current *route setup* so, no departure and arrival only
+        } else if (!routePrompt.value) {
+            var text = `Generate a sensible, safe, airspace-aware VFR route between the provided departure and arrival aerodromes.
+                    You must strictly follow all rules from your global instructions.
+                    Choose logical VFR waypoints such as VRPs, navaids, cities/towns, or airports to shape a practical route that respects controlled airspace.
+                    Departure Airport: ${departureAirport}
+                    Arrival Airport: ${destinationAirport}`
+        }
+
+        const response = await prompt('Route', text);
+        console.log(response); //TEST
+        output.textContent = response; //displaying the result in the box
+        generate.disabled = false; //allow clicking again
+        generate.textContent = "Generate";
+
+    });
+    }
+);
