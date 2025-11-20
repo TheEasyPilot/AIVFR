@@ -524,21 +524,34 @@ generate.addEventListener('click',  async () => {
         const route_names = FlightData.route_names;
 
         //if there is a prompt provided by the user, use that to generate the route
-        if (routePrompt.value) {
+        if (routePrompt.value && departureAirport && destinationAirport) {
             var text = `Generate a VFR route within the UK based on the user’s instructions and the provided departure, arrival, and any partial existing route as given below.
+                    (if you choose to edit around an existing route, provide a full route including those existing waypoints)
                     You must strictly follow all rules from your global instructions.
                     Interpret the user’s intent precisely while maintaining VFR legality and airspace awareness.
                     Departure Airport: ${departureAirport}
                     Arrival Airport: ${destinationAirport}
                     Existing Route Waypoints: ${route_names.join(', ')}
-                    User Instructions: ${routePrompt.value}`
+                    User Instructions: ${routePrompt.value}
+                    
+                    If choosing a VRP or a Navaid, names AND coordinates MUST be chosen from the list provided below.
+                    If choosing a city or town, provide the name and ensure the coordinates are accurate.`
+
         //if there is no prompt, generate a route based on the current *route setup* so, no departure and arrival only
-        } else if (!routePrompt.value) {
+        } else if (!routePrompt.value && departureAirport && destinationAirport) {
             var text = `Generate a sensible, safe, airspace-aware VFR route between the provided departure and arrival aerodromes.
                     You must strictly follow all rules from your global instructions.
                     Choose logical VFR waypoints such as VRPs, navaids, cities/towns, or airports to shape a practical route that respects controlled airspace.
                     Departure Airport: ${departureAirport}
-                    Arrival Airport: ${destinationAirport}`
+                    Arrival Airport: ${destinationAirport}
+                    
+                    If choosing a VRP or a Navaid, names AND coordinates must be chosen from the list provided below.
+                    If choosing a city or town, provide the name and ensure the coordinates are accurate.`
+        } else {
+            showAlert("Please make sure both departure and arrival aerodromes are set before generating a route.");
+            generate.disabled = false; //allow clicking again
+            generate.textContent = "Generate";
+            return;
         }
 
         const response = await prompt('Route', text);

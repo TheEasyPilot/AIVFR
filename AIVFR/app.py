@@ -243,6 +243,7 @@ def NewFlightRun():
     #resettting settings data for test (no data in flight to reset)
     session["flight_data"]["flight"] = data_template["flight"]
     session.modified = True
+    return 
     
 #shows any errors on the actual page
 if __name__ == '__main__':
@@ -427,10 +428,60 @@ def remove_waypoint():
         return jsonify({"error": "Invalid waypoint index"}), 400
 
 #-----------------------------------------------AI------------------------------------------------------------
+#-----------Getting selecet waypoints based on route (so i dont need to give all navaids and vrps to the AI)
+
+def get_waypoints(coords):
+    header = {
+        "x-openaip-api-key": api_key_openaip
+    }
+
+    minx = min(coords[0][1], coords[1][1]) - 0.5367  #approx 20 NM corridor
+    maxx = max(coords[0][1], coords[1][1]) + 0.5367
+    miny = min(coords[0][0], coords[1][0])
+    maxy = max(coords[0][0], coords[1][0])
+
+    #"bbox" defines a rectangular area of interest for the query
+    params_vrp = {
+        "country": "GB",
+        "fields" : "name,geometry.coordinates",
+        "bbox" : f"{minx},{miny},{maxx},{maxy}"
+    }
+
+    params_navaid = {
+        "country": "GB",
+        "fields" : "identifier,geometry.coordinates",
+        "bbox" : f"{minx},{miny},{maxx},{maxy}"
+    }
+
+    vrp = "https://api.core.openaip.net/api/reporting-points"
+    navaid = "https://api.core.openaip.net/api/navaids"
+
+    response_vrp = requests.get(vrp, headers=header, params=params_vrp)
+    response_navaid = requests.get(navaid, headers=header, params=params_navaid)
+
+
+    data_vrp = response_vrp.json()
+    data_vrp["items"]
+
+    data_navaid = response_navaid.json()
+    data_navaid["items"]
+
+    #print only the name and coordinates of each reporting point
+    waypoints = []
+    for item in data_vrp["items"]:
+        waypoints.append(f"{item['name']}, {item['geometry']['coordinates']}")
+    for item in data_navaid["items"]:
+        waypoints.append(f"{item['identifier']}, {item['geometry']['coordinates']}")
+
+    return waypoints
+
 
 #-----------Making a prompt
 @main.route('/prompt', methods=["POST"])
 def prompt():
+    departure_coords = session["flight_data"]["flight"]["route"][0]
+    destination_coords = session["flight_data"]["flight"]["route"][-1]
+
     type = request.json.get("type") #expecting 'Route', 'Brief' or 'Navlog'
     text = request.json.get("text") #the actual prompt text by user
 
@@ -442,7 +493,11 @@ def prompt():
             input=[
                 {
                     "role" : 'system', "content" : 'You are a helpful flight planning assistant.',
-                    "role" : 'user', "content" : (fetchRole(type) + "\n\n" + text) #user prompt with role instructions
+                    "role" : 'user', "content" : (
+                        fetchRole(type) + "\n\n" 
+                        + text + "\n\n" 
+                        + str(get_waypoints([departure_coords, destination_coords]))
+                        )  
                 }
             ]
         )
