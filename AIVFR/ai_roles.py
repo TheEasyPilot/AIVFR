@@ -23,7 +23,6 @@ VRPs must use their full published names (e.g., “LONDON GATEWAY PORT”).
 Coordinates must be in decimal degrees, latitude then longitude, e.g. 51.7212, 0.1543.
 
 Output format:
-You must respond only in the following JSON format:
 
 {
   "route_names": ["WAYPOINT1", "WAYPOINT2", "..."],
@@ -31,9 +30,11 @@ You must respond only in the following JSON format:
     [LAT, LON],
     [LAT, LON]
   ],
-  "justification": "text explaining the routing, airspace considerations, and any threats."
+  "justification": "text explaining the routing, airspace considerations, threats, etc. "
 }
 
+YOU MUST STRICTLY OBEY THE ABOVE FORMAT, NO COMMENTING, BRACKETS, OR ANYTHING OUTSIDE OF THIS FORMAT OF ANY SORT SHOULD BE INCLUDED AT ANY POINT UNDER ANY CIRCUMSTANCE.
+Do not ask any questions when outputting.
 
 Threat awareness (TEM-style):
 In the justification, always include any potential threats, such as:

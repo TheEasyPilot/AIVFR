@@ -535,7 +535,9 @@ generate.addEventListener('click',  async () => {
                     User Instructions: ${routePrompt.value}
                     
                     If choosing a VRP or a Navaid, names AND coordinates MUST be chosen from the list provided below.
-                    If choosing a city or town, provide the name and ensure the coordinates are accurate.`
+                    If choosing a city or town, provide the name and ensure the coordinates are accurate.
+                    You have full flexibility to use Navaids, VRPs or cities/towns when generating a route, so long as they meet user requirements.`
+                    
 
         //if there is no prompt, generate a route based on the current *route setup* so, no departure and arrival only
         } else if (!routePrompt.value && departureAirport && destinationAirport) {
@@ -546,7 +548,8 @@ generate.addEventListener('click',  async () => {
                     Arrival Airport: ${destinationAirport}
                     
                     If choosing a VRP or a Navaid, names AND coordinates must be chosen from the list provided below.
-                    If choosing a city or town, provide the name and ensure the coordinates are accurate.`
+                    If choosing a city or town, provide the name and ensure the coordinates are accurate.
+                    You have full flexibility to use Navaids, VRPs or cities/towns when generating a route.`
         } else {
             showAlert("Please make sure both departure and arrival aerodromes are set before generating a route.");
             generate.disabled = false; //allow clicking again
