@@ -9,8 +9,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const disclaimerContinue = document.getElementById("disclaimerACCEPT");
     const disclaimerGoBack = document.getElementById("disclaimerEXIT");
     const uploadFlightGoBack = document.getElementById("uploadFlightEXIT");
-    const uploadFlightForm = document.getElementById("uploadFlightForm");
-    const uploadStatus = document.getElementById("uploadStatus");
     
 
     //display the disclaimer
@@ -123,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }  else { //if the response is not okay, display the error message from the server
             const errorData = await response.json();
             uploadStatus.style.color = "red";
-            uploadStatus.textContent = errorData.error || "An error occurred while loading the flight.";
+            uploadStatus.textContent = errorData.error || "An error occurred while loading the flight."; //latter should always show
         }
     }
 

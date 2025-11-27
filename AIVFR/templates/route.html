@@ -21,6 +21,21 @@
         <span id="alertBox"></span>
       </div>
 
+<!-------Tooltip Popup-------->
+      <div id="tooltip" class="modal">
+        <div class="tooltipContent">
+          <!--header--><h1 id="tooltipHeader">ROUTE SETUP INSTRUCTIONS</h1>
+          <ol>
+            <li>To select an aerodrome, type in the ICAO code (not case sensitive) and press ENTER. Wait for the aerodrome name to appear.</p>
+            <li>After selecting the arrival aerodrome, the route will intialise. After this point, you must start a new flight to edit the departure or arrival aerodromes.</p>
+            <li>You can manually add and remove items from the route by using the box provided. Simply select the category of waypoint, and enter the name of the waypoint.</p>
+            <li>VRPs, navaids and airports are based upon the OpenAIP database, so use the map to access the correct spelling of the name to avoid errors.</p>
+            <li>Please note that not all cities area available. If a city/town you have chosen is not in the API database you will be notified with an error.</p>
+          </ol>
+          <!--close tooltip button--><span><button id="closeTooltip">CLOSE</button></span>
+        </div>
+      </div>
+
       <div id="content">
 
 <!----------------------------------------------------------ROUTE SETUP-->
