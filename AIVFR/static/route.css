@@ -120,19 +120,7 @@ a {
     height: 12px;
 }
 
-#route_names {
-    padding: 5px;
-    background-color: var(--bg);
-    color: var(--text);
-    width: 100%;
-    border-radius: 10px;
-    resize: none;/*do not allow resizing*/
-    font-family: 'Manrope';
-    font-size: 14px;
-    border: 1px solid var(--onhover);
-    pointer-events: none;
-    vertical-align: middle;
-}
+
 
 /*------------Route Generator------------*/
 #AI_twinkle {
@@ -215,11 +203,10 @@ a {
 
 /*add/remove waypoint section*/
 #addWaypointContainer {
-    padding: 10px
+    padding: 10px;
 }
 
 .waypoint_choice, #addWaypoint, #removeWaypoint {
-    width: auto;
     font-family: 'Manrope';
     height: auto;
     font-size: 13px;
@@ -270,4 +257,17 @@ a {
 
 #routeOutput {
     padding: 10px;
+}
+
+#route_names {
+    padding: 5px;
+    background-color: var(--bg);
+    color: var(--text);
+    width: 100%;
+    border-radius: 10px;
+    resize: none;/*do not allow resizing*/
+    font-family: 'Manrope';
+    font-size: 14px;
+    border: 1px solid var(--onhover);
+    vertical-align: middle;
 }

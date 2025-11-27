@@ -6,6 +6,8 @@
 <script src="{{ url_for('static', filename='base.js') }}" defer></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<link rel="stylesheet" href="https://prominentedge.com/leaflet-measure-path/leaflet-measure-path.css">
+<script src="https://prominentedge.com/leaflet-measure-path/leaflet-measure-path.js"></script>
 {% endblock %}
 
 {% block title %} {# edit whats in the title block #}
@@ -30,8 +32,8 @@
               <h3>Route Setup<svg xmlns="http://www.w3.org/2000/svg" id="routeSetupTooltip" width="20" xmlns:xlink="http://www.w3.org/1999/xlink" style="enable-background:new 0 0 16 16;" fill="currentColor" version="1.1" viewBox="0 0 16 16" xml:space="preserve"><g id="Guide"/><g id="Layer_2"><g><path d="M8,2C4.69,2,2,4.69,2,8s2.69,6,6,6s6-2.69,6-6S11.31,2,8,2z M8,13c-2.76,0-5-2.24-5-5s2.24-5,5-5s5,2.24,5,5    S10.76,13,8,13z"/><path d="M8,6.85c-0.28,0-0.5,0.22-0.5,0.5v3.4c0,0.28,0.22,0.5,0.5,0.5s0.5-0.22,0.5-0.5v-3.4C8.5,7.08,8.28,6.85,8,6.85z"/><path d="M8.01,4.8C7.75,4.78,7.51,5.05,7.5,5.32c0,0.01,0,0.07,0,0.08c0,0.27,0.21,0.47,0.49,0.48c0,0,0.01,0,0.01,0    c0.27,0,0.49-0.24,0.5-0.5c0-0.01,0-0.11,0-0.11C8.5,4.98,8.29,4.8,8.01,4.8z"/></g></g></svg></h3>
             </div>
             
-            <div> <!--Route time & distance-->
-              {{ flight.time }} | {{ flight.distance.output }}
+            <div> <!--Route time & distance (NOT TO BE IMPLEMENTED IN FIRST ALPHA)-->
+              <!--{{ flight.time }} | {{ flight.distance.output }}--> 
             </div>
           </div>
     <!----------BODY-------------->
@@ -56,9 +58,14 @@
         <div id="routePlan" class="routeItem">
     <!--------------------HEADER--------------->
           <div><!--Title-->
+          <ul id="route_list">
+
+          </ul>
+
             <h3 id="route_plan">Route Plan</h3>
     <!-------------------BODY--------------->
-            <!--READABLE ROUTE--><textarea id="route_names" name="route_names" rows="4" cols="50" placeholder="Your route will appear here.">{{ ' ➔ '.join(flight.route_names) if flight.route_names else '' }}</textarea>
+            <!--READABLE ROUTE--><textarea readonly id="route_names" name="route_names" rows="4" cols="50" placeholder="Your route will appear here.">{{ ' ➔ '.join(flight.route_names) if flight.route_names else '' }}</textarea>
+            
           </div>
           <!--MANUAL ROUTE MAKING-->
           <div id="addWaypointContainer">
@@ -89,7 +96,7 @@
           <!--GENERATE BUTTON--><button id="generateRoute" class="button TARGET">Generate</button>
         </div>
         <!--AI OUTPUT-->
-        <div id="routeOutput"></div>
+        <div id="routeOutput">{{ flight.route_gen_justification if flight.route_gen_justification else '' }}</div>
         </div>
 
 <!------------------------------------------------------ROUTE MAP DISPLAY----------->
