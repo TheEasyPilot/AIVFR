@@ -1,6 +1,7 @@
 import { update, showAlert, prompt } from "./basePage.js";
 let map = null;
 load_map()
+
 //-------------------------------------ROUTE SETUP---------------------------------
 //-------Verifying ICAO code--------------
 
@@ -237,7 +238,7 @@ async function load_map() {
                  map = L.map('routeMAP', { 
                 center: [51.505, -0.09], //Initial center coords (set to London)
                 zoom: 9,
-                layers: [Satellite, OpenAIP]line";
+                layers: [Satellite, OpenAIP]
                 //crafting the map
             });
             const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
@@ -248,7 +249,7 @@ async function load_map() {
 
         .catch(error => {
             console.error('MapCreationError', error);
-            showAlert('An error occurred while fetching map data. Please try again later.');
+            showAlert(error);
         });
     });
 
@@ -596,3 +597,20 @@ generate.addEventListener('click',  async () => {
     });
     }
 );
+
+
+//--------------------------TOOLTIP--------------------------
+const tooltip = document.getElementById("tooltip");
+const closeTooltip = document.getElementById("closeTooltip");
+const showTooltip = document.getElementById("routeSetupTooltip")
+
+//show when info icon clicked
+showTooltip.addEventListener("click", function() {
+    tooltip.style.display = "block"
+})
+
+//close when 'close' button clicked
+closeTooltip.addEventListener("click", function() {
+    tooltip.style.display = "none"
+})
+

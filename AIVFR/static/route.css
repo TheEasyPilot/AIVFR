@@ -110,7 +110,7 @@
     position: relative;
      height: 100%; 
      border-radius: 10px; 
-     z-index: 90;
+     z-index: 2;
      background-color: var(--highlight);
 }
 
@@ -270,4 +270,55 @@ a {
     font-size: 14px;
     border: 1px solid var(--onhover);
     vertical-align: middle;
+}
+
+/*tooltip popup*/
+
+.tooltipContent {
+  position: relative;
+  background-color: var(--highlight);
+  margin: 10% auto; 
+  padding: 30px 30px 5px 35px;
+  width: 720px;
+  border-radius: 15px; 
+  text-align: center;
+  bottom: 30px;
+}
+
+/*header*/
+#tooltipHeader {
+    font-weight: 500;
+    font-size: 30px;
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
+/*close button*/
+#closeTooltip {
+    position: relative;
+    font-family: 'Manrope';
+    font-size: 20px;
+    background-color: var(--bg);
+    border: none;
+    padding: 6px 20px;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 20px;
+
+}
+
+#closeTooltip:hover {
+    background-color: var(--primary);
+}
+
+.modal{
+  display: none;  /*makes it hidden by default */
+  position: fixed; 
+  z-index: 3; /*this makes it appear ontop*/
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  background-color: var(--popupbg);
 }
