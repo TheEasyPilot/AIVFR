@@ -164,8 +164,10 @@ data_template = {
         "destinationAirport_name" : "",
         "alternateAirport_code" : "",
         "alternateAirport_name" : "",
+        "add_index" : -1,
         "route" : [],
         "route_names" : [],
+        "route_gen_justification" : "",
         "distance" : {"value" : 0, "class" : "distance"},
         "time" : "",
     }
@@ -398,9 +400,9 @@ def get_avCoords():
 def add_waypoint():
     waypoint = request.json.get("waypoint") #expecting a list [latitude, longitude]
     name = request.json.get("name") #expecting the name of the waypoint
-
+    add_index = session["flight_data"]["flight"]["add_index"]#current index to be appended from
     #waypoints are always added before the destination airport (so one before the end)
-    add_index = len(session["flight_data"]["flight"]["route_names"]) - 1
+    
 
     #allow the inital addition of departure and destination airports
     if add_index <= 0:
@@ -412,16 +414,18 @@ def add_waypoint():
         session["flight_data"]["flight"]["route_names"].insert(add_index, name)
         session["flight_data"]["flight"]["route"].insert(add_index, waypoint)
 
+    
+    session["flight_data"]["flight"]["add_index"] += 1
     session.modified = True
     return jsonify(session["flight_data"]["flight"]["route"]), 200
 
 @main.route("/remove-waypoint", methods=["POST"])
 def remove_waypoint():
-    index = request.json.get("waypointIndex") #expecting the index of the waypoint to remove
+    remove_index = request.json.get("waypointIndex") #expecting the index of the waypoint to remove
     try:
         #remove the waypoint at the specified index
-        session["flight_data"]["flight"]["route_names"].pop(index)
-        session["flight_data"]["flight"]["route"].pop(index)
+        session["flight_data"]["flight"]["route_names"].pop(remove_index)
+        session["flight_data"]["flight"]["route"].pop(remove_index)
         session.modified = True
         return jsonify(session["flight_data"]["flight"]["route"]), 200
     except IndexError:

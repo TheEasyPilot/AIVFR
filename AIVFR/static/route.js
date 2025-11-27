@@ -214,7 +214,10 @@ async function load_map() {
                 center: [51.505, -0.09], //Initial center coords (set to London)
                 zoom: 9,
                 layers: [Basemap, OpenAIP]
-            }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+            }); 
+            const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
+            .addTo(map)
+            .showMeasurements();
 
             } else if (mapStyle == 'normal' && theme == 'dark') {
                 mapTilerLogo.style.display = "none";
@@ -223,7 +226,10 @@ async function load_map() {
                 center: [51.505, -0.09], //Initial center coords (set to London)
                 zoom: 12,
                 layers: [Darkmode, OpenAIP]
-            }); const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+            }); 
+            const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
+            .addTo(map)
+            .showMeasurements();
 
             } else if (mapStyle == 'satellite') {
                 mapTilerLogo.style.display = "inline";
@@ -231,8 +237,12 @@ async function load_map() {
                  map = L.map('routeMAP', { 
                 center: [51.505, -0.09], //Initial center coords (set to London)
                 zoom: 9,
-                layers: [Satellite, OpenAIP]
-            });const line = L.polyline(route, { color: '#f0F' }).addTo(map);
+                layers: [Satellite, OpenAIP]line";
+                //crafting the map
+            });
+            const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
+            .addTo(map)
+            .showMeasurements(); //show the distances between each point on the map
             }
         })
 
@@ -503,7 +513,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             update_route_names();
         });
     }
-    
+
 };
 
 //---------------------------------------------ROUTE GENERATOR----------------------------------------
@@ -522,6 +532,7 @@ generate.addEventListener('click',  async () => {
         const departureAirport = FlightData.departureAirport_code;
         const destinationAirport = FlightData.destinationAirport_code;
         const route_names = FlightData.route_names;
+        const route = FlightData.route;
 
         //if there is a prompt provided by the user, use that to generate the route
         if (routePrompt.value && departureAirport && destinationAirport) {
@@ -529,14 +540,15 @@ generate.addEventListener('click',  async () => {
                     (if you choose to edit around an existing route, provide a full route including those existing waypoints)
                     You must strictly follow all rules from your global instructions.
                     Interpret the user’s intent precisely while maintaining VFR legality and airspace awareness.
-                    Departure Airport: ${departureAirport}
-                    Arrival Airport: ${destinationAirport}
+                    Departure Airport: ${departureAirport} coordinates ${route[0][1]}, ${route[0][0]}
+                    Arrival Airport: ${destinationAirport} coordinates ${route[route.length - 1][1]}, ${route[route.length - 1][0]}
                     Existing Route Waypoints: ${route_names.join(', ')}
                     User Instructions: ${routePrompt.value}
                     
                     If choosing a VRP or a Navaid, names AND coordinates MUST be chosen from the list provided below.
-                    If choosing a city or town, provide the name and ensure the coordinates are accurate.
-                    You have full flexibility to use Navaids, VRPs or cities/towns when generating a route, so long as they meet user requirements.`
+                    If choosing a city or town, that is not already a vrp, use the appopriate name and coordinates from your own knowledge, and ensure the coordinates are accurate.
+                    You have full flexibility to use Navaids, VRPs or cities/towns when generating a route, so long as they meet user requirements.
+                    Please ensure you do not change the coordinates of the departure or arrival aerodromes.`
                     
 
         //if there is no prompt, generate a route based on the current *route setup* so, no departure and arrival only
@@ -544,12 +556,13 @@ generate.addEventListener('click',  async () => {
             var text = `Generate a sensible, safe, airspace-aware VFR route between the provided departure and arrival aerodromes.
                     You must strictly follow all rules from your global instructions.
                     Choose logical VFR waypoints such as VRPs, navaids, cities/towns, or airports to shape a practical route that respects controlled airspace.
-                    Departure Airport: ${departureAirport}
-                    Arrival Airport: ${destinationAirport}
+                    Departure Airport: ${departureAirport} coordinates ${route[0][1]}, ${route[0][0]}
+                    Arrival Airport: ${destinationAirport} coordinates ${route[route.length - 1][1]}, ${route[route.length - 1][0]}
                     
                     If choosing a VRP or a Navaid, names AND coordinates must be chosen from the list provided below.
-                    If choosing a city or town, provide the name and ensure the coordinates are accurate.
-                    You have full flexibility to use Navaids, VRPs or cities/towns when generating a route.`
+                    If choosing a city or town, that is not already a vrp, use the appopriate name and coordinates from your own knowledge, and ensure the coordinates are accurate.
+                    You have full flexibility to use Navaids, VRPs or cities/towns when generating a route.
+                    Please ensure you do not change the coordinates of the departure or arrival aerodromes.`
         } else {
             showAlert("Please make sure both departure and arrival aerodromes are set before generating a route.");
             generate.disabled = false; //allow clicking again
@@ -557,9 +570,26 @@ generate.addEventListener('click',  async () => {
             return;
         }
 
-        const response = await prompt('Route', text);
-        console.log(response); //TEST
-        output.textContent = response; //displaying the result in the box
+        var response = await prompt('Route', text);
+        try {
+            response = JSON.parse(response); //parsing the response to JSON
+            output.textContent = response.justification; //displaying the result in the box 
+
+        } catch (error) {
+            console.log(error);
+            showAlert("An error occured whilst generating the route. Please try again.");
+            generate.disabled = false; //allow clicking again
+            generate.textContent = "Generate";
+            return;
+        }
+        
+        //adding the waypoints to the route
+        await update('route_names', response.route_names);
+        await update('route', response.route);
+        await update('route_gen_justification', response.justification);
+        reload_map();
+        update_route_names();
+
         generate.disabled = false; //allow clicking again
         generate.textContent = "Generate";
 
