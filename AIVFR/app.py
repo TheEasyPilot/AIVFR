@@ -157,6 +157,7 @@ data_template = {
                   "waypoint_addType" : "City/Town"
                   },
     "flight" : {
+        #--------ROUTE
         "saved" : "False",
         "departureAirport_code" : "",
         "departureAirport_name" : "",
@@ -170,6 +171,9 @@ data_template = {
         "route_gen_justification" : "",
         "distance" : {"value" : 0, "class" : "distance"},
         "time" : "",
+        #--------WEATHER
+        "WX_airportCode" : "",
+        "WX_airportName" : ""
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA

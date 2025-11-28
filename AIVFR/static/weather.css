@@ -50,7 +50,7 @@
 .WX_item { /*all items on the weather page*/
     margin: 2px;
     background-color: var(--highlight);
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
 }
 
@@ -63,4 +63,49 @@
 #WX_search {
     grid-column: 1 / span 1;
     grid-row: 1 / span 2;
+}
+
+/*--------------------SEARCHING-------------*/
+#searchAirport {
+    display: flex;
+    justify-content: space-between;
+}
+
+#airport_code {
+    margin-top: 10px;
+    border: 1px solid var(--text);
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Manrope';
+    font-size: 13px;
+    max-width: 80px;
+    background-color: var(--bg);
+    border: 1px solid var(--onhover);
+}
+
+#airport_name {
+    font-weight: 400;
+    margin-left: 10px;
+    color: var(--text);
+    background-color: var(--bg);
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: 600;
+    display: none; /*hide the airport names until they are available*/
+}
+
+/*when the airport names are available, show them*/
+#airport_name.active {
+    display: block;
+}
+
+/*content box- this is where reports will be*/
+#reports {
+    display: grid;
+    height: 100%;
+    grid-template-rows: 1fr 1.5fr;
 }
