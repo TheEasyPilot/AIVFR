@@ -7,3 +7,60 @@
     background-color: var(--primary);
     pointer-events: none;
 }
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    border: 1px none var(--text);
+    height: 46px;
+}
+
+#update { /*update weather report btn*/
+    width: 165px;
+    height: 40px;
+    font-family: 'Manrope';
+    font-size: 18px;
+    font-weight: 600;
+    padding: 8px 26px;
+    border: 1px solid var(--text);
+    border-radius: 5px;
+    background-color: var(--highlight);
+}
+
+#update:hover {
+    cursor: pointer;
+    background-color: var(--primary);
+}
+
+#update_icon {
+    width: 30px;
+    margin-right: 10px;
+}
+
+/*Main content*/
+#content {
+    grid-template-columns: 5fr 5fr;
+    display: grid;
+    gap: 10px;
+    border-radius: 10px;
+    z-index: 1;
+    height: 100vh;
+}
+
+.WX_item { /*all items on the weather page*/
+    margin: 2px;
+    background-color: var(--highlight);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/*departure and arrival in second column*/
+#WX_departure, #WX_arrival {
+    grid-column: 2 / span 1; 
+}
+
+/*aerodrome search remains in the first column but spans 2 rows*/
+#WX_search {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 2;
+}
