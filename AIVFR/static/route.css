@@ -12,20 +12,20 @@
 /*Main content*/
 #content {
     grid-template-columns: 5fr 5fr;
-    display: grid; /* grid allows flexible layout */
+    display: grid;
     gap: 10px;
     border-radius: 10px;
     z-index: 1;
 }
 
-.routeItem { /* all items in the route page */
+.routeItem { /*all items in the route page*/
     margin: 2px;
     background-color: var(--highlight);
     padding: 10px;
     border-radius: 10px;
 }
 
-/* all these three items are in the first column */
+/*all these three items are in the first column*/
 #route_setup, #routePlan, #route_generator {
     grid-column: 1 / span 1; 
 }
@@ -64,7 +64,7 @@
 
 #toArrow {
     vertical-align: middle;
-    transform: scaleX(-1); /* flip the arrow horizontally */
+    transform: scaleX(-1); /*flip the arrow horizontally*/
     margin: 0 15px;
     fill: var(--text);
 }
@@ -81,7 +81,7 @@
     background-color: var(--bg);
     padding: 5px 10px;
     font-size: 14px;
-    display: none; /* hide the airport names until they are available */
+    display: none; /*hide the airport names until they are available*/
 }
 
 /*when the airport names are available, show them*/
