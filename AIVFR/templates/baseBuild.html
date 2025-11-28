@@ -72,7 +72,7 @@
     <main>
 
 <!--=============================HEADER==========================-->
-    <div class="pageTitle" id="header">
+    <div class="pageTitle" style="display: flex; justify-content: space-between;">
         <div id="title">WEATHER</div>
         <span id="alertBox"></span>
         <!--Update weather reports button-->
@@ -95,20 +95,22 @@
           <span id="airport_name"></span>
         </div>
 
-  <!----------WEATHER REPORTS------->
-        <div id="reports">
-      <!--METAR--->
-          <div id="METAR">
-            <hr size="3.5" color="#cdcdcd" noshade style="margin-top: 25px;">
-            <h3>Meteorological Aerodrome Report (METAR)</h3>
+    <!--Weather reports---->
+          <div id="reports">
+        <!--METAR--->
+            <div id="METAR">
+              <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
+              <h3>Meteorological Aerodrome Report (METAR)</h3>
+              <span id="METAR_searched" class="report">METAR EGMC 100650Z 32004KT 280V360 CAVOK 20/15 Q1023</span><span id="METAR_searched_grading" class="grading">VFR</span>
+            </div>
+    
+        <!--TAF--->
+            <div id="TAF">
+              <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
+              <h3>Terminal Aerodrome Forecast (TAF)</h3>
+              <span id="TAF_searched" class="report">TAF EGMC 101706Z 1018/1101 09012KT CAVOK</span><span id="METAR_searched_grading" class="grading">VFR</span>
+            </div>
           </div>
-  
-      <!--TAF--->
-          <div id="TAF">
-            <hr size="3.5" color="#cdcdcd" noshade style="margin-top: 25px;">
-            <h3>Terminal Aerodrome Forecast (TAF)</h3>
-          </div>
-        </div>
 
       </div>
 
