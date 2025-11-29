@@ -179,6 +179,7 @@ data_template = {
         "TAF_searched" : "",
         "METAR_searched_decoded" : "",
         "TAF_searched_decoded" : "",
+        "METAR_searched_grading" : "",
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA
