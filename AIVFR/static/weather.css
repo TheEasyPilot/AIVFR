@@ -124,3 +124,12 @@ h3 {
     font-size: 20px;
     font-weight: 650;
 }
+
+#METAR_searched_output, #TAF_searched_output {
+    resize: none;
+    margin-top: 20px;
+    width: 100%;
+    min-height: 50%;
+    height: auto;
+    font-family: 'Manrope';
+}
