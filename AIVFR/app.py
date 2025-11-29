@@ -157,7 +157,7 @@ data_template = {
                   "waypoint_addType" : "City/Town"
                   },
     "flight" : {
-        #--------ROUTE
+        #-----------------------ROUTE
         "saved" : "False",
         "departureAirport_code" : "",
         "departureAirport_name" : "",
@@ -171,14 +171,14 @@ data_template = {
         "route_gen_justification" : "",
         "distance" : {"value" : 0, "class" : "distance"},
         "time" : "",
-        #--------WEATHER
+        #-----------------------WEATHER
+        #-----Searched airport
         "WX_airportCode" : "",
         "WX_airportName" : "",
         "METAR_searched" : "",
         "TAF_searched" : "",
         "METAR_searched_decoded" : "",
         "TAF_searched_decoded" : "",
-
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA

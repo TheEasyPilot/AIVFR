@@ -129,10 +129,9 @@ h3 {
 #TAF_searched {
     resize: none;
     width: 100%;
-    height: calc(100px + 2em);
+    height: fit-content;
     font-family: 'Manrope';
     font-size: 14px;
-    border: 1px solid var(--onhover);
     pointer-events: none;
 }
 
