@@ -515,3 +515,9 @@ def prompt():
     
     except Exception as error:
         return jsonify({"error": str(error)}), 400
+    
+#----------------------------------------------WEATHER REPORTS-------------------------------------------------------
+'''
+@main.route('/get-weather', methods=["POST"])
+def get_weather():
+'''
