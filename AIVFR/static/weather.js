@@ -111,6 +111,8 @@ const metar_searched = document.getElementById('METAR_searched');
 const taf_searched = document.getElementById('TAF_searched');
 const metar_searched_decoded = document.getElementById('METAR_searched_decoded');
 const taf_searched_decoded = document.getElementById('TAF_searched_decoded');
+const METAR_searched_grading = document.getElementById('METAR_searched_grading');
+const TAF_searched_grading = document.getElementById('TAF_searched_grading');
 
 
 update_wx.addEventListener('click', async () => {
@@ -125,17 +127,92 @@ update_wx.addEventListener('click', async () => {
         await update("TAF_searched", wx_searched.taf.raw_text);
         taf_searched.textContent = wx_searched.taf.raw_text;
 
-        await update("METAR_searched_decoded", wx_searched.metar);
-        metar_searched_decoded.textContent = parseMETAR(wx_searched.metar);
+        await update("METAR_searched_decoded", await parseMETAR(wx_searched.metar));
+        metar_searched_decoded.textContent = await parseMETAR(wx_searched.metar);
 
-        await update("TAF_searched_decoded", wx_searched.taf);
-        taf_searched_decoded.textContent = parseTAF(wx_searched.taf);
-
+        await update("TAF_searched_decoded", await parseTAF(wx_searched.taf));
+        taf_searched_decoded.textContent = await parseTAF(wx_searched.taf);
     }
 });
 
-function parseMETAR(metar) {
-    //parsing logic here
+async function parseMETAR(metar) {
+    //fetching current units
+    const response = await fetch("/get-settings");
+    const settings = await response.json();
+    
+    const wind_unit = settings.units_airspeed;
+    const altitude_unit = settings.units_altitude;
+
+    //airspeed
+    if (wind_unit == "knot") {
+        var windspeed = `${metar.wind.speed_kts} knots`;
+    } else if (wind_unit == "kilometer_per_hour") {
+        var windspeed = `${metar.wind.speed_kph} km/h`;
+    } else if (wind_unit == "mile_per_hour") {
+        var windspeed = `${metar.wind.speed_mph} mph`;
+    }
+
+    //altitude
+    if (altitude_unit == "feet") {
+        try {
+          var ceiling = `${metar.ceiling[0].feet} feet`;  
+        }
+        catch (TypeError) {
+          var ceiling = "N/A";  
+        }
+        var cloud_base = `${metar.clouds[0].base_feet_agl} feet`;
+
+    } else if (altitude_unit == "meter") {
+        try {
+          var ceiling = `${metar.ceiling[0].meters} meters`;  
+        }
+        catch (TypeError) {
+          var ceiling = "N/A";  
+        }
+        var cloud_base = `${metar.clouds[0].base_metres_agl} meters`;
+    }
+
+    //other non-unit related values
+    const time = metar.observed;
+    const visibility = metar.visibility.meters;
+    const visibility_text = metar.visibility.meters_text;
+    const wind_direction = metar.wind.degrees;
+    const temperature = metar.temperature.celsius;
+    const dewpoint = metar.dewpoint.celsius;
+    const pressure = metar.barometer.hpa;
+    const clouds_code = metar.clouds[0].code;
+    const clouds_text = metar.clouds[0].text;
+    const flight_category = metar.flight_category;
+    const humidity = metar.humidity.percent;
+
+    //constructing decoded METAR string
+    const decoded_METAR = `
+    Time of observation: ${time}\n
+    Wind: ${wind_direction}° at ${windspeed}\n
+    Visibility: ${visibility} meters (${visibility_text})\n
+    Temperature: ${temperature}°C\n
+    Dewpoint: ${dewpoint}°C\n
+    Pressure: ${pressure} hPa\n
+    Humidity: ${humidity}%\n
+    Ceiling: ${ceiling}\n
+    Clouds: ${clouds_code} (${clouds_text})\n
+    Cloud Base: ${cloud_base}
+    `;
+
+    //grading
+    METAR_searched_grading.textContent = flight_category;
+    if (flight_category == "VFR") {
+        METAR_searched_grading.style.color = "green";
+    } else if (flight_category == "MVFR") {
+        METAR_searched_grading.style.color = "blue";
+    } else if (flight_category == "IFR") {
+        METAR_searched_grading.style.color = "red";
+    } else if (flight_category == "LIFR") {
+        METAR_searched_grading.style.color = "purple";
+    }
+
+    //returning decoded METAR
+    return decoded_METAR;
 }
 
 function parseTAF(taf) {

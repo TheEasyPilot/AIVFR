@@ -30,7 +30,7 @@
         </div>
     <!--Searching--->
         <div id="searchAirport">
-          <input id="airport_code" type="text" name="airport_code" placeholder="ICAO Code" value="">
+      <input id="airport_code" type="text" name="airport_code" placeholder="ICAO Code" value="{{ flight.WX_airportCode }}">
           <span id="airport_name" class="{{ 'active' if flight.WX_airportName else '' }}">{{ flight.WX_airportName }}</span>
         </div>
 
@@ -40,7 +40,7 @@
             <div id="METAR">
               <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
               <h3>Meteorological Aerodrome Report (METAR)</h3>
-              <span id="METAR_searched" class="report">{{ flight.METAR_searched }}</span><span id="METAR_searched_grading" class="grading">VFR</span>
+              <span id="METAR_searched" class="report">{{ flight.METAR_searched }}</span><span id="METAR_searched_grading" class="grading"></span>
               <div id="METAR_searched_decoded">{{ flight.METAR_searched_decoded if flight.METAR_searched_decoded else "" }}</div>
             </div>
     
@@ -48,7 +48,7 @@
             <div id="TAF">
               <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
               <h3>Terminal Aerodrome Forecast (TAF)</h3>
-              <textarea id="TAF_searched" class="report">{{ flight.TAF_searched }}</textarea><span id="METAR_searched_grading" class="grading">VFR</span>
+              <div id="TAF_searched" class="report">{{ flight.TAF_searched }}</div><span id="METAR_searched_grading" class="grading">VFR</span>
               <div id="TAF_searched_decoded">{{ flight.TAF_searched_decoded if flight.TAF_searched_decoded else "" }}</div>
             </div>
           </div>
