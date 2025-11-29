@@ -173,7 +173,12 @@ data_template = {
         "time" : "",
         #--------WEATHER
         "WX_airportCode" : "",
-        "WX_airportName" : ""
+        "WX_airportName" : "",
+        "METAR_searched" : "",
+        "TAF_searched" : "",
+        "METAR_searched_decoded" : "",
+        "TAF_searched_decoded" : "",
+
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA
@@ -264,6 +269,7 @@ api_key_openaip = os.getenv("OPENAIP_API_KEY")
 api_key_maptiler = os.getenv("MAPTILER_API_KEY")
 api_key_jawg = os.getenv("JAWG_API_KEY")
 api_key_api_ninjas = os.getenv("API_NINJAS_API_KEY")
+api_key_wx = os.getenv("CHECKWXAPI_API_KEY")
 
 #-------------------------------------FETCHING AIRPORT DETAILS
 @main.route("/fetch-airport-details", methods=["POST"])
@@ -517,7 +523,23 @@ def prompt():
         return jsonify({"error": str(error)}), 400
     
 #----------------------------------------------WEATHER REPORTS-------------------------------------------------------
-'''
 @main.route('/get-weather', methods=["POST"])
 def get_weather():
-'''
+    airport_code = request.json.get("code") #expecting ICAO code
+
+    url_metar = f"https://api.checkwx.com/metar/{airport_code}/decoded"
+    url_taf = f"https://api.checkwx.com/taf/{airport_code}/decoded"
+
+    #making the requests to the API
+    response_metar = requests.request("GET", url_metar, headers={'X-API-Key': api_key_wx})
+    response_taf = requests.request("GET", url_taf, headers={'X-API-Key': api_key_wx})
+
+    if response_metar.status_code == 200 and response_taf.status_code == 200:
+        #parsing the responses to JSON
+        data_metar = response_metar.json()
+        metar = data_metar['data'][0]
+        data_taf = response_taf.json()
+        taf = data_taf['data'][0]
+        return jsonify({"metar": metar, "taf": taf}), 200 #back to frontend
+    else:
+        return jsonify({"error": "Unable to fetch weather data"}), 400
