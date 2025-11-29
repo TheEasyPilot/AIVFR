@@ -141,4 +141,5 @@ h3 {
     width: 100%;
     height: fit-content;
     font-family: 'Manrope';
+    white-space: pre-wrap;
 }

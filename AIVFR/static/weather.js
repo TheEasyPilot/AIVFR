@@ -1,5 +1,23 @@
 import { update, showAlert } from "./basePage.js";
 
+const grading = document.getElementsByClassName('grading');
+
+//initializing grading colours
+function initializeGradingColors() {
+    for (let i = 0; i < grading.length; i++) {
+        if (grading[i].textContent == "VFR") {
+            grading[i].style.color = "green";
+        } else if (grading[i].textContent == "MVFR") {
+            grading[i].style.color = "blue";
+        } else if (grading[i].textContent == "IFR") {
+            grading[i].style.color = "red";
+        } else if (grading[i].textContent == "LIFR") {
+            grading[i].style.color = "purple";
+        }
+    }
+}
+initializeGradingColors();
+
 //-------Verifying ICAO code--------------
 
 function verifyICAO(code) {
@@ -128,10 +146,10 @@ update_wx.addEventListener('click', async () => {
         taf_searched.textContent = wx_searched.taf.raw_text;
 
         await update("METAR_searched_decoded", await parseMETAR(wx_searched.metar));
-        metar_searched_decoded.textContent = await parseMETAR(wx_searched.metar);
+        metar_searched_decoded.innerHTML = await parseMETAR(wx_searched.metar);
 
         await update("TAF_searched_decoded", await parseTAF(wx_searched.taf));
-        taf_searched_decoded.textContent = await parseTAF(wx_searched.taf);
+        taf_searched_decoded.innerHTML = await parseTAF(wx_searched.taf);
     }
 });
 
@@ -161,6 +179,9 @@ async function parseMETAR(metar) {
           var ceiling = "N/A";  
         }
         var cloud_base = `${metar.clouds[0].base_feet_agl} feet`;
+        if (cloud_base == "undefined feet") {
+            cloud_base = "N/A";
+        }
 
     } else if (altitude_unit == "meter") {
         try {
@@ -170,6 +191,9 @@ async function parseMETAR(metar) {
           var ceiling = "N/A";  
         }
         var cloud_base = `${metar.clouds[0].base_metres_agl} meters`;
+        if (cloud_base == "undefined meters") {
+            cloud_base = "N/A";
+        }
     }
 
     //other non-unit related values
@@ -186,30 +210,22 @@ async function parseMETAR(metar) {
     const humidity = metar.humidity.percent;
 
     //constructing decoded METAR string
-    const decoded_METAR = `
-    Time of observation: ${time}\n
-    Wind: ${wind_direction}° at ${windspeed}\n
-    Visibility: ${visibility} meters (${visibility_text})\n
-    Temperature: ${temperature}°C\n
-    Dewpoint: ${dewpoint}°C\n
-    Pressure: ${pressure} hPa\n
-    Humidity: ${humidity}%\n
-    Ceiling: ${ceiling}\n
-    Clouds: ${clouds_code} (${clouds_text})\n
+    const decoded_METAR = `Time of observation: ${time}
+    Wind: ${wind_direction}° at ${windspeed}
+    Visibility: ${visibility} meters (${visibility_text})
+    Temperature: ${temperature}°C
+    Dewpoint: ${dewpoint}°C
+    Pressure: ${pressure} hPa
+    Humidity: ${humidity}%
+    Ceiling: ${ceiling}
+    Clouds: ${clouds_code} (${clouds_text})
     Cloud Base: ${cloud_base}
     `;
 
     //grading
+    await update("METAR_searched_grading", flight_category);
     METAR_searched_grading.textContent = flight_category;
-    if (flight_category == "VFR") {
-        METAR_searched_grading.style.color = "green";
-    } else if (flight_category == "MVFR") {
-        METAR_searched_grading.style.color = "blue";
-    } else if (flight_category == "IFR") {
-        METAR_searched_grading.style.color = "red";
-    } else if (flight_category == "LIFR") {
-        METAR_searched_grading.style.color = "purple";
-    }
+    initializeGradingColors();
 
     //returning decoded METAR
     return decoded_METAR;
