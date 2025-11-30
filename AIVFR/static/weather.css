@@ -123,7 +123,7 @@ h3 {
 .grading {
     margin-left: 15px;
     font-size: 20px;
-    font-weight: 650;
+    font-weight: 700;
 }
 
 #TAF_searched {
@@ -136,6 +136,59 @@ h3 {
 }
 
 #METAR_searched_decoded, #TAF_searched_decoded {
+    resize: none;
+    margin-top: 20px;
+    width: 100%;
+    height: fit-content;
+    font-family: 'Manrope';
+    white-space: pre-wrap;
+}
+
+/*-----------Departure and Arrival Aerodrome Weather--------------*/
+#WX_departure_header2, #WX_arrival_header2 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    height: 36px;
+}
+
+#WX_departure_name, #WX_arrival_name {
+    font-size: 17px;
+    background-color: var(--bg);
+    padding: 5px 10px;
+}
+
+.WX_switch {
+    background-color: var(--bg);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-family: 'Manrope';
+    font-weight: 600;
+    font-size: 17px;
+    margin-left: 15px;
+    width: 150px;
+    max-height: 70px;
+}
+
+#WX_departure_METAR_switch.active, #WX_arrival_METAR_switch.active,
+#WX_departure_TAF_switch.active, #WX_arrival_TAF_switch.active {
+    background-color: var(--primary);
+}
+
+#METARDeparture, #METARArrival, #TAFDeparture, #TAFArrival {
+    margin-top: 10px;
+}
+
+#TAF_departure, #TAF_arrival {
+    resize: none;
+    width: 100%;
+    height: fit-content;
+    font-family: 'Manrope';
+    font-size: 14px;
+    pointer-events: none;
+}
+
+#METAR_departure_decoded, #TAF_departure_decoded, #METAR_arrival_decoded, #TAF_arrival_decoded {
     resize: none;
     margin-top: 20px;
     width: 100%;
