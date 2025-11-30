@@ -2,7 +2,7 @@ import { update, showAlert } from "./basePage.js";
 
 const grading = document.getElementsByClassName('grading');
 
-//initializing grading colours
+//initializing grading colours and styling
 function initializeGradingColors() {
     for (let i = 0; i < grading.length; i++) {
         if (grading[i].textContent == "VFR") {
@@ -15,8 +15,24 @@ function initializeGradingColors() {
             grading[i].style.color = "purple";
         }
     }
+
 }
 initializeGradingColors();
+
+//styling for item titles
+//this takes temporary decoded weather data from the backend (if it exists) and inserts it into the correct divs
+//along with proper HTML formatting
+const resp = await fetch("/get-flight")
+const weather = await resp.json();
+var TEMPtaf_searched_decoded = weather.TAF_searched_decoded;
+var TEMPmetar_searched_decoded = weather.METAR_searched_decoded;
+
+if (TEMPtaf_searched_decoded && TEMPmetar_searched_decoded) { //more to be added for dep/arr wx
+    var metar_searched_decodedTEMP = document.getElementById('METAR_searched_decoded');
+    var taf_searched_decodedTEMP = document.getElementById('TAF_searched_decoded');
+    taf_searched_decodedTEMP.innerHTML = TEMPtaf_searched_decoded
+    metar_searched_decodedTEMP.innerHTML = TEMPmetar_searched_decoded
+}
 
 //-------Verifying ICAO code--------------
 
@@ -173,24 +189,24 @@ async function parseMETAR(metar) {
     //altitude
     if (altitude_unit == "feet") {
         try {
-          var ceiling = `${metar.ceiling[0].feet} feet`;  
+          var ceiling = `${metar.ceiling[0]?.feet} feet`;  
         }
         catch (TypeError) {
           var ceiling = "N/A";  
         }
-        var cloud_base = `${metar.clouds[0].base_feet_agl} feet`;
+        var cloud_base = `${metar.clouds[0]?.base_feet_agl} feet`;
         if (cloud_base == "undefined feet") {
             cloud_base = "N/A";
         }
 
     } else if (altitude_unit == "meter") {
         try {
-          var ceiling = `${metar.ceiling[0].meters} meters`;  
+          var ceiling = `${metar.ceiling[0]?.meters} meters`;  
         }
         catch (TypeError) {
           var ceiling = "N/A";  
         }
-        var cloud_base = `${metar.clouds[0].base_metres_agl} meters`;
+        var cloud_base = `${metar.clouds[0]?.base_metres_agl} meters`;
         if (cloud_base == "undefined meters") {
             cloud_base = "N/A";
         }
@@ -210,16 +226,16 @@ async function parseMETAR(metar) {
     const humidity = metar.humidity.percent;
 
     //constructing decoded METAR string
-    const decoded_METAR = `Time of observation: ${time}
-    Wind: ${wind_direction}° at ${windspeed}
-    Visibility: ${visibility} meters (${visibility_text})
-    Temperature: ${temperature}°C
-    Dewpoint: ${dewpoint}°C
-    Pressure: ${pressure} hPa
-    Humidity: ${humidity}%
-    Ceiling: ${ceiling}
-    Clouds: ${clouds_code} (${clouds_text})
-    Cloud Base: ${cloud_base}
+    const decoded_METAR = `<b>Time of observation:</b> ${time}
+    <b>Wind:</b> ${wind_direction}° at ${windspeed}
+    <b>Visibility:</b> ${visibility} meters (${visibility_text})
+    <b>Temperature:</b> ${temperature}°C
+    <b>Dewpoint:</b> ${dewpoint}°C
+    <b>Pressure:</b> ${pressure} hPa
+    <b>Humidity:</b> ${humidity}%
+    <b>Ceiling:</b> ${ceiling}
+    <b>Clouds:</b> ${clouds_code} (${clouds_text})
+    <b>Cloud Base:</b> ${cloud_base}
     `;
 
     //grading
@@ -232,6 +248,49 @@ async function parseMETAR(metar) {
 }
 
 function parseTAF(taf) {
-    //parsing logic here
+    //parsing taf data depending on available fields
+    const parsed_TAF = taf.forecast.map(f => ({
+    start: f.timestamp?.from,
+    end: f.timestamp?.to,
+    wind: f.wind ?? null,
+    visibility: f.visibility ?? null,
+    clouds: (f.clouds ?? []).map(cloud => ({
+        type: cloud.text,
+        base_ft: cloud.base_feet_agl
+    })),
+    conditions: (f.conditions ?? []).map(cond => cond.text),
+    change: f.change?.indicator?.text ?? null,
+    probability: f.change?.probability ?? null
+    }));
+
+    let decoded_TAF = '';
+
+    //constructing decoded TAF string
+    parsed_TAF.forEach(period => { //iterate through each forecast period
+        decoded_TAF += `\n<b>From:</b> ${period.start} <b>To:</b> ${period.end}\n`;
+        if (period.change) { //if an item is undefined, it will be skipped
+            decoded_TAF += `  <b>Change Indicator:</b> ${period.change}\n`;
+        }
+        if (period.probability) {
+            decoded_TAF += `  <b>Probability:</b> ${period.probability}%\n`;
+        }
+        if (period.conditions.length > 0) {
+            decoded_TAF += `  <b>Conditions:</b> ${period.conditions.join(', ')}\n`;
+        }
+
+        if (period.wind) {
+            decoded_TAF += `  <b>Wind:</b> ${period.wind.degrees}° at ${period.wind.speed_kts} knots\n`;
+        }
+        if (period.visibility) {
+            decoded_TAF += `  <b>Visibility:</b> ${period.visibility.meters} meters (${period.visibility.meters_text})\n`;
+        }
+        if (period.clouds.length > 0) {
+            period.clouds.forEach(cloud => {
+                decoded_TAF += `  <b>Clouds:</b> ${cloud.type} at ${cloud.base_ft} feet AGL\n`;
+            });
+        }
+    });
+
+    return decoded_TAF;
 }
 
