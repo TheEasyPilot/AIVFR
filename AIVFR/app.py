@@ -180,6 +180,20 @@ data_template = {
         "METAR_searched_decoded" : "",
         "TAF_searched_decoded" : "",
         "METAR_searched_grading" : "",
+        #-----Departure airport
+        "WX_switch_dep" : "METAR",
+        "METAR_departure" : "",
+        "TAF_departure" : "",
+        "METAR_departure_decoded" : "",
+        "TAF_departure_decoded" : "",
+        "METAR_departure_grading" : "",
+        #-----Arrival airport
+        "WX_switch_arr" : "METAR",
+        "METAR_arrival" : "",  
+        "TAF_arrival" : "",
+        "METAR_arrival_decoded" : "",
+        "TAF_arrival_decoded" : "",
+        "METAR_arrival_grading" : "",
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA
@@ -252,10 +266,9 @@ def save_flight():
 #resets all flight data  but NOT settings
 @main.route("/new-flight")
 def NewFlightRun():
-    #resettting settings data for test (no data in flight to reset)
     session["flight_data"]["flight"] = data_template["flight"]
     session.modified = True
-    return 
+    return jsonify({"status": "success", "message": "New flight started."}), 200
     
 #shows any errors on the actual page
 if __name__ == '__main__':
@@ -535,12 +548,34 @@ def get_weather():
     response_metar = requests.request("GET", url_metar, headers={'X-API-Key': api_key_wx})
     response_taf = requests.request("GET", url_taf, headers={'X-API-Key': api_key_wx})
 
+
     if response_metar.status_code == 200 and response_taf.status_code == 200:
         #parsing the responses to JSON
         data_metar = response_metar.json()
+
+    try:
         metar = data_metar['data'][0]
         data_taf = response_taf.json()
         taf = data_taf['data'][0]
         return jsonify({"metar": metar, "taf": taf}), 200 #back to frontend
-    else:
-        return jsonify({"error": "Unable to fetch weather data"}), 400
+    
+    except (IndexError, KeyError):
+        #use the nearest station if the entred airport has no weather data
+        url_metar = f"https://api.checkwx.com/metar/{airport_code}/nearest/decoded"
+        url_taf = f"https://api.checkwx.com/taf/{airport_code}/nearest/decoded"
+
+        response_metar = requests.request("GET", url_metar, headers={'X-API-Key': api_key_wx})
+        response_taf = requests.request("GET", url_taf, headers={'X-API-Key': api_key_wx})
+
+        if response_metar.status_code == 200 and response_taf.status_code == 200:
+            #parsing the responses to JSON
+            data_metar = response_metar.json()
+
+        try:
+            metar = data_metar['data'][0]
+            data_taf = response_taf.json()
+            taf = data_taf['data'][0]
+            return jsonify({"metar": metar, "taf": taf}), 200 #back to frontend
+        
+        except (IndexError, KeyError):
+            return jsonify({"error": "Unable to fetch weather data"}), 400
