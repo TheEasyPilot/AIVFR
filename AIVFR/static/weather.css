@@ -29,6 +29,7 @@
 #update_icon {
     width: 30px;
     margin-right: 10px;
+    fill: currentColor;
 }
 
 #working_icon {
