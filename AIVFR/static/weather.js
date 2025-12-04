@@ -396,8 +396,8 @@ async function parseMETAR(metar, gradingHTML) {
     const clouds_text = metar.clouds[0].text;
     const flight_category = metar.flight_category;
     const humidity = metar.humidity.percent;
-    const conditions_fetch = metar.conditions.map(cond => cond.text)
-    const conditions = conditions_fetch.join(', ')
+    const conditions_fetch = metar.conditions?.map(cond => cond.text)
+    const conditions = conditions_fetch?.join(', ')
 
     //constructing decoded METAR string
     let decoded_METAR = `<b>Time of observation:</b> ${time}
