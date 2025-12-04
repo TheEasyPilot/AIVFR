@@ -31,6 +31,11 @@
     margin-right: 10px;
 }
 
+#working_icon {
+    width: 100px;
+    margin-right: 10px;
+}
+
 /*Main content*/
 #content {
     grid-template-columns: 5fr 5fr;
@@ -48,6 +53,7 @@
     margin: 2px;
     padding: 15px;
     border-radius: 10px;
+    z-index: 1;
 }
 
 /*departure and arrival in second column*/
@@ -108,11 +114,14 @@
 
 /*-----------Weather reports--------------*/
 
-h3 {
+#subheading {
     margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
 }
 
 .report {
+    display: none;
     background-color: var(--bg);
     margin-top: 10px;
     margin-bottom: 10px;
@@ -125,6 +134,7 @@ h3 {
     font-size: 20px;
     font-weight: 700;
 }
+
 
 #TAF_searched {
     resize: none;
@@ -156,6 +166,7 @@ h3 {
     font-size: 17px;
     background-color: var(--bg);
     padding: 5px 10px;
+    max-width: fit-content;
 }
 
 .WX_switch {
@@ -195,4 +206,19 @@ h3 {
     height: fit-content;
     font-family: 'Manrope';
     white-space: pre-wrap;
+}
+
+
+/*-------------Covers when search not possible--------*/
+
+#METAR_departure.active, #TAF_departure.active,
+#METAR_arrival.active, #TAF_arrival.active,
+#METAR_searched.active, #TAF_searched.active {
+    display: block;
+}
+
+
+#WX_departure.inop, #WX_arrival.inop {
+    pointer-events: none;
+    opacity: 0.4;
 }

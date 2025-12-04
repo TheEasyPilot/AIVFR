@@ -2,7 +2,7 @@ import { update, showAlert } from "./basePage.js";
 
 const grading = document.getElementsByClassName('grading');
 
-//initializing grading colours and styling
+//------------------initializing grading colours and styling
 function initializeGradingColors() {
     for (let i = 0; i < grading.length; i++) {
         if (grading[i].textContent == "VFR") {
@@ -140,8 +140,7 @@ const code_searched = document.getElementById('airport_code');
 
 async function getWeather(code) {
     if (code === "") {
-        showAlert("Couldn't get data for seached aerodrome. Please enter an ICAO code.");
-        return;
+        return undefined;
     }
 
     try {
@@ -231,8 +230,9 @@ WX_arrival_TAF_switch.addEventListener('click', async () => {
     update("WX_switch_arr", "TAF");
 });
 
+//----------------------------------UPDATING WEATHER FUNCTION----------------------------------
 
-//-------------------updating all weather data------------
+//--declarations for the individual METAR/TAF reports and decoded text--
 const metar_searched = document.getElementById('METAR_searched');
 const taf_searched = document.getElementById('TAF_searched');
 const metar_searched_decoded = document.getElementById('METAR_searched_decoded');
@@ -251,14 +251,33 @@ const metar_arrival_decoded = document.getElementById('METAR_arrival_decoded');
 const taf_arrival_decoded = document.getElementById('TAF_arrival_decoded');
 const METAR_arrival_grading = document.getElementById('METAR_arrival_grading');
 
+//--declarations for the boxes containing METAR/TAF reports--
+const WX_departure = document.getElementById('WX_departure');
+const WX_arrival = document.getElementById('WX_arrival');
+
+
 
 update_wx.addEventListener('click', async () => {
-    //Add loading feedback here
+    //'updating...' feedback
+    update_wx.style.pointerEvents = 'none'; //disable button while updating
+    update_wx.style.opacity = '0.6';
+    update_wx.style.backgroundColor = 'var(--onhover)'
+    update_wx.style.border = 'none';
+    update_wx.style.alignItems = 'center';
+    update_wx.innerHTML = `<svg id='working_icon' data-name="Layer 1" id="Layer_1" fill='currentColor' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title/><path d="M19,6.76V2H6V6.76A4,4,0,0,0,7.17,9.59L9.59,12,7.17,14.41A4.06,4.06,0,0,0,6,17.24V22H19V17.24a4.06,4.06,0,0,0-1.17-2.83L15.41,12l2.42-2.41A4,4,0,0,0,19,6.76Zm-2,0a2,2,0,0,1-.59,1.41l-2.76,2.77a1.5,1.5,0,0,0,0,2.12l2.76,2.77A2,2,0,0,1,17,17.24V20H8V17.24a2,2,0,0,1,.59-1.41l2.76-2.77a1.5,1.5,0,0,0,0-2.12L8.59,8.17A2,2,0,0,1,8,6.76V4h9Z"/></svg>
+    <p style="font-size: 14px;">WORKING...</p>
+    `
+    //fetching weather data for searched, departure and arrival aerodromes
     const wx_searched = await getWeather(code_searched.value);
     const wx_departure = await getWeather(departure_aerodrome);
     const wx_arrival = await getWeather(arrival_aerodrome);
 
+    try {
+
     if (wx_searched) {
+        metar_searched.classList.add('active')
+        taf_searched.classList.add('active')
+
         //update the session as well as the actual decoded text for each report
         //------------SEARCHED WX-----------
         await update("METAR_searched", wx_searched.metar.raw_text);
@@ -273,6 +292,10 @@ update_wx.addEventListener('click', async () => {
         await update("TAF_searched_decoded", await parseTAF(wx_searched.taf));
         taf_searched_decoded.innerHTML = await parseTAF(wx_searched.taf);
 
+    } if (wx_departure) {
+        WX_departure.classList.remove('inop');
+        metar_departure.classList.add('active');
+        taf_departure.classList.add('active');
         //------------DEPARTURE WX-----------
         await update("METAR_departure", wx_departure.metar.raw_text);
         metar_departure.textContent = wx_departure.metar.raw_text;
@@ -284,6 +307,11 @@ update_wx.addEventListener('click', async () => {
 
         await update("TAF_departure_decoded", await parseTAF(wx_departure.taf));
         taf_departure_decoded.innerHTML = await parseTAF(wx_departure.taf);
+
+    } if (wx_arrival) {
+        WX_arrival.classList.remove('inop');
+        metar_arrival.classList.add('active');
+        taf_arrival.classList.add('active');
 
         //------------ARRIVAL WX-----------
         await update("METAR_arrival", wx_arrival.metar.raw_text);
@@ -297,8 +325,20 @@ update_wx.addEventListener('click', async () => {
 
         await update("TAF_arrival_decoded", await parseTAF(wx_arrival.taf));
         taf_arrival_decoded.innerHTML = await parseTAF(wx_arrival.taf);
-
     }
+
+    } catch (error) {
+        showAlert(error)
+    }
+
+    //restoring button state
+    update_wx.style.pointerEvents = 'auto';
+    update_wx.style.opacity = "";
+    update_wx.style.border = "";
+    update_wx.style.backgroundColor = "";
+    update_wx.innerHTML = `<svg id='update_icon' xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><style type="text/css">.st0{opacity:0.2;fill:currentColor;stroke:#000000;stroke-width:0.05;stroke-miterlimit:10;}</style><g id="grid_system"/><g id="_icons"><g><path d="M12,21c4.9624,0,9-4.0376,9-9c0-0.3784-0.0239-0.7598-0.0708-1.1338c-0.0688-0.5479-0.5698-0.9346-1.1172-0.8672    c-0.5479,0.0688-0.936,0.5688-0.8672,1.1172C18.981,11.4053,19,11.7007,19,12c0,3.8599-3.1401,7-7,7s-7-3.1401-7-7s3.1401-7,7-7    c1.8568,0,3.6179,0.7455,4.9119,2.0166c0.062,0.0613,0.1177,0.1297,0.1776,0.1935c0.0279,0.0295,0.0533,0.0613,0.0806,0.0914    L15.3794,7.624c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616c0.0874,0.4839,0.5088,0.8228,0.9834,0.8228    c0.0586,0,0.1182-0.0049,0.1782-0.0156l4.1753-0.7524c0.5435-0.0981,0.9048-0.6182,0.8071-1.1616l-0.7524-4.1758    c-0.0986-0.5439-0.6167-0.9058-1.1616-0.8071c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616l0.3109,1.7251    C16.6447,3.9421,14.4072,3,12,3c-4.9624,0-9,4.0376-9,9S7.0376,21,12,21z"/></g></g></svg>
+          <p>UPDATE</p>
+    `
 });
 
 async function parseMETAR(metar, gradingHTML) {
@@ -356,19 +396,42 @@ async function parseMETAR(metar, gradingHTML) {
     const clouds_text = metar.clouds[0].text;
     const flight_category = metar.flight_category;
     const humidity = metar.humidity.percent;
+    const conditions_fetch = metar.conditions.map(cond => cond.text)
+    const conditions = conditions_fetch.join(', ')
 
     //constructing decoded METAR string
-    const decoded_METAR = `<b>Time of observation:</b> ${time}
+    let decoded_METAR = `<b>Time of observation:</b> ${time}
     <b>Wind:</b> ${wind_direction}° at ${windspeed}
     <b>Visibility:</b> ${visibility} meters (${visibility_text})
     <b>Temperature:</b> ${temperature}°C
     <b>Dewpoint:</b> ${dewpoint}°C
     <b>Pressure:</b> ${pressure} hPa
     <b>Humidity:</b> ${humidity}%
-    <b>Ceiling:</b> ${ceiling}
-    <b>Clouds:</b> ${clouds_code} (${clouds_text})
-    <b>Cloud Base:</b> ${cloud_base}
-    `;
+    <b>Clouds:</b> ${clouds_code} (${clouds_text})`;
+
+    //adding items that may be undefined
+    try {
+    if (ceiling != 'undefined feet' && ceiling != 'undefined meters') {
+        decoded_METAR += `
+    <b>Ceiling:</b> ${ceiling}`;
+    } else if (ceiling != 'undefined meters' && ceiling != 'undefined feet') {
+        decoded_METAR += `
+    <b>Ceiling:</b> ${ceiling}`;
+    }
+
+    if (cloud_base) {
+        decoded_METAR += `
+    <b>Cloud Base:</b> ${cloud_base}`;
+    }
+
+    if (conditions) {
+        decoded_METAR += `
+    <b>Conditions:</b> ${conditions}`;
+    }
+
+    } catch (error) {
+        showAlert(error) //tST
+    }
 
     //grading
     await update(`${gradingHTML.id}`, flight_category);
