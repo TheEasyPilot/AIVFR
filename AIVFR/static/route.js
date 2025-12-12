@@ -231,6 +231,7 @@ async function load_map() {
             const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
             .addTo(map)
             .showMeasurements();
+            
 
             } else if (mapStyle == 'satellite') {
                 mapTilerLogo.style.display = "inline";
@@ -403,10 +404,10 @@ function update_route_names() {
         .then(response => response.json())
         .then(FlightData => {
             const route = FlightData.route_names;
-
             route_names.value = route.join(' ➔ ');
         });
 
+    
 }
 
 //-------------------ADDING AND REMOVING WAYPOINTS MANUALLY----------------
@@ -464,6 +465,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             waypoint.value = '';
             reload_map();
             update_route_names();
+            await updateDistances();
             });
         
       
@@ -512,6 +514,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
 
             reload_map();
             update_route_names();
+            await updateDistances();
         });
     }
 
@@ -614,3 +617,50 @@ closeTooltip.addEventListener("click", function() {
     tooltip.style.display = "none"
 })
 
+//------------------------DISTANCE FINDING----------------------
+
+async function getDistance(coord_arr) {
+    var len = coord_arr.length;
+    let total = 0
+    var separate_distances = []
+
+    //iterate through the route coordinates
+    //and find the distance between each point and the next
+    for (let i = 0; i = len; i++) {
+        var distance = map.distance(coord_arr[i], coord_arr[i+1]) / 1852; //for nautical miles
+        console.log(distance) //TEST
+        total = total + distance
+        separate_distances.push(distance)
+    }
+
+    //updating the session to include distance values
+    await update("separate_distances", separate_distances)
+    await update("distance[value]", total)
+
+    return total
+
+}
+
+async function updateDistances() {
+        fetch('/get-flight')
+        .then(response => response.json())
+        .then(async FlightData => {
+            const route_coords = FlightData.route;
+
+        //only update the distance when a waypoint exits
+        if (route_coords.length >= 3) {
+            var total = getDistance(route_coords)
+        }
+
+        //updating the distance to display to the user
+         const response = await fetch('/time-distance');
+        if (response.ok) {
+            const text = await response.text();
+            document.getElementById('timeDistance').textContent = text;
+        }
+        
+        return total
+    });
+        
+}
+   
