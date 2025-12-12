@@ -170,7 +170,8 @@ data_template = {
         "route_names" : [],
         "route_gen_justification" : "",
         "distance" : {"value" : 0, "class" : "distance"},
-        "time" : "",
+        "separate_distances" : [], #distances for each point
+        "time" : 0,
         #-----------------------WEATHER
         #-----Searched airport
         "WX_airportCode" : "",
@@ -450,6 +451,7 @@ def remove_waypoint():
         #remove the waypoint at the specified index
         session["flight_data"]["flight"]["route_names"].pop(remove_index)
         session["flight_data"]["flight"]["route"].pop(remove_index)
+        session["flight_data"]["flight"]["add_index"] -= 1
         session.modified = True
         return jsonify(session["flight_data"]["flight"]["route"]), 200
     except IndexError:
@@ -579,3 +581,9 @@ def get_weather():
         
         except (IndexError, KeyError):
             return jsonify({"error": "Unable to fetch weather data"}), 400
+
+#------------------------------Time & Distance----------------------------
+
+@main.route('/time-distance')
+def get_time_distance():
+    return f"{session["flight_data"]["flight"]["time"]} | {session["flight_data"]["flight"]["distance"]["output"]}", 200
