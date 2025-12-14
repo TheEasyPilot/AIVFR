@@ -216,11 +216,21 @@ def update_settings():
 def update_flight():
     key = request.json.get("key")
     value = request.json.get("value")
-    session["flight_data"]["flight"][key] = value
+
+    target = session["flight_data"]["flight"]
+    keys = key.split(".")
+
+    #allowing paths (for items like distance.value)
+    for k in keys[:-1]:
+        if k not in target or not isinstance(target[k], dict):
+            return jsonify({"error": "Invalid key path"}), 400
+        target = target[k]
+
+    target[keys[-1]] = value
+
     update_units() #update units in case a unit value was changed
     session.modified = True
     return jsonify(session["flight_data"])
-
 #--------------------------------------------READING DATA
 
 @main.route("/get-settings", methods=["GET"])
@@ -586,4 +596,9 @@ def get_weather():
 
 @main.route('/time-distance')
 def get_time_distance():
-    return f"{session["flight_data"]["flight"]["time"]} | {session["flight_data"]["flight"]["distance"]["output"]}", 200
+    try:
+        text = f"{session["flight_data"]["flight"]["time"]} | {session["flight_data"]["flight"]["distance"]["output"]}"
+    except KeyError:
+        text = "0 | 0.0"
+
+    return text, 200

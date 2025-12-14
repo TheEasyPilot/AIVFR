@@ -1,6 +1,17 @@
 import { update, showAlert, prompt } from "./basePage.js";
 let map = null;
-load_map()
+
+(async () => {
+    await load_map();
+})();
+
+const response = await fetch('/time-distance');
+if (response.ok) {
+    const text = await response.text();
+    document.getElementById('timeDistance').textContent = text;
+}
+
+await updateDistances();
 
 //-------------------------------------ROUTE SETUP---------------------------------
 //-------Verifying ICAO code--------------
@@ -168,89 +179,97 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
 const mapTilerLogo = document.getElementById("mapTilerLogo");
 
 async function load_map() {
-    //getting API keys from backend
-    fetch('/get-api-keys')
-    .then(response => response.json())
-    .then(data => {
-        const apiKey = data.openaip;
-        const apiKeyMaptiler = data.maptiler;
-        const apiKeyJawg = data.jawg;
-
-        //Basemap layer from OpenStreetMap
-        const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors'
-        });
-
-        //dark mode map from jawg.io
-        const Darkmode = L.tileLayer(`https://tile.jawg.io/e292ef5c-3844-4eef-83ad-a14b12e76451/{z}/{x}/{y}{r}.png?access-token=${apiKeyJawg}`, {
-        maxZoom: 19,
-        attribution: `<a href="https://maplibre.org">MapLibre</a> &copy; <a href="http://www.jawg.io">JawgMaps</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`
-        });
-
-        //OpenAIP layer for airspace, airports, navaids, etc.
-        const OpenAIP = L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
-        maxZoom: 18,
-        attribution: '<a href="https://www.openaip.net/">OpenAIP Data</a>(<a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC 4.0</a>)'
-        });
-
-        //satellite map from mapTiler
-        const Satellite = L.tileLayer(`https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${apiKeyMaptiler}`, {
-        maxZoom: 19,
-        attribution: ` &copy; <a href="https://www.maptiler.com">maptiler</a>`
-        });
-
-        //finding the Basemap style from settings, and the route data from route
-        fetch('/get-all')
+    return new Promise((resolve) => {
+        if (map) {
+            map.remove();
+            map = null;
+        }
+        //getting API keys from backend
+        fetch('/get-api-keys')
         .then(response => response.json())
-        .then(FlightData => {
-            const mapStyle = FlightData.settings.map_style;
-            const theme = FlightData.settings.theme;
-            const route = FlightData.flight.route
+        .then(data => {
+            const apiKey = data.openaip;
+            const apiKeyMaptiler = data.maptiler;
+            const apiKeyJawg = data.jawg;
 
-            if (mapStyle == 'normal' && theme == 'light') {
-                mapTilerLogo.style.display = "none";
-                //crafting the map
-                 map = L.map('routeMAP', { 
-                center: [51.505, -0.09], //Initial center coords (set to London)
-                zoom: 9,
-                layers: [Basemap, OpenAIP]
-            }); 
-            const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
-            .addTo(map)
-            .showMeasurements();
-
-            } else if (mapStyle == 'normal' && theme == 'dark') {
-                mapTilerLogo.style.display = "none";
-                //crafting the map
-                 map = L.map('routeMAP', { 
-                center: [51.505, -0.09], //Initial center coords (set to London)
-                zoom: 12,
-                layers: [Darkmode, OpenAIP]
-            }); 
-            const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
-            .addTo(map)
-            .showMeasurements();
-            
-
-            } else if (mapStyle == 'satellite') {
-                mapTilerLogo.style.display = "inline";
-                //crafting the map
-                 map = L.map('routeMAP', { 
-                center: [51.505, -0.09], //Initial center coords (set to London)
-                zoom: 9,
-                layers: [Satellite, OpenAIP]
-                //crafting the map
+            //Basemap layer from OpenStreetMap
+            const Basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors'
             });
-            const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
-            .addTo(map)
-            .showMeasurements(); //show the distances between each point on the map
-            }
-        })
 
-        .catch(error => {
-            console.error('MapCreationError', error);
-            showAlert(error);
+            //dark mode map from jawg.io
+            const Darkmode = L.tileLayer(`https://tile.jawg.io/e292ef5c-3844-4eef-83ad-a14b12e76451/{z}/{x}/{y}{r}.png?access-token=${apiKeyJawg}`, {
+            maxZoom: 19,
+            attribution: `<a href="https://maplibre.org">MapLibre</a> &copy; <a href="http://www.jawg.io">JawgMaps</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`
+            });
+
+            //OpenAIP layer for airspace, airports, navaids, etc.
+            const OpenAIP = L.tileLayer(`https://api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
+            maxZoom: 18,
+            attribution: '<a href="https://www.openaip.net/">OpenAIP Data</a>(<a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC 4.0</a>)'
+            });
+
+            //satellite map from mapTiler
+            const Satellite = L.tileLayer(`https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=${apiKeyMaptiler}`, {
+            maxZoom: 19,
+            attribution: ` &copy; <a href="https://www.maptiler.com">maptiler</a>`
+            });
+
+            //finding the Basemap style from settings, and the route data from route
+            fetch('/get-all')
+            .then(response => response.json())
+            .then(FlightData => {
+                const mapStyle = FlightData.settings.map_style;
+                const theme = FlightData.settings.theme;
+                const route = FlightData.flight.route
+
+                if (mapStyle == 'normal' && theme == 'light') {
+                    mapTilerLogo.style.display = "none";
+                    //crafting the map
+                    map = L.map('routeMAP', { 
+                    center: [51.505, -0.09], //Initial center coords (set to London)
+                    zoom: 9,
+                    layers: [Basemap, OpenAIP]
+                }); 
+                const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
+                .addTo(map)
+                .showMeasurements();
+
+                } else if (mapStyle == 'normal' && theme == 'dark') {
+                    mapTilerLogo.style.display = "none";
+                    //crafting the map
+                    map = L.map('routeMAP', { 
+                    center: [51.505, -0.09], //Initial center coords (set to London)
+                    zoom: 12,
+                    layers: [Darkmode, OpenAIP]
+                }); 
+                const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
+                .addTo(map)
+                .showMeasurements();
+                
+
+                } else if (mapStyle == 'satellite') {
+                    mapTilerLogo.style.display = "inline";
+                    //crafting the map
+                    map = L.map('routeMAP', { 
+                    center: [51.505, -0.09], //Initial center coords (set to London)
+                    zoom: 9,
+                    layers: [Satellite, OpenAIP]
+                    //crafting the map
+                });
+                const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
+                .addTo(map)
+                .showMeasurements(); //show the distances between each point on the map
+                }
+
+                resolve();
+            })
+
+            .catch(error => {
+                console.error('MapCreationError', error);
+                resolve();
+            });
         });
     });
 
@@ -357,11 +376,10 @@ function reload_map() {
         map.remove(); //removes the whole contaier
       } catch (error) {
         console.warn("Error removing map during reload:", error);
-        showAlert('An error occured. Please reload the page')
       }
-      map = null; //container then re innitalized but set to null
     }
-    load_map();
+    map = null; //container then re innitalized but set to null
+    return load_map();
 } 
 
 //-------------------------Picking a waypoint------------------------
@@ -623,19 +641,36 @@ async function getDistance(coord_arr) {
     var len = coord_arr.length;
     let total = 0
     var separate_distances = []
+    let operative = false
+
+    //finding correct units
+    const response = await fetch( "/get-settings");
+    const settings = await response.json();
+    const distance_unit = settings.units_distance;
+
+    if (distance_unit === "nautical_mile") {var divideBy = 1852}
+    else if (distance_unit === "kilometer") {var divideBy = 1000}
+    else if (distance_unit === "us_statute_mile") {var divideBy = 1609.344}
 
     //iterate through the route coordinates
     //and find the distance between each point and the next
-    for (let i = 0; i = len; i++) {
-        var distance = map.distance(coord_arr[i], coord_arr[i+1]) / 1852; //for nautical miles
-        console.log(distance) //TEST
-        total = total + distance
-        separate_distances.push(distance)
-    }
+    do {
+        try {
+            for (let i = 0; i < len - 1; i++) {
+                var distance = map.distance(coord_arr[i], coord_arr[i+1]) / divideBy;
+                total = total + distance
+                separate_distances.push(distance)
+                operative = true
+            }
+        } catch (error) { //in case the map isnt loaded yet
+            operative = false
+            await reload_map();
+        }
+    } while (!operative);
 
     //updating the session to include distance values
     await update("separate_distances", separate_distances)
-    await update("distance[value]", total)
+    await update("distance.value", total)
 
     return total
 
@@ -649,11 +684,11 @@ async function updateDistances() {
 
         //only update the distance when a waypoint exits
         if (route_coords.length >= 3) {
-            var total = getDistance(route_coords)
+            var total = await getDistance(route_coords)
         }
 
         //updating the distance to display to the user
-         const response = await fetch('/time-distance');
+        const response = await fetch('/time-distance');
         if (response.ok) {
             const text = await response.text();
             document.getElementById('timeDistance').textContent = text;
@@ -661,6 +696,6 @@ async function updateDistances() {
         
         return total
     });
-        
+    
 }
    
