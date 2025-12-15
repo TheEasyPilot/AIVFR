@@ -170,7 +170,6 @@ data_template = {
         "route_names" : [],
         "route_gen_justification" : "",
         "distance" : {"value" : 0, "class" : "distance"},
-        "separate_distances" : [], #distances for each point
         "time" : 0,
         #-----------------------WEATHER
         #-----Searched airport
@@ -195,6 +194,9 @@ data_template = {
         "METAR_arrival_decoded" : "",
         "TAF_arrival_decoded" : "",
         "METAR_arrival_grading" : "",
+        #-----------------------NAVLOG
+        "separate_distances" : [], #distances for each point
+        "separate_bearings" : [], #bearings for each point
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA

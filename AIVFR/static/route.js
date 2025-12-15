@@ -1,4 +1,5 @@
 import { update, showAlert, prompt } from "./basePage.js";
+import LatLon from 'https://cdn.jsdelivr.net/npm/geodesy@2.4.0/latlon-spherical.min.js';
 let map = null;
 
 (async () => {
@@ -641,6 +642,7 @@ async function getDistance(coord_arr) {
     var len = coord_arr.length;
     let total = 0
     var separate_distances = []
+    var separate_bearings = []
     let operative = false
 
     //finding correct units
@@ -659,6 +661,8 @@ async function getDistance(coord_arr) {
             for (let i = 0; i < len - 1; i++) {
                 var distance = map.distance(coord_arr[i], coord_arr[i+1]) / divideBy;
                 total = total + distance
+                var bearing = getBearing(coord_arr[i], coord_arr[i+1]);
+                separate_bearings.push(bearing)
                 separate_distances.push(distance)
                 operative = true
             }
@@ -670,6 +674,7 @@ async function getDistance(coord_arr) {
 
     //updating the session to include distance values
     await update("separate_distances", separate_distances)
+    await update("separate_bearings", separate_bearings)
     await update("distance.value", total)
 
     return total
@@ -699,3 +704,13 @@ async function updateDistances() {
     
 }
    
+
+//------------------------BEARINGS-----------------
+function getBearing(start, end) {
+
+    const p1 = new LatLon(start[0], start[1]);
+    const p2 = new LatLon(end[0], end[1]);
+
+    const bearing = p1.initialBearingTo(p2);
+    return bearing;
+}
