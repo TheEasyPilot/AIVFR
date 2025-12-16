@@ -7,3 +7,118 @@
     background-color: var(--primary);
     pointer-events: none;
 }
+
+#navlogHeader {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+}
+
+#autofillButton {
+    background-color: var(--primary);
+}
+
+#variationContainer {
+    background-color: var(--highlight);
+    padding: 10px;
+    height: fit-content;
+    border-radius: 10px;
+}
+
+#variation {
+    border: 1px solid var(--text);
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Manrope';
+    font-size: 13px;
+    max-width: 80px;
+    background-color: var(--bg);
+    border: 1px solid var(--onhover);
+}
+
+#autofillButton {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Manrope';
+    padding: 7px 10px 7px 10px;
+    width: fit-content;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 13px;
+}
+
+#downloadNavlogButton {
+    position: relative;
+    padding: 7px 10px 7px 10px;
+    top: 2px;
+    
+}
+
+#AI_icon {
+    margin-right: 5px;
+}
+
+#navlogTable {
+    margin-top: 15px;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--highlight);
+}
+
+thead {
+    background-color: black;
+}
+
+th {
+    color: white;
+    width: 120px;
+}
+
+#navlogTable, td, th {
+    text-align: center;
+    padding: 5px;
+    font-family: 'Manrope';
+    font-size: 14px;
+    font-weight: 700;
+    border: 2px solid black;
+}
+
+/*highlighting for automatically calculated values*/
+td:nth-child(7), td:nth-child(8), td:nth-child(11) {
+     background-color: var(--onhover);
+}
+
+.tableInput, .tableCalculated {
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    border: 1px solid var(--onhover);
+    background-color: transparent;
+    text-align: center;
+    font-family: 'Manrope';
+    font-size: 14px;
+    border-radius: 5px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.tableCalculated {
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+/*Remove spinners from number inputs*/
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

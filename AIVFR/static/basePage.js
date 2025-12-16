@@ -24,7 +24,8 @@ const pairs = {
   navlog: "navLABEL",
   fuel: "fuelLABEL",
   mass_and_balance: "mass_and_balanceLABEL",
-  performance: "performanceLABEL"
+  performance: "performanceLABEL",
+  settings: "settingsLABEL"
 };
 
 for (let buttonId in pairs) {
