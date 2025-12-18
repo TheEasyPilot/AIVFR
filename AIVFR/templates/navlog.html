@@ -15,11 +15,16 @@
         <div id="title">NAVIGATION LOG</div>
         <span id="alertBox"></span>
       </div>
-      <div id="navlogHeader">
+
+      <!--No data message when no route created--><h2 id="noData" class="{{ 'active' if flight.route|length < 3 else '' }}">NO ROUTE DATA</h2>
+
+      <div id="navlogHeader" class="{{ 'inactive' if flight.route|length < 3 else '' }}">
       <!---Variation-->
         <div id="variationContainer">
-          Variation (+° <b>E</b>, -° <b>W</b>): <input type="number" id="variation" value="0" step="1"/>
+          Variation (+° <b>E</b>, -° <b>W</b>): <input type="number" id="variation" value="{{ flight.variation }}" step="1"/>
         </div>
+
+
       <!--Autofill and download buttons-->
 
         <div>
@@ -35,7 +40,7 @@
       <hr size="3.5" color="#cdcdcd" noshade>
 
 <!--=============================BODY (TABLE)==========================-->
-      <table id="navlogTable">
+      <table id="navlogTable" class="{{ 'inactive' if flight.route|length < 3 else '' }}">
         <thead> <!--header row-->
           <tr>
             <th style="width:20%">FROM / TO</th>
@@ -53,20 +58,6 @@
         </thead>
         <tbody id="navlogTableBody">
           <!--Rows will be dynamically added here-->
-          <!--TEST ROW-->
-          <tr>
-            <!--FROM/TO--><td>POINT A - POINT B</td>
-            <!--MSA--><td><input type="number" class="tableInput" value=""></td>
-            <!--TAS--><td><input type="number" class="tableInput" value=""></td>
-            <!--TRACK (°T)--><td><input type="number" class="tableInput" value=""></td>
-            <!--Wind DIR (°)--><td><input type="number" class="tableInput" value=""></td>
-            <!--Wind SPD (KT)--><td><input type="number" class="tableInput" value=""></td>
-            <!--HDG (°T)--><td><div class="tableCalculated"></div></td>
-            <!--HDG (°M)--><td><div class="tableCalculated"></div></td>
-            <!--GS (KT)--><td><input type="number" class="tableInput" value=""></td>
-            <!--DIST (NM)--><td><input type="number" class="tableInput" value=""></td>
-            <!--TIME (Min)--><td><div class="tableCalculated"></div></td>
-          </tr>
         </tbody>
       </table>
 {% endblock %}

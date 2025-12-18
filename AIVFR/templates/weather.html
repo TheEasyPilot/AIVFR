@@ -65,7 +65,7 @@
         </div>
         <!--header containing airport name and toggle buttons-->
         <div id="WX_departure_header2">
-          <div id="WX_departure_name"><b>{{  flight.departureAirport_code if flight.departureAirport_code else 'N/A' }}</b> {{  flight.departureAirport_name if flight.departureAirport_name else '' }}</div>
+          <div id="WX_departure_name"><b>{{  flight.departureAirport_code if flight.departureAirport_code else 'NO ROUTE DATA' }}</b> {{  flight.departureAirport_name if flight.departureAirport_name else '' }}</div>
           <div><button class="WX_switch {{ 'active' if flight.WX_switch_dep == 'METAR' else '' }}" id="WX_departure_METAR_switch">METAR</button><button class="WX_switch {{ 'active' if flight.WX_switch_dep == 'TAF' else '' }}" id="WX_departure_TAF_switch">TAF</button></div>
         </div>
         <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
@@ -91,7 +91,7 @@
         </div>
         <!--header containing airport name and toggle buttons-->
         <div id="WX_arrival_header2">
-          <div id="WX_arrival_name"><b>{{  flight.destinationAirport_code if flight.destinationAirport_code else 'N/A' }}</b> {{  flight.destinationAirport_name if flight.destinationAirport_name else '' }}</div>
+          <div id="WX_arrival_name"><b>{{  flight.destinationAirport_code if flight.destinationAirport_code else 'NO ROUTE DATA' }}</b> {{  flight.destinationAirport_name if flight.destinationAirport_name else '' }}</div>
           <div><button class="WX_switch {{ 'active' if flight.WX_switch_arr == 'METAR' else '' }}" id="WX_arrival_METAR_switch">METAR</button><button class="WX_switch {{ 'active' if flight.WX_switch_arr == 'TAF' else '' }}" id="WX_arrival_TAF_switch">TAF</button></div>
         </div>
         <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">  

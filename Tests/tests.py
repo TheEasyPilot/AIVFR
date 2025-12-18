@@ -11,7 +11,7 @@ api_key_openai = os.getenv("OPENAI_API_KEY")
 api_key_ors = os.getenv("ORS_API_KEY")
 
 
-url = "https://api.checkwx.com/metar/EGCC/decoded"
+url = "https://api.checkwx.com/metar/EGLL/decoded"
 
 response = requests.request("GET", url, headers={'X-API-Key': api_key_wx})
 #parse response

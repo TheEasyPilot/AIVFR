@@ -355,10 +355,13 @@ async function parseMETAR(metar, gradingHTML) {
     //airspeed
     if (wind_unit == "knot") {
         var windspeed = `${metar.wind.speed_kts} knots`;
+        var windgusts = `${metar.wind.gust_kts ? metar.wind.gust_kts : "N/A"} knots`;
     } else if (wind_unit == "kilometer_per_hour") {
         var windspeed = `${metar.wind.speed_kph} km/h`;
+        var windgusts = `${metar.wind.gust_kph ? metar.wind.gust_kph : "N/A"} km/h`;
     } else if (wind_unit == "mile_per_hour") {
         var windspeed = `${metar.wind.speed_mph} mph`;
+        var windgusts = `${metar.wind.gust_mph ? metar.wind.gust_mph : "N/A"} mph`;
     }
 
     //altitude
@@ -414,6 +417,12 @@ async function parseMETAR(metar, gradingHTML) {
 
     //adding items that may be undefined
     try {
+    
+    if (metar.wind.gust_kts || metar.wind.gust_kph || metar.wind.gust_mph) {
+        decoded_METAR += `
+    <b>Wind Gusts:</b> ${windgusts}`;
+    }
+
     if (ceiling != 'undefined feet' && ceiling != 'undefined meters') {
         decoded_METAR += `
     <b>Ceiling:</b> ${ceiling}`;
