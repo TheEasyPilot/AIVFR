@@ -3,6 +3,9 @@ import { update, showAlert } from "./basePage.js";
 const table = document.getElementById('navlogTableBody');
 
 await refreshPLOG();
+if (table.innerHTML === '') { //if no navlog exists, create one
+    await makePLOG();
+}
 
 //-------------------------------NAVLOG FUNCTIONS
 //Update variation
@@ -31,7 +34,7 @@ async function makePLOG() {
 }
 
 async function refreshPLOG() {
-    //clear the table's HTML first (so it dissapears)
+    //clear the cells
     table.innerHTML = '';
 
     await fetch('/get-flight')
@@ -40,7 +43,7 @@ async function refreshPLOG() {
         const log = FlightData.NAVLOG;
         const len = FlightData.route_names.length;
 
-        if (len < 3) {
+        if (len >= 3) {
             //create all rows, which will be dependent on route length
             log.rows.forEach(row => {
             const newrow = table.insertRow();
@@ -67,12 +70,20 @@ table.addEventListener('change', async (event) => {
         const rowIndex = target.parentElement.parentElement.rowIndex - 1; //adjust for header row
         const cell = target.parentElement;
         const columnIndex = cell.cellIndex;
-        const columnName = table.parentElement.querySelector('thead').rows[0].cells[columnIndex].innerText;
+        const columnName = table.parentElement.querySelector('thead').rows[0].cells[columnIndex].innerText; //this returns the column name
         const newValue = target.value;
 
-        //tests
-        console.log(`Row: ${rowIndex}, Column: ${columnName}, New Value: ${newValue}`);
-
-    }
-});
+        //send the updated value to the server
+        await fetch('/update-cell', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                row: rowIndex,
+                column: columnName,
+                value: newValue
+        })
+    });
+}});
 
