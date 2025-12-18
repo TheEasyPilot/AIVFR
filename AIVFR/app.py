@@ -199,7 +199,7 @@ data_template = {
         "separate_bearings" : [], #bearings for each point
         "variation" : 0,
         "NAVLOG" : {
-            "headers" : ["FROM/TO", "MSA", "TAS", "TRACK (°T)", "Wind DIR (°)", "Wind SPD (KT)", "HDG (°T)", "HDG (°M)", "GS (KT)", "DIST (NM)", "TIME (Min)"],
+            "headers" : ["FROM/TO", "MSA", "ALT PLAN (FT)", "TAS", "TRACK (°T)", "Wind DIR (°)", "Wind SPD (KT)", "HDG (°T)", "HDG (°M)", "GS (KT)", "DIST (NM)", "TIME (Min)"],
             "rows" : []
         },
     }
@@ -610,8 +610,9 @@ def get_time_distance():
 
     return text, 200
 
-#---------------------------------NAVLOG TABLE---------------------------
+#-------------------------------------------NAVLOG-------------------------------------
 
+#------------CREATING THE NAVLOG
 @main.route('/makeNavlog')
 def makeNavlog():
     #clear existing rows
@@ -630,6 +631,7 @@ def makeNavlog():
                     #'calculated' indicates if its user input or calculated automatically
                 "FROM/TO": {"value": route_names[i] + " - " + route_names[i+1], "calculated": True},
                 "MSA": {"value": "", "calculated": False},
+                "ALT PLAN (FT)": {"value": "", "calculated": False},
                 "TAS": {"value": "", "calculated": False},
                 "TRACK (°T)": {"value": round(separate_bearings[i]), "calculated": True},
                 "Wind DIR (°)": {"value": "", "calculated": False},
@@ -647,3 +649,29 @@ def makeNavlog():
     return {"headers": session["flight_data"]["flight"]["NAVLOG"]["headers"],
             "rows": session["flight_data"]["flight"]["NAVLOG"]["rows"]
         }, 200
+
+#----------------------UPDATING DATA
+@main.route('/update-cell', methods=["POST"])
+def update_cell():
+    row_index = request.json.get("row")
+    column_name = request.json.get("column")
+    new_value = request.json.get("value")
+
+    navlog_rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
+
+    #validate row index
+    if row_index < 0 or row_index >= len(navlog_rows):
+        return jsonify({"error": "Invalid row index"}), 400
+
+    #validate column name
+    if column_name not in navlog_rows[row_index]:
+        return jsonify({"error": "Invalid column name"}), 400
+    
+    #update the cell value
+    navlog_rows[row_index][column_name]["value"] = new_value
+    navlog_rows[row_index][column_name]["calculated"] = False #mark as user input
+
+    #---------Calcualtions retriggered------
+
+    session.modified = True
+    return jsonify({"status": "ok"}), 200
