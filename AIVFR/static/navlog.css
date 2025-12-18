@@ -90,7 +90,7 @@ th {
 }
 
 /*highlighting for automatically calculated values*/
-td:nth-child(7), td:nth-child(8), td:nth-child(11) {
+td:nth-child(4), td:nth-child(7), td:nth-child(8), td:nth-child(10), td:nth-child(11) {
      background-color: var(--onhover);
 }
 
@@ -121,4 +121,28 @@ input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/*---inactive header state when no route available---*/
+#navlogHeader.inactive, #navlogTable.inactive {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+#noData {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%); /*centering*/
+    font-family: 'Manrope';
+    font-size: 20px;
+    font-weight: 600;
+    background-color: hsla(0 100% 50% / 0.6);
+    padding: 10px 25px 10px 25px;
+    border-radius: 10px;
+    display: none;
+}
+
+#noData.active {
+    display: block;
 }

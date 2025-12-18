@@ -197,6 +197,11 @@ data_template = {
         #-----------------------NAVLOG
         "separate_distances" : [], #distances for each point
         "separate_bearings" : [], #bearings for each point
+        "variation" : 0,
+        "NAVLOG" : {
+            "headers" : ["FROM/TO", "MSA", "TAS", "TRACK (°T)", "Wind DIR (°)", "Wind SPD (KT)", "HDG (°T)", "HDG (°M)", "GS (KT)", "DIST (NM)", "TIME (Min)"],
+            "rows" : []
+        },
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA
@@ -604,3 +609,41 @@ def get_time_distance():
         text = "0 | 0.0"
 
     return text, 200
+
+#---------------------------------NAVLOG TABLE---------------------------
+
+@main.route('/makeNavlog')
+def makeNavlog():
+    #clear existing rows
+    session["flight_data"]["flight"]["NAVLOG"]["rows"] = []
+    
+    route_names = session["flight_data"]["flight"]["route_names"]
+    separate_distances = session["flight_data"]["flight"]["separate_distances"]
+    separate_bearings = session["flight_data"]["flight"]["separate_bearings"]
+    len_route = len(route_names)
+
+    #only make the navlog if there are at least 3 points
+    #(departure, destination and at least 1 waypoint)
+    if len_route >= 3:
+        for i in range(len_route - 1):
+            row = { #making each row as a dictionary.
+                    #'calculated' indicates if its user input or calculated automatically
+                "FROM/TO": {"value": route_names[i] + " - " + route_names[i+1], "calculated": True},
+                "MSA": {"value": "", "calculated": False},
+                "TAS": {"value": "", "calculated": False},
+                "TRACK (°T)": {"value": round(separate_bearings[i]), "calculated": True},
+                "Wind DIR (°)": {"value": "", "calculated": False},
+                "Wind SPD (KT)": {"value": "", "calculated": False},
+                "HDG (°T)": {"value": "", "calculated": True},
+                "HDG (°M)": {"value": "", "calculated": True},
+                "GS (KT)": {"value": "", "calculated": False},
+                "DIST (NM)": {"value": round(separate_distances[i]), "calculated": True},
+                "TIME (Min)": {"value": "", "calculated": False}
+            }
+            #append the row to the navlog
+            session["flight_data"]["flight"]["NAVLOG"]["rows"].append(row)
+
+    session.modified = True
+    return {"headers": session["flight_data"]["flight"]["NAVLOG"]["headers"],
+            "rows": session["flight_data"]["flight"]["NAVLOG"]["rows"]
+        }, 200
