@@ -2,7 +2,7 @@ import { update, showAlert } from "./basePage.js";
 
 const table = document.getElementById('navlogTableBody');
 
-await makePLOG();
+await refreshPLOG();
 
 //-------------------------------NAVLOG FUNCTIONS
 //Update variation
@@ -16,9 +16,6 @@ variation.addEventListener('change', async () => {
 //---------------------CREATING PLOG TABLE
 
 async function makePLOG() {
-    //clear the table's HTML first (so it dissapears)
-    table.innerHTML = '';
-
     await fetch('/get-flight')
     .then(response => response.json())
     .then(async FlightData => {
@@ -28,12 +25,26 @@ async function makePLOG() {
         //only make the navlog if there are at least 3 points
         if (len >= 3) {
             await fetch('/makeNavlog');
-            const log = FlightData.NAVLOG;
+            await refreshPLOG();
+        };
+    });
+}
 
+async function refreshPLOG() {
+    //clear the table's HTML first (so it dissapears)
+    table.innerHTML = '';
+
+    await fetch('/get-flight')
+    .then(response => response.json())
+    .then(async FlightData => {
+        const log = FlightData.NAVLOG;
+        const len = FlightData.route_names.length;
+
+        if (len < 3) {
             //create all rows, which will be dependent on route length
             log.rows.forEach(row => {
-                const newrow = table.insertRow();
-                //iterate through each row and create the table using the fetched data, and with specific HTML
+            const newrow = table.insertRow();
+            //iterate through each row and create the table using the fetched data, and with specific HTML
                 log.headers.forEach(column => {
                     const cell = row[column];
                     if (cell.calculated) {
@@ -43,6 +54,25 @@ async function makePLOG() {
                     }
                 });
             });
-        };
+        }
     });
 }
+
+//---------------------UPDATING PLOG TABLE
+
+table.addEventListener('change', async (event) => {
+    const target = event.target;
+    if (target.classList.contains('tableInput')) {
+        //get the row and column of the changed input
+        const rowIndex = target.parentElement.parentElement.rowIndex - 1; //adjust for header row
+        const cell = target.parentElement;
+        const columnIndex = cell.cellIndex;
+        const columnName = table.parentElement.querySelector('thead').rows[0].cells[columnIndex].innerText;
+        const newValue = target.value;
+
+        //tests
+        console.log(`Row: ${rowIndex}, Column: ${columnName}, New Value: ${newValue}`);
+
+    }
+});
+
