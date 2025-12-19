@@ -485,6 +485,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             reload_map();
             update_route_names();
             await updateDistances();
+            update("route_changed", "True");
             });
         
       
@@ -534,6 +535,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             reload_map();
             update_route_names();
             await updateDistances();
+            update("route_changed", "True");
         });
     }
 
@@ -612,6 +614,7 @@ generate.addEventListener('click',  async () => {
         await update('route_gen_justification', response.justification);
         reload_map();
         update_route_names();
+        update("route_changed", "True");
 
         generate.disabled = false; //allow clicking again
         generate.textContent = "Generate";

@@ -195,6 +195,7 @@ data_template = {
         "TAF_arrival_decoded" : "",
         "METAR_arrival_grading" : "",
         #-----------------------NAVLOG
+        "route_changed" : "False",
         "separate_distances" : [], #distances for each point
         "separate_bearings" : [], #bearings for each point
         "variation" : 0,
@@ -523,7 +524,7 @@ def get_waypoints(coords):
     return waypoints
 
 
-#-----------Making a prompt
+#------------------------Making a prompt
 @main.route('/prompt', methods=["POST"])
 def prompt():
     departure_coords = session["flight_data"]["flight"]["route"][0]
@@ -599,7 +600,7 @@ def get_weather():
         except (IndexError, KeyError):
             return jsonify({"error": "Unable to fetch weather data"}), 400
 
-#------------------------------Time & Distance----------------------------
+#--------------------------------------TIME & DISTANCE----------------------------
 
 @main.route('/time-distance')
 def get_time_distance():
@@ -612,9 +613,54 @@ def get_time_distance():
 
 #-------------------------------------------NAVLOG-------------------------------------
 
-#------------CREATING THE NAVLOG
+#------------Creating the navlog
 @main.route('/makeNavlog')
 def makeNavlog():
+    route_names = session["flight_data"]["flight"]["route_names"]
+    separate_distances = session["flight_data"]["flight"]["separate_distances"]
+    separate_bearings = session["flight_data"]["flight"]["separate_bearings"]
+    len_route = len(route_names)
+
+    #only make the navlog if there are at least 3 points
+    #(departure, destination and at least 1 waypoint)
+    if len_route >= 3:
+        for i in range(len_route - 1):
+            #dealing with removed waypoints: if an a-b pair no longer exists, remove that row as its not present anymore
+            try:
+                if session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["FROM/TO"]["value"] != route_names[i] + " - " + route_names[i+1]:
+                    session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(i)
+            except IndexError: #if the index is out of range, a new row should be made anyway
+                pass
+
+            row = { #making each row as a dictionary.
+                    #'calculated' indicates if its user input or calculated automatically
+                "FROM/TO": {"value": route_names[i] + " - " + route_names[i+1], "calculated": True},
+                "MSA": {"value":  session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["MSA"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
+                "ALT PLAN (FT)": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["ALT PLAN (FT)"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
+                "TAS": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["TAS"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
+                "TRACK (°T)": {"value": round(separate_bearings[i]), "calculated": True},
+                "Wind DIR (°)": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["Wind DIR (°)"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
+                "Wind SPD (KT)": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["Wind SPD (KT)"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
+                "HDG (°T)": {"value": "", "calculated": True},
+                "HDG (°M)": {"value": "", "calculated": True},
+                "GS (KT)": {"value": "", "calculated": True},
+                "DIST (NM)": {"value": round(separate_distances[i]), "calculated": True},
+                "TIME (Min)": {"value": "", "calculated": True}
+            }
+            #append the row to the navlog
+            try:
+                session["flight_data"]["flight"]["NAVLOG"]["rows"][i] = row
+            except IndexError:
+                session["flight_data"]["flight"]["NAVLOG"]["rows"].append(row)
+
+    session.modified = True
+    return {"headers": session["flight_data"]["flight"]["NAVLOG"]["headers"],
+            "rows": session["flight_data"]["flight"]["NAVLOG"]["rows"]
+        }, 200
+
+#------------Clearing the navlog
+@main.route('/clearNavlog')
+def clearNavlog():
     #clear existing rows
     session["flight_data"]["flight"]["NAVLOG"]["rows"] = []
     
@@ -630,7 +676,7 @@ def makeNavlog():
             row = { #making each row as a dictionary.
                     #'calculated' indicates if its user input or calculated automatically
                 "FROM/TO": {"value": route_names[i] + " - " + route_names[i+1], "calculated": True},
-                "MSA": {"value": "", "calculated": False},
+                "MSA": {"value":  "", "calculated": False},
                 "ALT PLAN (FT)": {"value": "", "calculated": False},
                 "TAS": {"value": "", "calculated": False},
                 "TRACK (°T)": {"value": round(separate_bearings[i]), "calculated": True},
@@ -650,7 +696,7 @@ def makeNavlog():
             "rows": session["flight_data"]["flight"]["NAVLOG"]["rows"]
         }, 200
 
-#----------------------UPDATING DATA
+#----------------------Updating data
 @main.route('/update-cell', methods=["POST"])
 def update_cell():
     row_index = request.json.get("row")
@@ -659,11 +705,11 @@ def update_cell():
 
     navlog_rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
 
-    #validate row index
+    #validate row index (shouldn't ever be triggered)
     if row_index < 0 or row_index >= len(navlog_rows):
         return jsonify({"error": "Invalid row index"}), 400
 
-    #validate column name
+    #validate column name (also shouldn't ever be triggered)
     if column_name not in navlog_rows[row_index]:
         return jsonify({"error": "Invalid column name"}), 400
     
