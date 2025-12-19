@@ -2,12 +2,22 @@ import { update, showAlert } from "./basePage.js";
 
 const table = document.getElementById('navlogTableBody');
 
-await refreshPLOG();
-if (table.innerHTML === '') { //if no navlog exists, create one
-    await makePLOG();
-}
 
-//-------------------------------NAVLOG FUNCTIONS
+//On page load, check if route has changed
+await fetch('/get-flight')
+    .then(response => response.json())
+    .then(async FlightData => {
+    const route_changed = FlightData.route_changed;
+    if (route_changed === "True") {
+        await makePLOG(); //allows for re-cration of PLOG, with calculations etc
+        update("route_changed", "False");
+    } else {
+        await refreshPLOG();
+    }
+});
+
+
+//---------------------------------------------------------NAVLOG FUNCTIONS
 //Update variation
 const variation = document.getElementById('variation');
 
@@ -34,8 +44,8 @@ async function makePLOG() {
 }
 
 async function refreshPLOG() {
-    //clear the cells
-    table.innerHTML = '';
+    const newtable = document.createElement('tbody');
+    newtable.id = 'navlogTableBody';
 
     await fetch('/get-flight')
     .then(response => response.json())
@@ -46,16 +56,18 @@ async function refreshPLOG() {
         if (len >= 3) {
             //create all rows, which will be dependent on route length
             log.rows.forEach(row => {
-            const newrow = table.insertRow();
+            const newrow = document.createElement('tr');
+            newtable.appendChild(newrow);
             //iterate through each row and create the table using the fetched data, and with specific HTML
                 log.headers.forEach(column => {
                     const cell = row[column];
                     if (cell.calculated) {
                         newrow.innerHTML += `<td><div class="tableCalculated">${cell.value}</div></td>`;
                     } else {
-                        newrow.innerHTML += `<td><input type="number" class="tableInput" value="${cell.value}"></td>`;
+                        newrow.innerHTML += `<td><input type="text" class="tableInput" value="${cell.value}"></td>`;
                     }
                 });
+                table.innerHTML = newtable.innerHTML;
             });
         }
     });
@@ -71,6 +83,13 @@ table.addEventListener('change', async (event) => {
         const cell = target.parentElement;
         const columnIndex = cell.cellIndex;
         const columnName = table.parentElement.querySelector('thead').rows[0].cells[columnIndex].innerText; //this returns the column name
+
+        //validating inputs
+        if (target.value < 0) {
+            target.value = 0; //all inputs cannot be negative
+        } if (columnName == "Wind DIR (°)" && target.value > 360) {
+            target.value = 360; //wind direction cannot be more than 360
+        }
         const newValue = target.value;
 
         //send the updated value to the server
@@ -85,5 +104,14 @@ table.addEventListener('change', async (event) => {
                 value: newValue
         })
     });
+    await refreshPLOG();
 }});
 
+//---------------------CLEARING PLOG TABLE
+
+const clearNavlogButton = document.getElementById('clearNavlogButton');
+
+clearNavlogButton.addEventListener('click', async () => {
+    await fetch('/clearNavlog');
+    await refreshPLOG();
+});
