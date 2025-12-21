@@ -620,6 +620,7 @@ def makeNavlog():
     separate_distances = session["flight_data"]["flight"]["separate_distances"]
     separate_bearings = session["flight_data"]["flight"]["separate_bearings"]
     len_route = len(route_names)
+    rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
 
     #only make the navlog if there are at least 3 points
     #(departure, destination and at least 1 waypoint)
@@ -635,12 +636,12 @@ def makeNavlog():
             row = { #making each row as a dictionary.
                     #'calculated' indicates if its user input or calculated automatically
                 "FROM/TO": {"value": route_names[i] + " - " + route_names[i+1], "calculated": True},
-                "MSA": {"value":  session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["MSA"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
-                "ALT PLAN (FT)": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["ALT PLAN (FT)"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
-                "TAS": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["TAS"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
+                "MSA": {"value":  rows[i]["MSA"]["value"] if i < len(rows) else "", "calculated": False},
+                "ALT PLAN (FT)": {"value": rows[i]["ALT PLAN (FT)"]["value"] if i < len(rows) else "", "calculated": False},
+                "TAS": {"value": rows[i]["TAS"]["value"] if i < len(rows) else "", "calculated": False},
                 "TRACK (°T)": {"value": round(separate_bearings[i]), "calculated": True},
-                "Wind DIR (°)": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["Wind DIR (°)"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
-                "Wind SPD (KT)": {"value": session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["Wind SPD (KT)"]["value"] if i < len(session["flight_data"]["flight"]["NAVLOG"]["rows"]) else "", "calculated": False},
+                "Wind DIR (°)": {"value": rows[i]["Wind DIR (°)"]["value"] if i < len(rows) else "", "calculated": False},
+                "Wind SPD (KT)": {"value": rows[i]["Wind SPD (KT)"]["value"] if i < len(rows) else "", "calculated": False},
                 "HDG (°T)": {"value": "", "calculated": True},
                 "HDG (°M)": {"value": "", "calculated": True},
                 "GS (KT)": {"value": "", "calculated": True},
@@ -684,9 +685,9 @@ def clearNavlog():
                 "Wind SPD (KT)": {"value": "", "calculated": False},
                 "HDG (°T)": {"value": "", "calculated": True},
                 "HDG (°M)": {"value": "", "calculated": True},
-                "GS (KT)": {"value": "", "calculated": False},
+                "GS (KT)": {"value": "", "calculated": True},
                 "DIST (NM)": {"value": round(separate_distances[i]), "calculated": True},
-                "TIME (Min)": {"value": "", "calculated": False}
+                "TIME (Min)": {"value": "", "calculated": True}
             }
             #append the row to the navlog
             session["flight_data"]["flight"]["NAVLOG"]["rows"].append(row)
@@ -717,7 +718,86 @@ def update_cell():
     navlog_rows[row_index][column_name]["value"] = new_value
     navlog_rows[row_index][column_name]["calculated"] = False #mark as user input
 
-    #---------Calcualtions retriggered------
+    #calculate fields for that row
+    calculate_row(row_index)
+
+    session.modified = True
+    return jsonify({"status": "ok"}), 200
+
+
+#----------------------Calculating calculated fields
+
+#TRUE HEADING
+def calc_HDG(tas, track, wind_dir, wind_spd):
+    from math import radians, degrees, sin, asin
+
+    #convert inputs to radians
+    track_rad = radians(track)
+    wind_dir_rad = radians(wind_dir)
+    wind_spd_ratio = wind_spd / tas
+
+    #calculate wind correction angle
+    wca = asin(wind_spd_ratio * sin(wind_dir_rad - track_rad))
+
+    #calculate heading
+    hdg_rad = track_rad + wca
+    hdg = degrees(hdg_rad) % 360
+
+    return round(hdg)
+
+#GROUND SPEED
+def calc_GS(tas, track, wind_dir, wind_spd):
+    from math import radians, cos, sqrt
+
+    #convert inputs to radians
+    track_rad = radians(track)
+    wind_dir_rad = radians(wind_dir)
+
+    #calculate ground speed
+    gs = sqrt(tas**2 + wind_spd**2 - 2 * tas * wind_spd * cos(wind_dir_rad - track_rad))
+
+    return round(gs)
+
+
+def calculate_row(row_index):
+    row = session["flight_data"]["flight"]["NAVLOG"]["rows"][row_index]
+    variation = float(session["flight_data"]["flight"]["variation"])
+
+    #getting necessary values
+    tas = float(row["TAS"]["value"]) if row["TAS"]["value"] != "" else ""
+    track = float(row["TRACK (°T)"]["value"])
+    wind_dir = float(row["Wind DIR (°)"]["value"]) if row["Wind DIR (°)"]["value"] != "" else ""
+    wind_spd = float(row["Wind SPD (KT)"]["value"]) if row["Wind SPD (KT)"]["value"] != "" else ""
+    distance = float(row["DIST (NM)"]["value"])
+
+    #only calculate if tas, wind_dir and wind_spd are provided
+    if all(value != "" for value in [tas, wind_dir, wind_spd, track]):
+
+        #heading
+        row["HDG (°T)"]["value"] = calc_HDG(tas, track, wind_dir, wind_spd)
+        row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
+
+        #ground speed
+        row["GS (KT)"]["value"] = calc_GS(tas, track, wind_dir, wind_spd)
+
+    else:
+        return
+    
+    gs = row["GS (KT)"]["value"]
+    if gs not in [0, ""]:
+        row["TIME (Min)"]["value"] = round((distance / gs) * 60, 1) #time in minutes
+
+#----recalculating magnetic heading for all rows (for when variation is changed)
+@main.route('/recalculate-magnetic-HDG')
+def recalculate_variation():
+    variation = float(session["flight_data"]["flight"]["variation"])
+    rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
+
+    for i in range(len(rows)):
+        row = rows[i]
+        #only recalculate if HDG (°T) is calculated
+        if row["HDG (°T)"]["value"] != "":
+            row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
 
     session.modified = True
     return jsonify({"status": "ok"}), 200

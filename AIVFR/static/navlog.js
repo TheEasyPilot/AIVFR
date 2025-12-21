@@ -24,6 +24,8 @@ const variation = document.getElementById('variation');
 //wait for a change in variation input, then update
 variation.addEventListener('change', async () => {
     await update('variation', variation.value);
+    await fetch('recalculate-magnetic-HDG'); //recalculate magnetic headings
+    await refreshPLOG();
 });
 
 //---------------------CREATING PLOG TABLE
@@ -87,8 +89,10 @@ table.addEventListener('change', async (event) => {
         //validating inputs
         if (target.value < 0) {
             target.value = 0; //all inputs cannot be negative
-        } if (columnName == "Wind DIR (°)" && target.value > 360) {
-            target.value = 360; //wind direction cannot be more than 360
+        } if (columnName == "Wind DIR (°)" && target.value == 360) {
+            target.value = 0; //360 = 0 degrees
+        } else if (columnName == "Wind DIR (°)" && target.value > 360) {
+            target.value = 359; //max 359 degrees
         }
         const newValue = target.value;
 
