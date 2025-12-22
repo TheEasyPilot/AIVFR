@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, session, jsonify, request
+from math import radians, degrees, sin, asin, cos, sqrt
 import os, pint, requests
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -285,7 +286,8 @@ def save_flight():
 #resets all flight data  but NOT settings
 @main.route("/new-flight")
 def NewFlightRun():
-    session["flight_data"]["flight"] = data_template["flight"]
+    while session["flight_data"]["flight"]["departureAirport_code"] != "":
+        session["flight_data"]["flight"] = data_template["flight"]
     session.modified = True
     return jsonify({"status": "success", "message": "New flight started."}), 200
     
@@ -645,7 +647,7 @@ def makeNavlog():
                 "HDG (°T)": {"value": "", "calculated": True},
                 "HDG (°M)": {"value": "", "calculated": True},
                 "GS (KT)": {"value": "", "calculated": True},
-                "DIST (NM)": {"value": round(separate_distances[i]), "calculated": True},
+                "DIST (NM)": {"value": round(separate_distances[i], 1), "calculated": True},
                 "TIME (Min)": {"value": "", "calculated": True}
             }
             #append the row to the navlog
@@ -686,7 +688,7 @@ def clearNavlog():
                 "HDG (°T)": {"value": "", "calculated": True},
                 "HDG (°M)": {"value": "", "calculated": True},
                 "GS (KT)": {"value": "", "calculated": True},
-                "DIST (NM)": {"value": round(separate_distances[i]), "calculated": True},
+                "DIST (NM)": {"value": round(separate_distances[i], 1), "calculated": True},
                 "TIME (Min)": {"value": "", "calculated": True}
             }
             #append the row to the navlog
@@ -729,8 +731,6 @@ def update_cell():
 
 #TRUE HEADING
 def calc_HDG(tas, track, wind_dir, wind_spd):
-    from math import radians, degrees, sin, asin
-
     #convert inputs to radians
     track_rad = radians(track)
     wind_dir_rad = radians(wind_dir)
@@ -746,15 +746,13 @@ def calc_HDG(tas, track, wind_dir, wind_spd):
     return round(hdg)
 
 #GROUND SPEED
-def calc_GS(tas, track, wind_dir, wind_spd):
-    from math import radians, cos, sqrt
-
+def calc_GS(tas, wind_dir, wind_spd, hdg):
     #convert inputs to radians
-    track_rad = radians(track)
     wind_dir_rad = radians(wind_dir)
+    hdg_rad = radians(hdg)
 
     #calculate ground speed
-    gs = sqrt(tas**2 + wind_spd**2 - 2 * tas * wind_spd * cos(wind_dir_rad - track_rad))
+    gs = sqrt(tas**2 + wind_spd**2 - 2 * tas * wind_spd * cos(wind_dir_rad - hdg_rad))
 
     return round(gs)
 
@@ -778,7 +776,7 @@ def calculate_row(row_index):
         row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
 
         #ground speed
-        row["GS (KT)"]["value"] = calc_GS(tas, track, wind_dir, wind_spd)
+        row["GS (KT)"]["value"] = calc_GS(tas, wind_dir, wind_spd, float(row["HDG (°T)"]["value"]))
 
     else:
         return
