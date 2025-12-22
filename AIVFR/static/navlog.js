@@ -26,7 +26,7 @@ variation.addEventListener('change', async () => {
     await update('variation', variation.value);
     await fetch('recalculate-magnetic-HDG'); //recalculate magnetic headings
     await refreshPLOG();
-});
+});      
 
 //---------------------CREATING PLOG TABLE
 
@@ -63,16 +63,35 @@ async function refreshPLOG() {
             //iterate through each row and create the table using the fetched data, and with specific HTML
                 log.headers.forEach(column => {
                     const cell = row[column];
-                    if (cell.calculated) {
-                        newrow.innerHTML += `<td><div class="tableCalculated">${cell.value}</div></td>`;
+
+                    //format bearings to be 3 digits
+                    if (column.includes("°")) {
+                        var display = formatBearing(cell.value);
                     } else {
-                        newrow.innerHTML += `<td><input type="text" class="tableInput" value="${cell.value}"></td>`;
+                        var display = cell.value;
+                    }
+
+                    //format calculated cells differently to input cells
+                    if (cell.calculated) {
+                        newrow.innerHTML += `<td><div class="tableCalculated">${display}</div></td>`;
+                    } else {
+                        newrow.innerHTML += `<td><input type="text" class="tableInput" value="${display}"></td>`;
                     }
                 });
                 table.innerHTML = newtable.innerHTML;
             });
         }
     });
+}
+//--------------------FORMATTING BEARING
+
+//formats all bearings to 3 digits for display
+function formatBearing(bearing) {
+    if (bearing === "") {
+        return "";
+    } else {
+        return Math.round(bearing).toString().padStart(3, '0');
+    }
 }
 
 //---------------------UPDATING PLOG TABLE

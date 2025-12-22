@@ -99,8 +99,13 @@ th {
 }
 
 /*highlighting for automatically calculated values*/
-td:nth-child(8), td:nth-child(9), td:nth-child(10), td:nth-child(12) {
+td:nth-child(8), td:nth-child(10), td:nth-child(12) {
      background-color: var(--onhover);
+}
+
+/*magnetic heading and planned alt has different coloring*/
+td:nth-child(9) {
+    background-color: var(--primary);
 }
 
 .tableInput, .tableCalculated {
@@ -111,7 +116,7 @@ td:nth-child(8), td:nth-child(9), td:nth-child(10), td:nth-child(12) {
     background-color: transparent;
     text-align: center;
     font-family: 'Manrope';
-    font-size: 14px;
+    font-size: 16px;
     border-radius: 5px;
     font-weight: 700;
     color: var(--text);

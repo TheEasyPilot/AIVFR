@@ -639,7 +639,7 @@ closeTooltip.addEventListener("click", function() {
     tooltip.style.display = "none"
 })
 
-//------------------------DISTANCE FINDING----------------------
+//------------------------DISTANCE FINDING and BEARINGS----------------------
 
 async function getDistance(coord_arr) {
     var len = coord_arr.length;
