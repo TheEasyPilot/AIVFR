@@ -2,7 +2,6 @@ import { update, showAlert } from "./basePage.js";
 
 const table = document.getElementById('navlogTableBody');
 
-
 //On page load, check if route has changed
 await fetch('/get-flight')
     .then(response => response.json())
@@ -54,6 +53,8 @@ async function refreshPLOG() {
     .then(async FlightData => {
         const log = FlightData.NAVLOG;
         const len = FlightData.route_names.length;
+        const arrival_code = FlightData.destinationAirport_code
+        const alternate_code = FlightData.alternateAirport_code;
 
         if (len >= 3) {
             //create all rows, which will be dependent on route length
@@ -63,12 +64,17 @@ async function refreshPLOG() {
             //iterate through each row and create the table using the fetched data, and with specific HTML
                 log.headers.forEach(column => {
                     const cell = row[column];
-
                     //format bearings to be 3 digits
                     if (column.includes("°")) {
                         var display = formatBearing(cell.value);
                     } else {
                         var display = cell.value;
+                    }
+
+                    //format alternate airport row differently
+                    if (row["FROM/TO"].value === arrival_code + " - " + alternate_code) {
+                        newrow.style.backgroundColor = "var(--alternate)";
+                        newrow.classList.add('alternate')
                     }
 
                     //format calculated cells differently to input cells

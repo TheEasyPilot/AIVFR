@@ -1,5 +1,7 @@
 import { update, showAlert, prompt } from "./basePage.js";
 import LatLon from 'https://cdn.jsdelivr.net/npm/geodesy@2.4.0/latlon-spherical.min.js';
+
+
 let map = null;
 
 (async () => {
@@ -120,7 +122,8 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
                             const departureCoords = await fetchAvCoords(departureAirport_code.value);
                             const arrivalCoords = await fetchAvCoords(arrivalAirport_code.value);
 
-                            [departureCoords[0][0], departureCoords[0][1]] = [departureCoords[0][1], departureCoords[0][0]]; //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
+                            //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
+                            [departureCoords[0][0], departureCoords[0][1]] = [departureCoords[0][1], departureCoords[0][0]]; 
                             [arrivalCoords[0][0], arrivalCoords[0][1]] = [arrivalCoords[0][1], arrivalCoords[0][0]];
 
                             await add_waypoint(departureCoords[0], departureCoords[1]);
@@ -160,10 +163,20 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
         if (verifyICAO(alternateAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(alternateAirport_code.value);
             if (airportDetails.country == "GB") {
+                //swapping cords to lat-long
+                const alternateCoords = airportDetails.coordinates;
+                [alternateCoords[0], alternateCoords[1]] = [alternateCoords[1], alternateCoords[0]];
+                //updating session data
                 await update("alternateAirport_code", alternateAirport_code.value.toUpperCase());
                 await update("alternateAirport_name", airportDetails.name);
+                //updating the alternate coords
+                await update("alternateAirport_coords", alternateCoords);
+                await update("route_changed", "True"); //to trigger navlog reload
+
                 alternateAirport_code.style.textTransform = "uppercase";
                 alternateAirport_name.textContent = airportDetails.name;
+                updateDistances();
+                await reload_map(); //reload the map to show the alternate route
 
             } else if (airportDetails.country != "GB") {
                 showAlert("Only UK aerodromes are supported");
@@ -224,37 +237,51 @@ async function load_map() {
                 const mapStyle = FlightData.settings.map_style;
                 const theme = FlightData.settings.theme;
                 const route = FlightData.flight.route
+                const alternate_coords = FlightData.flight.alternateAirport_coords;
 
                 if (mapStyle == 'normal' && theme == 'light') {
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
-                    center: [51.505, -0.09], //Initial center coords (set to London)
+                    center: route.length > 0 ? [route[0][0], route[0][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
                     zoom: 9,
                     layers: [Basemap, OpenAIP]
                 }); 
                 const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
                 .addTo(map)
                 .showMeasurements();
+                
+                //adding alternate
+                if (alternate_coords.length == 2) {
+                const alt_line = L.polyline([route[route.length - 1], alternate_coords], { color: '#ffa500' , weight: 7, measurementOptions : { imperial:true }, dashArray: '5, 10' })
+                .addTo(map)
+                .showMeasurements();
+                }
 
                 } else if (mapStyle == 'normal' && theme == 'dark') {
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
-                    center: [51.505, -0.09], //Initial center coords (set to London)
+                    center: route.length > 0 ? [route[0][0], route[0][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
                     zoom: 12,
                     layers: [Darkmode, OpenAIP]
                 }); 
                 const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
                 .addTo(map)
                 .showMeasurements();
-                
+
+                //adding alternate
+                if (alternate_coords.length == 2) {
+                const alt_line = L.polyline([route[route.length - 1], alternate_coords], { color: '#ffa500' , weight: 7, measurementOptions : { imperial:true }, dashArray: '5, 10' })
+                .addTo(map)
+                .showMeasurements();
+                }
 
                 } else if (mapStyle == 'satellite') {
                     mapTilerLogo.style.display = "inline";
                     //crafting the map
                     map = L.map('routeMAP', { 
-                    center: [51.505, -0.09], //Initial center coords (set to London)
+                    center: route.length > 0 ? [route[0][0], route[0][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
                     zoom: 9,
                     layers: [Satellite, OpenAIP]
                     //crafting the map
@@ -262,6 +289,13 @@ async function load_map() {
                 const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
                 .addTo(map)
                 .showMeasurements(); //show the distances between each point on the map
+                }
+
+                //adding alternate
+                if (alternate_coords.length == 2) {
+                const alt_line = L.polyline([route[route.length - 1], alternate_coords], { color: '#ffa500' , weight: 7, measurementOptions : { imperial:true }, dashArray: '5, 10' })
+                .addTo(map)
+                .showMeasurements();
                 }
 
                 resolve();
@@ -641,7 +675,7 @@ closeTooltip.addEventListener("click", function() {
 
 //------------------------DISTANCE FINDING and BEARINGS----------------------
 
-async function getDistance(coord_arr) {
+async function getDistance(coord_arr, alternate_coords) {
     var len = coord_arr.length;
     let total = 0
     var separate_distances = []
@@ -665,10 +699,23 @@ async function getDistance(coord_arr) {
                 var distance = map.distance(coord_arr[i], coord_arr[i+1]) / divideBy;
                 total = total + distance
                 var bearing = getBearing(coord_arr[i], coord_arr[i+1]);
+
+                if (alternate_coords.length == 2) { //only update if alternate is set
+                    var update_alternate = true
+                    var alt_distance = map.distance(coord_arr[i+1], alternate_coords) / divideBy;
+                    var alt_bearing = getBearing(coord_arr[i+1], alternate_coords);
+                }
+
                 separate_bearings.push(bearing)
                 separate_distances.push(distance)
                 operative = true
             }
+
+            if (update_alternate) {
+            await update("alternate_distance", alt_distance);
+            await update("alternate_track", alt_bearing);
+            }
+
         } catch (error) { //in case the map isnt loaded yet
             operative = false
             await reload_map();
@@ -681,18 +728,21 @@ async function getDistance(coord_arr) {
     await update("distance.value", total)
 
     return total
-
 }
 
+//updating the distance display
 async function updateDistances() {
         fetch('/get-flight')
         .then(response => response.json())
         .then(async FlightData => {
             const route_coords = FlightData.route;
+            const alternate_coords = FlightData.alternateAirport_coords;
 
         //only update the distance when a waypoint exits
         if (route_coords.length >= 3) {
-            var total = await getDistance(route_coords)
+            var total = await getDistance(route_coords, alternate_coords);
+        } else {
+            return;
         }
 
         //updating the distance to display to the user

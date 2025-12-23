@@ -5,6 +5,7 @@
 --text: hsl(0 0% 0%);
 --onhover: hsl(0 0% 80.4%);
 --popupbg: hsla(0, 0%, 0%, 0.33);
+--alternate: hsl(48.54, 83.18%, 79.02%)
 }
 
 /*unless dark mode is toggled, then these become the root
@@ -16,6 +17,7 @@ and are used instead*/
 --text: hsl(0 0% 100%);
 --onhover: hsl(0 0% 32.9%);
 --popupbg: hsla(0, 0%, 0%, 0.33);
+--alternate: hsl(48.54, 83.18%, 29.02%)
 }
 
 
@@ -24,7 +26,7 @@ body {
     font-family: 'Manrope';
 }
 
-.text{
+.text {
     font-family: 'Manrope';
     color: var(--text);
 }

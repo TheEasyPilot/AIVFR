@@ -98,13 +98,13 @@ th {
     border: 2px solid black;
 }
 
-/*highlighting for automatically calculated values*/
-td:nth-child(8), td:nth-child(10), td:nth-child(12) {
+/*highlighting for automatically calculated values, but not for alternate airport*/
+tr:not(.alternate) td:nth-child(8), tr:not(.alternate) td:nth-child(10), tr:not(.alternate) td:nth-child(12) {
      background-color: var(--onhover);
 }
 
 /*magnetic heading and planned alt has different coloring*/
-td:nth-child(9) {
+tr:not(.alternate) td:nth-child(9) {
     background-color: var(--primary);
 }
 

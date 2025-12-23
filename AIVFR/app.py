@@ -166,6 +166,7 @@ data_template = {
         "destinationAirport_name" : "",
         "alternateAirport_code" : "",
         "alternateAirport_name" : "",
+        "alternateAirport_coords" : [],
         "add_index" : -1,
         "route" : [],
         "route_names" : [],
@@ -199,6 +200,8 @@ data_template = {
         "route_changed" : "False",
         "separate_distances" : [], #distances for each point
         "separate_bearings" : [], #bearings for each point
+        "alternate_track" : 0,
+        "alternate_distance" : 0,
         "variation" : 0,
         "NAVLOG" : {
             "headers" : ["FROM/TO", "MSA", "ALT PLAN (FT)", "TAS", "TRACK (°T)", "Wind DIR (°)", "Wind SPD (KT)", "HDG (°T)", "HDG (°M)", "GS (KT)", "DIST (NM)", "TIME (Min)"],
@@ -328,11 +331,12 @@ def fetch_airport_details():
     icao_code = airport["icaoCode"]
     name = airport["name"]
     country = airport["country"]
+    coordinates = airport["geometry"]["coordinates"]
 
     if icao_code != code:
         return jsonify({"error": "ICAO code does not match"}), 400
 
-    return jsonify({"name": name, "country": country}), 200
+    return jsonify({"name": name, "country": country, "coordinates": coordinates}), 200
 
 #------------------------------------------ROUTE MAP
 
@@ -624,6 +628,28 @@ def makeNavlog():
     len_route = len(route_names)
     rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
 
+    #alternate airport details
+    alternate_track = session["flight_data"]["flight"]["alternate_track"]
+    alternate_distance = session["flight_data"]["flight"]["alternate_distance"]
+    alternateAirport_code = session["flight_data"]["flight"]["alternateAirport_code"]
+    arrivalAirport_code = session["flight_data"]["flight"]["destinationAirport_code"]
+
+    if alternateAirport_code != "":
+        #if a row already exists for the alternate airport, store it and remove it from the navlog temporarily
+        if session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]["FROM/TO"]["value"] == route_names[-1] + " - " + alternateAirport_code:
+            existing_alt_row = session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]
+            session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(-1)
+
+        #if the last row contains a waypoint beggining with the arrival airfield, remove it as the alternate airport has changed
+        #this prevents duplicate rows for the alternate airport, and only applies if above statement is false
+        elif f"{arrivalAirport_code} - " in session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]["FROM/TO"]["value"]:
+            session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(-1)
+            existing_alt_row = None
+
+        else:
+            print("no existing alt row")
+            existing_alt_row = None
+
     #only make the navlog if there are at least 3 points
     #(departure, destination and at least 1 waypoint)
     if len_route >= 3:
@@ -644,17 +670,41 @@ def makeNavlog():
                 "TRACK (°T)": {"value": round(separate_bearings[i]), "calculated": True},
                 "Wind DIR (°)": {"value": rows[i]["Wind DIR (°)"]["value"] if i < len(rows) else "", "calculated": False},
                 "Wind SPD (KT)": {"value": rows[i]["Wind SPD (KT)"]["value"] if i < len(rows) else "", "calculated": False},
-                "HDG (°T)": {"value": "", "calculated": True},
-                "HDG (°M)": {"value": "", "calculated": True},
-                "GS (KT)": {"value": "", "calculated": True},
+                "HDG (°T)": {"value": rows[i]["HDG (°T)"]["value"] if i < len(rows) else "", "calculated": True},
+                "HDG (°M)": {"value": rows[i]["HDG (°M)"]["value"] if i < len(rows) else "", "calculated": True},
+                "GS (KT)": {"value": rows[i]["GS (KT)"]["value"] if i < len(rows) else "", "calculated": True},
                 "DIST (NM)": {"value": round(separate_distances[i], 1), "calculated": True},
-                "TIME (Min)": {"value": "", "calculated": True}
+                "TIME (Min)": {"value": rows[i]["TIME (Min)"]["value"] if i < len(rows) else "", "calculated": True}
             }
             #append the row to the navlog
             try:
                 session["flight_data"]["flight"]["NAVLOG"]["rows"][i] = row
             except IndexError:
                 session["flight_data"]["flight"]["NAVLOG"]["rows"].append(row)
+
+        #adding the alternate airport row if an alternate airport has been specified
+        if alternateAirport_code != "":
+            #if a row already exists for the alternate airport, append it back
+            if existing_alt_row:
+                session["flight_data"]["flight"]["NAVLOG"]["rows"].append(existing_alt_row)
+
+            else: #if not make a fresh row
+                alt_row = {
+                        "FROM/TO": {"value": route_names[-1] + " - " + alternateAirport_code, "calculated": True},
+                        "MSA": {"value":  "", "calculated": False},
+                        "ALT PLAN (FT)": {"value": "", "calculated": False},
+                        "TAS": {"value": "", "calculated": False},
+                        "TRACK (°T)": {"value": round(alternate_track), "calculated": True},
+                        "Wind DIR (°)": {"value": "", "calculated": False},
+                        "Wind SPD (KT)": {"value": "", "calculated": False},
+                        "HDG (°T)": {"value": "", "calculated": True},
+                        "HDG (°M)": {"value": "", "calculated": True},
+                        "GS (KT)": {"value": "", "calculated": True},
+                        "DIST (NM)": {"value": round(alternate_distance, 1), "calculated": True},
+                        "TIME (Min)": {"value": "", "calculated": True}
+                    }
+                session["flight_data"]["flight"]["NAVLOG"]["rows"].append(alt_row)
+
 
     session.modified = True
     return {"headers": session["flight_data"]["flight"]["NAVLOG"]["headers"],
@@ -671,6 +721,11 @@ def clearNavlog():
     separate_distances = session["flight_data"]["flight"]["separate_distances"]
     separate_bearings = session["flight_data"]["flight"]["separate_bearings"]
     len_route = len(route_names)
+
+    #alternate airport details
+    alternate_track = session["flight_data"]["flight"]["alternate_track"]
+    alternate_distance = session["flight_data"]["flight"]["alternate_distance"]
+    alternateAirport_code = session["flight_data"]["flight"]["alternateAirport_code"]
 
     #only make the navlog if there are at least 3 points
     #(departure, destination and at least 1 waypoint)
@@ -693,6 +748,26 @@ def clearNavlog():
             }
             #append the row to the navlog
             session["flight_data"]["flight"]["NAVLOG"]["rows"].append(row)
+
+        #adding the alternate airport row if an alternate airport has been specified
+        if alternateAirport_code != "":
+            #make and append the alternate airport row at the end
+            alt_row = {
+                    "FROM/TO": {"value": route_names[-1] + " - " + alternateAirport_code, "calculated": True},
+                    "MSA": {"value":  "", "calculated": False},
+                    "ALT PLAN (FT)": {"value": "", "calculated": False},
+                    "TAS": {"value": "", "calculated": False},
+                    "TRACK (°T)": {"value": round(alternate_track), "calculated": True},
+                    "Wind DIR (°)": {"value": "", "calculated": False},
+                    "Wind SPD (KT)": {"value": "", "calculated": False},
+                    "HDG (°T)": {"value": "", "calculated": True},
+                    "HDG (°M)": {"value": "", "calculated": True},
+                    "GS (KT)": {"value": "", "calculated": True},
+                    "DIST (NM)": {"value": round(alternate_distance, 1), "calculated": True},
+                    "TIME (Min)": {"value": "", "calculated": True}
+                }
+            
+            session["flight_data"]["flight"]["NAVLOG"]["rows"].append(alt_row)
 
     session.modified = True
     return {"headers": session["flight_data"]["flight"]["NAVLOG"]["headers"],
