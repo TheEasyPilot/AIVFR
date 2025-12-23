@@ -11,10 +11,6 @@ This project is licensed under the [Creative Commons Attribution-NonCommercial 4
 
 ## Documentation
 
-Want to see the documentation of the development of this project? You can find that here:
+Want to see the documentation of the first development of this project? You can find that here:
 
 [LINK]
-
-## Webiste
-
-AIVFR is currently not publicly available and is still in development. Check back soon!
