@@ -3,7 +3,7 @@ from math import radians, degrees, sin, asin, cos, sqrt
 import os, pint, requests
 from openai import OpenAI
 from dotenv import load_dotenv
-from ai_roles import fetchRole
+from .ai_roles import fetchRole
 
 main = Blueprint('app', __name__)
 
