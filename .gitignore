@@ -1,8 +1,10 @@
 #Environment variables
 .env
 .env.*
-.flaskenv
 
 #developmnet files
 .vscode/
 .venv/
+
+#Python cache
+__pycache__/
