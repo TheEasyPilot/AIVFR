@@ -1,2 +1,0 @@
-FLASK_APP=AIVFR:create_app
-FLASK_ENV=development

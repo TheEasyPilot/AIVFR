@@ -297,7 +297,7 @@ def NewFlightRun():
     
 #shows any errors on the actual page
 if __name__ == '__main__':
-    main.run(debug=True)
+    main.run()
 
 
 #--------------------------------------------------API FUNCTIONS------------------------------------------------
