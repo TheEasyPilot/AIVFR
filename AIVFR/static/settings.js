@@ -11,18 +11,20 @@ function updateSettings(key, value) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, value})
     });
-    }
+}
 
 
 //--DARK MODE---
 darkMode.addEventListener("click", () => {
     root.classList.add("dark-mode");
+    localStorage.setItem("theme", "dark");
     updateSettings("theme", "dark");
 });
 
 //--LIGHT MODE---
 lightMode.addEventListener("click", () => {
     root.classList.remove("dark-mode");
+    localStorage.setItem("theme", "light");
     updateSettings("theme", "light"); }
 );
 

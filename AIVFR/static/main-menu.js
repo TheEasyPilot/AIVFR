@@ -9,7 +9,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const disclaimerContinue = document.getElementById("disclaimerACCEPT");
     const disclaimerGoBack = document.getElementById("disclaimerEXIT");
     const uploadFlightGoBack = document.getElementById("uploadFlightEXIT");
-    
+
+    function updateSettings(key, value) {
+        fetch("/update-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value})
+    });
+    }
+
+    updateSettings("current_page", "/");
 
     //display the disclaimer
     function displayDisclaimer() { 
