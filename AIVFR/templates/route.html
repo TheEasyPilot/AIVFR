@@ -87,8 +87,10 @@
           </div>
           <!--MANUAL ROUTE MAKING-->
           <div id="addWaypointContainer">
-            <button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'City/Town' else '' }}" id="CityOrTown">City/Town</button>
-            <span><button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'VRP/NAVAID/Airport' else '' }}" id='avFeature'>VRP/NAVAID/Airport</button></span>
+            <div id="waypointTypeSelection">
+              <button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'City/Town' else '' }}" id="CityOrTown">City/Town</button>
+              <span><button class="button waypoint_choice {{ 'active' if settings.waypoint_addType == 'VRP/NAVAID/Airport' else '' }}" id='avFeature'>VRP/NAVAID/Airport</button></span>
+            </div>
 
             <!--Submission form for waypoints-->
             <form id="addWaypointForm" enctype="multipart/form-data">

@@ -72,6 +72,17 @@ export async function update(key, value) { //async function allows code to work 
     }
 }
 
+//--------------------Settings update----------------------
+
+export async function updateSettings(key, value) {
+        await fetch("/update-settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value})
+    });
+}
+
+
 //-------Alert Box--------------
 const alertBox = document.getElementById("alertBox");
 

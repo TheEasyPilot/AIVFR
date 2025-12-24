@@ -1,4 +1,6 @@
-import { update, showAlert } from "./basePage.js";
+import { update, updateSettings, showAlert } from "./basePage.js";
+
+updateSettings("current_page", "/dashboard");
 //------SAVE BUTTON-------
 
 const saveButton = document.getElementById("save");

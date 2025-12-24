@@ -155,7 +155,8 @@ data_template = {
                   "units_mass": "kilogram",
                   "units_fuel" : "litre",
                   "units_distance" : "nautical_mile",
-                  "waypoint_addType" : "City/Town"
+                  "waypoint_addType" : "City/Town",
+                  "current_page" : ""
                   },
     "flight" : {
         #-----------------------ROUTE
@@ -634,7 +635,7 @@ def makeNavlog():
     alternateAirport_code = session["flight_data"]["flight"]["alternateAirport_code"]
     arrivalAirport_code = session["flight_data"]["flight"]["destinationAirport_code"]
 
-    if alternateAirport_code != "":
+    if alternateAirport_code != "" and session["flight_data"]["flight"]["NAVLOG"]["rows"] != []:
         #if a row already exists for the alternate airport, store it and remove it from the navlog temporarily
         if session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]["FROM/TO"]["value"] == route_names[-1] + " - " + alternateAirport_code:
             existing_alt_row = session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]
@@ -649,6 +650,13 @@ def makeNavlog():
         else:
             print("no existing alt row")
             existing_alt_row = None
+
+    elif session["flight_data"]["flight"]["NAVLOG"]["rows"] == []:
+        existing_alt_row = None
+
+    else:
+        session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(-1)
+        existing_alt_row = None
 
     #only make the navlog if there are at least 3 points
     #(departure, destination and at least 1 waypoint)

@@ -204,6 +204,9 @@ a {
 /*add/remove waypoint section*/
 #addWaypointContainer {
     padding: 10px;
+    border: 1px solid var(--onhover);
+    border-radius: 10px;
+    min-height: 80px;
 }
 
 .waypoint_choice, #addWaypoint, #removeWaypoint {
@@ -224,6 +227,13 @@ a {
 #addOrRemoveWaypoints {
     display: flex;
     gap: 5px;
+    justify-content: center;
+}
+
+#waypointTypeSelection {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
 }
 
 #removeWaypoint:hover {

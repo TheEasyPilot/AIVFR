@@ -1,6 +1,7 @@
 import { update, showAlert, prompt } from "./basePage.js";
 import LatLon from 'https://cdn.jsdelivr.net/npm/geodesy@2.4.0/latlon-spherical.min.js';
 
+updateSettings("current_page", "/route");
 
 let map = null;
 
@@ -159,6 +160,17 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
         alternateAirport_name.style.display = "inline";
         alternateAirport_name.textContent = "...";
 
+        //if the value is empty, clear the alternate airport
+        if (alternateAirport_code.value.trim() === "") {
+            await update("alternateAirport_code", "");
+            await update("alternateAirport_name", "");
+            await update("alternateAirport_coords", []);
+            await update("route_changed", "True"); //to trigger navlog reload
+            alternateAirport_name.style.display = "none";
+            await reload_map(); //reload the map to remove the alternate route
+            return;
+        }
+
         //validating data
         if (verifyICAO(alternateAirport_code.value)) {
             const airportDetails = await fetchAirportDetails(alternateAirport_code.value);
@@ -243,8 +255,8 @@ async function load_map() {
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
-                    center: route.length > 0 ? [route[0][0], route[0][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
-                    zoom: 9,
+                    center: route.length > 0 ? [route[route.length - 2][0], route[route.length - 2][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
+                    zoom: 10.3,
                     layers: [Basemap, OpenAIP]
                 }); 
                 const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
@@ -262,8 +274,8 @@ async function load_map() {
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
-                    center: route.length > 0 ? [route[0][0], route[0][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
-                    zoom: 12,
+                    center: route.length > 0 ? [route[route.length - 2][0], route[route.length - 2][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
+                    zoom: 10.3,
                     layers: [Darkmode, OpenAIP]
                 }); 
                 const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
@@ -281,8 +293,8 @@ async function load_map() {
                     mapTilerLogo.style.display = "inline";
                     //crafting the map
                     map = L.map('routeMAP', { 
-                    center: route.length > 0 ? [route[0][0], route[0][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
-                    zoom: 9,
+                    center: route.length > 0 ? [route[route.length - 2][0], route[route.length - 2][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
+                    zoom: 10.3,
                     layers: [Satellite, OpenAIP]
                     //crafting the map
                 });

@@ -1,4 +1,6 @@
-import { update, showAlert } from "./basePage.js";
+import { update, updateSettings, showAlert } from "./basePage.js";
+
+updateSettings("current_page", "/weather");
 
 const grading = document.getElementsByClassName('grading');
 
