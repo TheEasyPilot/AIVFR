@@ -153,6 +153,7 @@ table.addEventListener('input', async (event) => {
                 tableRow.cells[11].querySelector('div').innerText = data.time
             }
         };
+        await fetch('/calc_flight_time')
     }
 });
 
