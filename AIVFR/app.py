@@ -177,7 +177,7 @@ data_template = {
         "route_names" : [],
         "route_gen_justification" : "",
         "distance" : {"value" : 0, "class" : "distance"},
-        "time" : 0,
+        "time" : "",
         #-----------------------WEATHER
         #-----Searched airport
         "WX_airportCode" : "",
@@ -613,12 +613,12 @@ def get_weather():
 
 #--------------------------------------TIME & DISTANCE----------------------------
 
-@main.route('/time-distance')
-def get_time_distance():
+@main.route('/distance')
+def getDistance():
     try:
-        text = f"{session["flight_data"]["flight"]["time"]} | {session["flight_data"]["flight"]["distance"]["output"]}"
+        text = session["flight_data"]["flight"]["distance"]["output"]
     except KeyError:
-        text = "0 | 0.0"
+        text = "0.0"
 
     return text, 200
 
@@ -891,3 +891,35 @@ def recalculate_variation():
 
     session.modified = True
     return jsonify({"status": "ok"}), 200
+
+#--------calculating total flight time
+
+@main.route('/calc_flight_time')
+def calculate_flight_time():
+    totalMins = 0
+    rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
+    calc = True
+
+    for i in range(len(rows)):
+        row = rows[i]
+        #only calculate total time if all time values are filled
+        if row["TIME (Min)"]["value"] == "":
+            calc = False
+            session['flight_data']['flight']['time'] = ''
+            return jsonify ({"time" : 'none'})
+
+    if calc:
+        for i in range(len(rows)):
+            row = rows[i]
+            totalMins += float(row["TIME (Min)"]["value"])
+        
+        #convert to hours and minutes
+        hours = totalMins // 60
+        mins = totalMins % 60
+
+        #update session
+        totalTime = f'{round(hours)}hrs {round(mins)}mins'
+        session['flight_data']['flight']['time'] = totalTime
+
+        session.modified = True
+        return jsonify({"time": totalTime}), 200

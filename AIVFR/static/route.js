@@ -770,6 +770,7 @@ async function updateDistances() {
         .then(async FlightData => {
             const route_coords = FlightData.route;
             const alternate_coords = FlightData.alternateAirport_coords;
+            const time = FlightData.time
 
         //only update the distance when a waypoint exits
         if (route_coords.length >= 3) {
@@ -779,10 +780,10 @@ async function updateDistances() {
         }
 
         //updating the distance to display to the user
-        const response = await fetch('/time-distance');
+        const response = await fetch('/distance');
         if (response.ok) {
             const text = await response.text();
-            document.getElementById('timeDistance').textContent = text;
+            document.getElementById('Distance').textContent = text;
         }
         
         return total
