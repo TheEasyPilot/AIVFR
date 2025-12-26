@@ -160,42 +160,48 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
         alternateAirport_name.style.display = "inline";
         alternateAirport_name.textContent = "...";
 
-        //if the value is empty, clear the alternate airport
-        if (alternateAirport_code.value.trim() === "") {
-            await update("alternateAirport_code", "");
-            await update("alternateAirport_name", "");
-            await update("alternateAirport_coords", []);
-            await update("route_changed", "True"); //to trigger navlog reload
-            alternateAirport_name.style.display = "none";
-            await reload_map(); //reload the map to remove the alternate route
-            return;
-        }
+        if (departureAirport_code.value && arrivalAirport_code.value) {
 
-        //validating data
-        if (verifyICAO(alternateAirport_code.value)) {
-            const airportDetails = await fetchAirportDetails(alternateAirport_code.value);
-            if (airportDetails.country == "GB") {
-                //swapping cords to lat-long
-                const alternateCoords = airportDetails.coordinates;
-                [alternateCoords[0], alternateCoords[1]] = [alternateCoords[1], alternateCoords[0]];
-                //updating session data
-                await update("alternateAirport_code", alternateAirport_code.value.toUpperCase());
-                await update("alternateAirport_name", airportDetails.name);
-                //updating the alternate coords
-                await update("alternateAirport_coords", alternateCoords);
+            //if the value is empty, clear the alternate airport
+            if (alternateAirport_code.value.trim() === "") {
+                await update("alternateAirport_code", "");
+                await update("alternateAirport_name", "");
+                await update("alternateAirport_coords", []);
                 await update("route_changed", "True"); //to trigger navlog reload
+                alternateAirport_name.style.display = "none";
+                await reload_map(); //reload the map to remove the alternate route
+                return;
+            }
 
-                alternateAirport_code.style.textTransform = "uppercase";
-                alternateAirport_name.textContent = airportDetails.name;
-                updateDistances();
-                await reload_map(); //reload the map to show the alternate route
+            //validating data
+            if (verifyICAO(alternateAirport_code.value)) {
+                const airportDetails = await fetchAirportDetails(alternateAirport_code.value);
+                if (airportDetails.country == "GB") {
+                    //swapping cords to lat-long
+                    const alternateCoords = airportDetails.coordinates;
+                    [alternateCoords[0], alternateCoords[1]] = [alternateCoords[1], alternateCoords[0]];
+                    //updating session data
+                    await update("alternateAirport_code", alternateAirport_code.value.toUpperCase());
+                    await update("alternateAirport_name", airportDetails.name);
+                    //updating the alternate coords
+                    await update("alternateAirport_coords", alternateCoords);
+                    await update("route_changed", "True"); //to trigger navlog reload
 
-            } else if (airportDetails.country != "GB") {
-                showAlert("Only UK aerodromes are supported");
+                    alternateAirport_code.style.textTransform = "uppercase";
+                    alternateAirport_name.textContent = airportDetails.name;
+                    updateDistances();
+                    await reload_map(); //reload the map to show the alternate route
+
+                } else if (airportDetails.country != "GB") {
+                    showAlert("Only UK aerodromes are supported");
+                    alternateAirport_name.style.display = "none";
+                }
+            } else {
+                showAlert("Invalid ICAO code");
                 alternateAirport_name.style.display = "none";
             }
         } else {
-            showAlert("Invalid ICAO code");
+            showAlert("Please make sure both departure and arrival aerodromes are set before adding an alternate airport.");
             alternateAirport_name.style.display = "none";
         }
     }
