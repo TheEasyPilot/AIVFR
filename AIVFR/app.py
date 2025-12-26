@@ -859,8 +859,11 @@ def calculate_row(row_index):
     if all(value != "" for value in [tas, wind_dir, wind_spd, track]):
 
         #heading
-        row["HDG (°T)"]["value"] = calc_HDG(tas, track, wind_dir, wind_spd)
-        row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
+        try:
+            row["HDG (°T)"]["value"] = calc_HDG(tas, track, wind_dir, wind_spd)
+            row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
+        except ValueError: #Return 'ERROR' for all fields if a calculation cannot be done
+            return jsonify({"hdgT": "ERROR", "hdgM": "ERROR", "gs": "ERROR", "time": "ERROR"})
 
         #ground speed
         row["GS (KT)"]["value"] = calc_GS(tas, wind_dir, wind_spd, float(row["HDG (°T)"]["value"]))

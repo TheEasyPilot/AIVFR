@@ -96,6 +96,8 @@ async function refreshPLOG() {
 function formatBearing(bearing) {
     if (bearing === "") {
         return "";
+    } else if (bearing == 'ERROR') {
+        return 'ERROR'
     } else {
         return Math.round(bearing).toString().padStart(3, '0');
     }
@@ -140,7 +142,7 @@ table.addEventListener('input', async (event) => {
         const tableRow = table.rows[rowIndex];
         for (let i = 6; i < tableRow.cells.length; i++) {
             const columnName = table.parentElement.querySelector('thead').rows[0].cells[i].innerText;
-
+            //iterate through each column and replace the relevant cells with the fetched data
             if (columnName == "HDG (°T)") {
                 tableRow.cells[7].querySelector('div').innerText = formatBearing(data.hdgT)
             } else if (columnName == "HDG (°M)") {
@@ -162,3 +164,36 @@ clearNavlogButton.addEventListener('click', async () => {
     await fetch('/clearNavlog');
     await refreshPLOG();
 });
+
+//--------------------------------DOWNLOADING PLOG
+const download = document.getElementById('downloadNavlogButton')
+
+download.addEventListener('click', () => {
+    downloadPDF();
+});
+
+
+ function downloadPDF() {
+    //getting the table
+    const navlog = document.getElementById('navlogTable');
+    
+    //getting the template
+    const template_container = document.getElementById('navlogPDF_template');
+    const navlog_content = document.getElementById('pdf_content');
+    const dateAndTime = document.getElementById('pdf_dateAndTime');
+
+    //inserting the data into the templete
+    navlog_content.innerHTML = navlog.outerHTML;
+    dateAndTime.innerHTML = `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`
+    //using html2pdf to convert the html table into a image, then save to PDF
+    const options = {
+            margin: 0.2,
+            filename: 'navlog.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            logging: false,
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape'}
+        };
+  
+    html2pdf().set(options).from(template_container.innerHTML).save();
+}

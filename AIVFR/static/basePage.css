@@ -145,3 +145,25 @@ hr  {
     transform: translate(-50%, -50%); /*center the box*/
     z-index: 200;
 }
+
+/*-----Navlog pdf template------*/
+
+#navlogPDF_template {
+    position: absolute;
+    left: -9999px;
+    width: 800px;
+}
+
+#pdf_header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #333; 
+    padding-bottom: 10px;
+}
+
+#pdf_footer {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 50px;
+    border-top: 1px solid #ccc;
+}
