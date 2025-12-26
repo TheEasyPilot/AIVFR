@@ -56,46 +56,50 @@
         <div> <!--AIRSPEED-->
           <button style="display: block;" id="airspeed" class="dropdown">Airspeed</button>
           <div id="airspeed_options" style="display: none;">
-            <button style="display: block;" id="knots" class="{{ 'active' if settings.units_airspeed == 'knot' else '' }}">Knots</button>
-            <button style="display: block;" id="mph" class="{{ 'active' if settings.units_airspeed == 'mile_per_hour' else '' }}">MPH</button>
-            <button style="display: block;" id="kmph" class="{{ 'active' if settings.units_airspeed == 'kilometer_per_hour' else '' }}">KM/H</button>
+            <button style="display: block;" id="knots" class="{{ 'active' if settings.units_airspeed == 'knot' else '' }} unit">Knots</button>
+            <button style="display: block;" id="mph" class="{{ 'active' if settings.units_airspeed == 'mile_per_hour' else '' }} unit">MPH</button>
+            <button style="display: block;" id="kmph" class="{{ 'active' if settings.units_airspeed == 'kilometer_per_hour' else '' }} unit">KM/H</button>
           </div>
         </div>
     
         <div> <!--ALTITUDE-->
           <button style="display: block;" id="altitude" class="dropdown">Altitude</button>
           <div id="altitude_options" style="display: none;">
-            <button style="display: block;" id="feet" class="{{ 'active' if settings.units_altitude == 'feet' else '' }}">Feet (ft)</button>
-            <button style="display: block;" id="metres" class="{{ 'active' if settings.units_altitude == 'metre' else '' }}">Metres (m)</button>
+            <button style="display: block;" id="feet" class="{{ 'active' if settings.units_altitude == 'feet' else '' }} unit">Feet (ft)</button>
+            <button style="display: block;" id="metres" class="{{ 'active' if settings.units_altitude == 'metre' else '' }} unit">Metres (m)</button>
           </div>
         </div>
   
         <div> <!--MASS-->
           <button style="display: block;" id="mass" class="dropdown">Mass</button>
           <div id="mass_options" style="display: none;">
-            <button style="display: block;" id="kg" class="{{ 'active' if settings.units_mass == 'kilogram' else '' }}">Kilograms (kg)</button>
-            <button style="display: block;" id="pounds" class="{{ 'active' if settings.units_mass == 'pound' else '' }}">Pounds (lbs)</button>
+            <button style="display: block;" id="kg" class="{{ 'active' if settings.units_mass == 'kilogram' else '' }} unit">Kilograms (kg)</button>
+            <button style="display: block;" id="pounds" class="{{ 'active' if settings.units_mass == 'pound' else '' }} unit">Pounds (lbs)</button>
           </div>
         </div>
   
         <div> <!--FUEL-->
           <button style="display: block;" id="fuel" class="dropdown">Fuel</button>
           <div id="fuel_options" style="display: none;">
-            <button style="display: block;" id="litres" class="{{ 'active' if settings.units_fuel == 'litre' else '' }}">Litres (l)</button>
-            <button style="display: block;" id="gallons" class="{{ 'active' if settings.units_fuel == 'US_liquid_gallon' else '' }}">US Gallons (gal)</button>
+            <button style="display: block;" id="litres" class="{{ 'active' if settings.units_fuel == 'litre' else '' }} unit">Litres (l)</button>
+            <button style="display: block;" id="gallons" class="{{ 'active' if settings.units_fuel == 'US_liquid_gallon' else '' }} unit">US Gallons (gal)</button>
           </div>
         </div>
   
         <div> <!--DISTANCE-->
           <button style="display: block;" id="distance" class="dropdown">Distance</button>
           <div id="distance_options" style="display: none;">
-            <button style="display: block;" id="nautical_miles" class="{{ 'active' if settings.units_distance == 'nautical_mile' else '' }}">Nautical Miles (NM)</button>
-            <button style="display: block;" id="kilometres" class="{{ 'active' if settings.units_distance == 'kilometer' else '' }}">Kilometers (km)</button>
-            <button style="display: block;" id="statute_miles" class="{{ 'active' if settings.units_distance == 'us_statute_mile' else '' }}">Statute Miles</button>
+            <button style="display: block;" id="nautical_miles" class="{{ 'active' if settings.units_distance == 'nautical_mile' else '' }} unit">Nautical Miles (NM)</button>
+            <button style="display: block;" id="kilometres" class="{{ 'active' if settings.units_distance == 'kilometer' else '' }} unit">Kilometers (km)</button>
+            <button style="display: block;" id="statute_miles" class="{{ 'active' if settings.units_distance == 'us_statute_mile' else '' }} unit">Statute Miles</button>
           </div>
         </div>
       </div>
     </div>
+    <footer id="footer">
+      <p><i><a href="https://github.com/AlimMugalaasi/AIVFR">v{{ app_version }}</a></i><svg xmlns="http://www.w3.org/2000/svg" width="15px" viewBox="0 0 24 24" fill="gray"><path d="M14 2C14 1.44772 14.4477 1 15 1H21C22.1046 1 23 1.89543 23 3V9C23 9.55229 22.5523 10 22 10C21.4477 10 21 9.55228 21 9V4.41421L13.4406 11.9736C13.0501 12.3641 12.4169 12.3641 12.0264 11.9736C11.6359 11.5831 11.6359 10.9499 12.0264 10.5594L19.5858 3H15C14.4477 3 14 2.55228 14 2Z" fill="gray"/></svg></p>
+      <p><i>Deployed with <a href="https://railway.com" target="_blank">Railway</a></i></p>
+    </footer>
   </body>
 </html>
 

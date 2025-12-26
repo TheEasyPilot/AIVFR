@@ -7,6 +7,8 @@ from .ai_roles import fetchRole
 
 main = Blueprint('app', __name__)
 
+APP_VERSION = "0.1.0-alpha"
+
 #------------------------------------------WEBTOOL NAVIGATION-------------------------------------
 #main menu
 @main.route('/') #this will be the first to load up
@@ -19,7 +21,7 @@ def index():
 #settings menu
 @main.route('/settings')
 def settingsMenu():
-    return render_template('settings.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
+    return render_template('settings.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"], app_version=session["flight_data"]["app_version"])
 
 #dashboard
 @main.route('/dashboard')
@@ -56,11 +58,12 @@ def massAndBalanceTab():
 def performanceTab():
     return render_template('performance.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
+#-------------DEBUGGING
+
 #debug route that allows me to see the flight data at any time
 @main.route('/debug')
 def debug_session():
     return jsonify(session.get("flight_data", {}))
-
 #-------------------------------------------------UNITS CHANGING-------------------------------------
 
 ureg = pint.UnitRegistry()
@@ -147,6 +150,7 @@ def update_unitsRUN():
 #also allows setting default values
 
 data_template = {
+    "app_version": "0.1.0-alpha",
     "settings" : {"theme": "light",
                   "map_style": "normal",
                   "units_changed": "False",
@@ -648,7 +652,6 @@ def makeNavlog():
             existing_alt_row = None
 
         else:
-            print("no existing alt row")
             existing_alt_row = None
 
     elif session["flight_data"]["flight"]["NAVLOG"]["rows"] == []:
