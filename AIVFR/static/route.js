@@ -96,6 +96,7 @@ departureAirport_code.addEventListener("keydown", async (event) => {
 
 const arrivalAirport_code = document.getElementById("arrival_code");
 const arrivalAirport_name = document.getElementById("arrival_name");
+const content = document.getElementById('content');
 
 arrivalAirport_code.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
@@ -115,6 +116,7 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
                  arrival for intial route drawing*/
 
                 /*checking if both departure and arrival aerodromes are set already*/
+                content.classList.add('loading')
                 fetch('/get-flight')
                     .then(response => response.json())
                     .then(async data => {
@@ -132,8 +134,10 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
 
                             reload_map();
                             update_route_names();
+                            content.classList.remove('loading');
                         } else {
                             showAlert("Both aerodromes are set already. Clear the route to reset them.");
+                            content.classList.remove('loading');
                         }
                     });
 
@@ -265,7 +269,7 @@ async function load_map() {
                     zoom: 10.3,
                     layers: [Basemap, OpenAIP]
                 }); 
-                const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
+                const line = L.polyline(route, { color: '#f0F' , weight: 5, measurementOptions : { imperial:true }})
                 .addTo(map)
                 .showMeasurements();
                 
@@ -315,6 +319,12 @@ async function load_map() {
                 .addTo(map)
                 .showMeasurements();
                 }
+
+                //adding circles to determine turning points
+                route.forEach((coord) => {
+                    const circle = L.circle(coord, {color: 'black',fillColor: 'rgb(248, 248, 8)',fillOpacity: 0.4, radius: 300 })
+                    .addTo(map)
+                })
 
                 resolve();
             })
@@ -485,6 +495,9 @@ function update_route_names() {
 //adding event listener to the waypoint form
 const waypoint = document.getElementById('searchWaypoint')
 
+//for button styling
+const addWaypointContainer = document.getElementById('addWaypointContainer')
+
 //wait for a submission by the user
 document.getElementById('addWaypointForm').onsubmit = async function(event) {
     event.preventDefault();
@@ -494,6 +507,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
 
     //**************REMOVING A WAYPOINT*****************
     if (actionValue === 'remove') {
+        addWaypointContainer.classList.add('loading')
         //first, get the index of the waypoint to be removed
         fetch('/get-flight')
         .then(response => response.json())
@@ -538,13 +552,14 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             update_route_names();
             await updateDistances();
             update("route_changed", "True");
+            addWaypointContainer.classList.remove('loading')
             });
         
       
         
         //*************ADDING A WAYPOINT*****************
     } else if (actionValue === 'add') {
-
+        addWaypointContainer.classList.add('loading')
         //get the current waypoint type from settings
         //(to know whether to add a city or an aviation feature)
         fetch('/get-all')
@@ -583,11 +598,11 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
                 await add_av(waypoint.value);
                 waypoint.value = ''; 
             }
-
             reload_map();
             update_route_names();
             await updateDistances();
             update("route_changed", "True");
+            addWaypointContainer.classList.remove('loading')
         });
     }
 
