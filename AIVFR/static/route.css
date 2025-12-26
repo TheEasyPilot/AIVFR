@@ -246,6 +246,11 @@ a {
     font-family: 'Manrope';
 }
 
+#addWaypointContainer.loading, #content.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 #searchWaypoint {
     width: 100%;
     margin-bottom: 10px;
