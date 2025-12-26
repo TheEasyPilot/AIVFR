@@ -103,7 +103,7 @@ function formatBearing(bearing) {
 
 //---------------------UPDATING PLOG TABLE
 
-table.addEventListener('change', async (event) => {
+table.addEventListener('input', async (event) => {
     const target = event.target;
     if (target.classList.contains('tableInput')) {
         //get the row and column of the changed input
@@ -123,19 +123,36 @@ table.addEventListener('change', async (event) => {
         const newValue = target.value;
 
         //send the updated value to the server
-        await fetch('/update-cell', {
+         const response = await fetch('/update-cell', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                row: rowIndex,
-                column: columnName,
-                value: newValue
-        })
-    });
-    await refreshPLOG();
-}});
+            body: JSON.stringify({row: rowIndex, column: columnName, value: newValue})
+        });
+        const data = await response.json();
+
+        if (data.data == 'none') {
+            return
+        }
+
+        //update the specific row with returned values
+        const tableRow = table.rows[rowIndex];
+        for (let i = 6; i < tableRow.cells.length; i++) {
+            const columnName = table.parentElement.querySelector('thead').rows[0].cells[i].innerText;
+
+            if (columnName == "HDG (°T)") {
+                tableRow.cells[7].querySelector('div').innerText = formatBearing(data.hdgT)
+            } else if (columnName == "HDG (°M)") {
+                tableRow.cells[8].querySelector('div').innerText = formatBearing(data.hdgM)
+            } else if (columnName == "GS (KT)") {
+                tableRow.cells[9].querySelector('div').innerText = data.gs
+            } else if (columnName == "TIME (Min)") {
+                tableRow.cells[11].querySelector('div').innerText = data.time
+            }
+        };
+    }
+});
 
 //---------------------CLEARING PLOG TABLE
 

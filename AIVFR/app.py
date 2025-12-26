@@ -807,10 +807,11 @@ def update_cell():
     navlog_rows[row_index][column_name]["calculated"] = False #mark as user input
 
     #calculate fields for that row
-    calculate_row(row_index)
+    values = calculate_row(row_index)
 
     session.modified = True
-    return jsonify({"status": "ok"}), 200
+
+    return values, 200
 
 
 #----------------------Calculating calculated fields
@@ -865,11 +866,13 @@ def calculate_row(row_index):
         row["GS (KT)"]["value"] = calc_GS(tas, wind_dir, wind_spd, float(row["HDG (°T)"]["value"]))
 
     else:
-        return
+        return jsonify ({ "data" : "none" })
     
     gs = row["GS (KT)"]["value"]
     if gs not in [0, ""]:
         row["TIME (Min)"]["value"] = round((distance / gs) * 60, 1) #time in minutes
+
+    return jsonify({"hdgT": row["HDG (°T)"]["value"], "hdgM": row["HDG (°M)"]["value"], "gs": row["GS (KT)"]["value"], "time": row["TIME (Min)"]["value"]})
 
 #----recalculating magnetic heading for all rows (for when variation is changed)
 @main.route('/recalculate-magnetic-HDG')
