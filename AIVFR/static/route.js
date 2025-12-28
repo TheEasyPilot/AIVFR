@@ -519,12 +519,14 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             if (WaypointIndex == -1) {
                 showAlert("Waypoint not found in the current route. Please check the name and try again.");
                 waypoint.value = '';
+                addWaypointContainer.classList.remove('loading')
                 return;
 
                 //prevent removing departure or arrival aerodrome
             } else if (waypoint.value.toUpperCase() == data.departureAirport_code || waypoint.value.toUpperCase() == data.destinationAirport_code) {
                 showAlert("You cannot remove the departure or arrival aerodrome from here. Please start a new flight.");
                 waypoint.value = '';
+                addWaypointContainer.classList.remove('loading')
                 return;
             }
 
@@ -544,6 +546,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
 
             } catch (error) {
                 showAlert("An error occured whilst removing the waypoint. Please try again.");
+                addWaypointContainer.classList.remove('loading')
                 return null;
             }
             
@@ -574,6 +577,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             if (route_names.includes(waypoint.value.toUpperCase())) {
                 showAlert("This waypoint is already in the current route. Please choose another waypoint.");
                 waypoint.value = '';
+                addWaypointContainer.classList.remove('loading')
                 return;
             }
 
@@ -581,11 +585,13 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             if (waypoint.value.toUpperCase() == departureAirport || waypoint.value.toUpperCase() == destinationAirport) {
                 showAlert("You cannot add the departure or arrival aerodrome as a waypoint.");
                 waypoint.value = '';
+                addWaypointContainer.classList.remove('loading')
                 return;
 
             } else if (departureAirport == '' || destinationAirport == '') {
                 showAlert("Please make sure both departure and arrival aerodromes are set before adding waypoints.");
                 waypoint.value = '';
+                addWaypointContainer.classList.remove('loading')
                 return;
             }
 

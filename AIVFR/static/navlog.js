@@ -169,12 +169,25 @@ clearNavlogButton.addEventListener('click', async () => {
 //--------------------------------DOWNLOADING PLOG
 const download = document.getElementById('downloadNavlogButton')
 
-download.addEventListener('click', () => {
-    downloadPDF();
+download.addEventListener('click', async ()  => {
+    await downloadPDF();
+    download.style.pointerEvents = 'all'
+    download.style.opacity = 1
 });
 
 
- function downloadPDF() {
+async function downloadPDF() {
+
+await fetch('/get-flight')
+.then(response => response.json())
+.then(async FlightData => {
+    //get the departure and arrival names to put in the file name
+    const departure_code = FlightData.departureAirport_code
+    const arrival_code = FlightData.destinationAirport_code
+
+    download.style.pointerEvents = 'none'
+    download.style.opacity = 0.4
+    await refreshPLOG();
     //getting the table
     const navlog = document.getElementById('navlogTable');
     
@@ -189,12 +202,13 @@ download.addEventListener('click', () => {
     //using html2pdf to convert the html table into a image, then save to PDF
     const options = {
             margin: 0.2,
-            filename: 'navlog.pdf',
+            filename: `navlog ${departure_code}-${arrival_code}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true },
             logging: false,
             jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape'}
         };
-  
+
     html2pdf().set(options).from(template_container.innerHTML).save();
+    })
 }

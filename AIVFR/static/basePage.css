@@ -37,8 +37,12 @@ main {
 }
 
 /*AIVFR logo*/
-#logoAI {
+#logoAI{
     color: var(--primary);
+}
+
+#logoAI_nav {
+    color: hsl(190 100% 42.5%);
 }
 
 #logoVFR {
@@ -47,8 +51,19 @@ main {
     color: var(--text);
 }
 
+#logoVFR_nav {
+    position: relative;
+    right: 3px;
+    color: black;
+}
+
 #logoAI, #logoVFR {
     font-size: 30px;
+    font-weight: 700;
+}
+
+#logoAI_nav, #logoVFR_nav {
+    font-size: 50px;
     font-weight: 700;
 }
 
@@ -157,7 +172,7 @@ hr  {
 #pdf_header {
     display: flex;
     justify-content: space-between;
-    border-bottom: 2px solid #333; 
+    border-bottom: 1px solid #ccc;
     padding-bottom: 10px;
 }
 
