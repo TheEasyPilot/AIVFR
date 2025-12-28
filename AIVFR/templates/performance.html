@@ -10,8 +10,21 @@
 {% endblock %}
 
 {% block content %} {# edit what's in between the content block #}
-    <div class="pageTitle" style="display: flex; align-items: center; gap: 10px;">
-        <div id="title">PERFORMANCE</div>
-        <span id="alertBox"></span>
-    </div>
+<!--=============================HEADER==========================-->
+      <div class="pageTitle" style="display: flex; align-items: center; gap: 10px;">
+          <div id="title">PERFORMANCE</div>
+          <span id="alertBox"></span>
+      </div>
+<!--=============================BODY==========================-->
+      <div id="content">
+        <div id="perf_inputs">
+          <div class="perf_input"><b>Take-off Distance Required:</b>   <input type="number" id="TODR" value="{{ flight.TODR if flight.TODR != 0 else "" }}"></div>
+          <div class="perf_input"><b>Landing Distance Required: </b>   <input type="number" id="LDR" value="{{ flight.LDR if flight.LDR != 0 else "" }}"></div>
+          <div class="perf_input"><b>Take-off Distance Available: </b> <input type="number" id="TODA" value="{{ flight.TODA if flight.TODA != 0 else "" }}"></div>
+          <div class="perf_input"><b>Landing Distance Available:</b>   <input type="number" id="LDA" value="{{ flight.LDA if flight.LDA != 0 else "" }}"></div>
+        </div>
+        <div id="tooltip">
+            <p style="color: #737373; margin-bottom: 5px;">TODA and LDA should be factored. All values in metres (m).</p>
+            <p style="color: #737373">Due to the critical nature of performance values in flight, the ability to calculate performance values here is not yet possible. Instead, please consult official charts and your flight manual to calculate these values yourself, then input them here.</p></div>
+      </div>
 {% endblock %}
