@@ -20,6 +20,16 @@ and are used instead*/
 --alternate: hsl(48.54, 83.18%, 29.02%)
 }
 
+.light_mode {
+    --bg: hsl(0 0% 96.1%);
+    --primary: hsl(190 100% 42.5%);
+    --highlight: hsl(0 0% 100%);
+    --text: hsl(0 0% 0%);
+    --onhover: hsl(0 0% 80.4%);
+    --popupbg: hsla(0, 0%, 0%, 0.33);
+    --alternate: hsl(48.54, 83.18%, 79.02%)
+}
+
 
 body {
     background-color: var(--bg);

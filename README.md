@@ -7,6 +7,8 @@ Fun fact: The very first version of this tool was made as part of the OCR Comput
 
 This webtool is not adapted for mobile users. For the best experience please use a laptop/tablet.
 
+Use **/debug** to see all the currently stored data for your session!
+
 ## License
 
 This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/). Free to use, but not for commercial purposes.
