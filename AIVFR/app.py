@@ -212,6 +212,12 @@ data_template = {
             "headers" : ["FROM/TO", "MSA", "ALT PLAN (FT)", "TAS", "TRACK (°T)", "Wind DIR (°)", "Wind SPD (KT)", "HDG (°T)", "HDG (°M)", "GS (KT)", "DIST (NM)", "TIME (Min)"],
             "rows" : []
         },
+        #---------------------PERFORMANCE
+        "TODR" : 0,
+        "LDR" : 0,
+        "TODA" : 0,
+        "LDA" : 0,
+
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA
