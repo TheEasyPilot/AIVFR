@@ -7,3 +7,101 @@
     background-color: var(--primary);
     pointer-events: none;
 }
+
+#content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#fuel_policy {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+}
+
+#stopovers {
+    grid-column: 2;
+    grid-row: 3;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+#fuel_required {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 20px;
+}
+
+#fuelBurn_and_taxiTime {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: fit-content;
+    
+}
+
+.with_highlight {
+    background-color: var(--highlight);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 5px;
+}
+
+input {
+    border: 1px solid var(--text);
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Manrope';
+    font-size: 13px;
+    background-color: var(--bg);
+    border: 1px solid var(--onhover);
+}
+
+#stopoverRequired {
+    display: flex;
+    font-size: 17px;
+    margin-top: 10px;
+    padding: 3%;
+    background-color: hsla(0 100% 60% / 0.7);
+    border-radius: 15px;
+    justify-content: center;
+}
+
+#stopoverNotRequired {
+    display: flex;
+    font-size: 17px;
+    margin-top: 10px;
+    padding: 3%;
+    background-color: var(--onhover);
+    border-radius: 15px;
+    justify-content: center;
+}
+
+.totals {
+    font-size: 18px;
+    font-weight: 700;
+    margin-right: 40%;
+}
+
+#autofillButton {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Manrope';
+    padding: 7px 10px 7px 10px;
+    width: fit-content;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 13px;
+    background-color: var(--bg);
+}
+
+#autofillButton:hover {
+    background-color: var(--primary);
+}
+
+#AI_icon {
+    margin-right: 5px;
+}

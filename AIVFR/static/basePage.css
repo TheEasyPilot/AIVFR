@@ -79,12 +79,15 @@ main {
 }
 
 button {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     background-color: var(--highlight);
     border: none;
     padding: 5px;
     border-radius: 5px;
+}
 
+.navButton {
+    margin-bottom: 25px;
 }
 
 .icon {
