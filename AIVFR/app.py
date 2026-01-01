@@ -150,7 +150,7 @@ def update_unitsRUN():
 #also allows setting default values
 
 data_template = {
-    "app_version": "0.1.0-alpha",
+    "app_version": "0.1.1-alpha",
     "settings" : {"theme": "light",
                   "map_style": "normal",
                   "units_changed": "False",
