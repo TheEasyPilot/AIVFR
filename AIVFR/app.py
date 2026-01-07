@@ -123,8 +123,8 @@ CUSTOM_UNITS = {
     'knot' : "kts",
     'kg' : "kg",
     'lb' : "lbs",
-    'litre' : "L",
-    'gallon' : "gal",
+    'l' : "L",
+    'gal' : "Gal",
     'feet' : "ft",
     'meter' : "m",
     'kilometer' : "km",
@@ -212,6 +212,45 @@ data_template = {
             "headers" : ["FROM/TO", "MSA", "ALT PLAN (FT)", "TAS", "TRACK (°T)", "Wind DIR (°)", "Wind SPD (KT)", "HDG (°T)", "HDG (°M)", "GS (KT)", "DIST (NM)", "TIME (Min)"],
             "rows" : []
         },
+        #-----------------------FUEL
+        #FUEL POLICY - general policy as default
+        "fuelPolicy_trip" : {
+            "policy" : "Take-off to Landing. Should consider steep climbs, descents and arrival procedures.",
+            "time_allowed" : "",
+        },
+        "fuelPolicy_contingency" : {
+            "policy" : "Either 5% of Trip, 3% if Enroute alternative aerodrome available, or Whatever is sufficient for 20min of flight. Whichever higher.",
+            "time_allowed" : "",
+        },
+        "fuelPolicy_alternate" : {
+            "policy" : "For Missed approaches / landing at alternative aerodromes. Should include time for a circuit at destination.",
+            "time_allowed" : "",
+        },
+        "fuelPolicy_finalReserve" : {
+            "policy" : "Enough for 45 min Flight time",
+            "time_allowed" : "",
+        },
+        "fuelPolicy_additional" : {
+            "policy" : "Enough for 15 mins holding time",
+            "time_allowed" : "",
+        },
+        #FUEL VALUES - NON EDITABLE#
+        "fuel_total" : {"value" : 0, "class" : "fuel"},
+        "fuel_taxi" : {"value" : 0, "class" : "fuel"},
+        "fuel_trip" : {"value" : 0, "class" : "fuel"},
+        "fuel_contingency" : {"value" : 0, "class" : "fuel"},
+        "fuel_alternate" : {"value" : 0, "class" : "fuel"},
+        "fuel_finalReserve" : {"value" : 0, "class" : "fuel"},
+        "fuel_additional" : {"value" : 0, "class" : "fuel"},
+        "fuel_endurance" : "",
+        "fuel_mass" : {"value" : 0, "class" : "mass"},
+        #EDITABLE PARAMETERS#
+        "fuel_extra" : {"value" : 0, "class" : "fuel"},
+        "fuel_burn" : {"value" : 0, "class" : "fuel"},
+        "specific_gravity" : 0,
+        "max_tank_capacity" : {"value" : 0, "class" : "fuel"},
+        "taxi_time" : "",
+
         #---------------------PERFORMANCE
         "TODR" : 0,
         "LDR" : 0,
