@@ -72,7 +72,7 @@
 
     <main>
       <div id="policyTooltipText">
-        <p style="color: #737373">You can use the provided general policy or (preferably) edit it to your operator's policy.</p>
+        <p style="color: #737373">The provided general policy serves as a default guideline. You are advised to edit it to match your operator's specific policy.</p>
         <br>
         <p style="color: #737373">You can use Autofill to calculate time values based on the currently entered policy.</p>
       </div>
@@ -130,13 +130,13 @@
         <!--Fuel burn, taxi time, specific gravity-->
         <div id="fuel_info" class="with_highlight" style="display: flex; justify-content: center; gap: 50px; ">
           <div>
-            <div class="input" style="margin-bottom: 10px;"><b>Fuel Burn: </b> <input id="fuelBurn" type="number"> <b>[unit]/hr</b></div>
+            <div class="input" style="margin-bottom: 10px;"><b>Fuel Burn: </b> <input id="fuelBurn" type="number"> <b>{{ 'gph' if settings.units_fuel == 'US_liquid_gallon' else 'l/hr' }}</b></div>
             <div class="input"><b>Taxi Time: </b> <input id="taxiTime" type="number"> <b>mins</b></div>
           </div>
 
           <div>
             <div class="input" style="margin-bottom: 10px;"><b>Specific Gravity (SG): </b> <input id="specificGravity" type="number" value=""></div>
-            <div class="input" style="margin-left: 16px;"><b>Max Tank Capacity: </b> <input id="maxTankCapacity" type="number"> <b>[unit]</b></div>
+            <div class="input" style="margin-left: 16px;"><b>Max Tank Capacity: </b> <input id="maxTankCapacity" type="number"> <b>{{ 'Gal.' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
           </div>
         </div>
 
@@ -149,12 +149,13 @@
           <p style="margin-bottom: 20px;">Alternate: </p>
           <p style="margin-bottom: 20px;">Final Reserve: </p>
           <p style="margin-bottom: 20px;">Additional: </p>
-          <div class="input">Extra (PIC discretion): <input id="extraFuel" type="number"> <b>[unit]</b></div>
+          <div class="input">Extra (PIC discretion): <input id="extraFuel" type="number"> <b>{{ 'Gal.' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
 
           <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
           <!--Totals-->
           <span class="totals" style="margin-top: 20px;">Total: </span>
-          <span class="totals" style="margin-top: 10px;">Weight: </span>
+          <span class="totals" style="margin-top: 10px;">Endurance: </span>
+          <span class="totals" style="margin-top: 10px;">Mass: </span>
         </div>
 
         <!--Determining stopover requirement-->
