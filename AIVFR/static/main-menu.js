@@ -72,8 +72,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     //---------------------------NEW FLIGHT
-    function NewFlight() {
-        fetch('/get-flight')
+    async function NewFlight() {
+        await fetch('/get-flight')
         .then(response => response.json())
         .then(data => {
         if (data.saved == "False") { //checks if current flight data is saved
@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function() {
         })
     };
 
-    function clearSession() {
-        fetch('/new-flight')
+    async function clearSession() {
+        await fetch('/new-flight')
     }
 
     //---------------------------LOAD FLIGHT

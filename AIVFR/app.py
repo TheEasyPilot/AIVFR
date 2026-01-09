@@ -16,12 +16,12 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.1.1-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
 def settingsMenu():
-    return render_template('settings.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"], app_version=session["flight_data"]["app_version"])
+    return render_template('settings.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
 #dashboard
 @main.route('/dashboard')
@@ -150,7 +150,6 @@ def update_unitsRUN():
 #also allows setting default values
 
 data_template = {
-    "app_version": "0.1.1-alpha",
     "settings" : {"theme": "light",
                   "map_style": "normal",
                   "units_changed": "False",
@@ -247,7 +246,7 @@ data_template = {
         #EDITABLE PARAMETERS#
         "fuel_extra" : {"value" : 0, "class" : "fuel"},
         "fuel_burn" : {"value" : 0, "class" : "fuel"},
-        "specific_gravity" : 0,
+        "specific_gravity" : "",
         "max_tank_capacity" : {"value" : 0, "class" : "fuel"},
         "taxi_time" : "",
 
@@ -339,10 +338,11 @@ def save_flight():
 #resets all flight data  but NOT settings
 @main.route("/new-flight")
 def NewFlightRun():
-    while session["flight_data"]["flight"]["departureAirport_code"] != "":
+    while session["flight_data"]["flight"] != data_template["flight"]:
         session["flight_data"]["flight"] = data_template["flight"]
+    update_unitsRUN()
     session.modified = True
-    return jsonify({"status": "success", "message": "New flight started."}), 200
+    return jsonify({"status": "success"}), 200
     
 #shows any errors on the actual page
 if __name__ == '__main__':
@@ -968,3 +968,66 @@ def calculate_flight_time():
 
         session.modified = True
         return jsonify({"time": totalTime}), 200
+
+#-------------------------------------------FUEL-------------------------------------
+
+#---------calculating totals
+@main.route('/calculate-totals', methods=["POST"])
+def calculate_totals():
+    flight_data = session["flight_data"]["flight"]
+
+    #---TOTAL FUEL---#
+    #getting all fuel components
+    taxi = flight_data["fuel_taxi"]["value"]
+    trip = flight_data["fuel_trip"]["value"]
+    contingency = flight_data["fuel_contingency"]["value"]
+    alternate = flight_data["fuel_alternate"]["value"]
+    finalReserve = flight_data["fuel_finalReserve"]["value"]
+    additional = flight_data["fuel_additional"]["value"]
+    extra = request.json.get("extra")
+
+    #calculating total fuel
+    total_fuel = sum([
+        float(taxi),
+        float(trip),
+        float(contingency),
+        float(alternate),
+        float(finalReserve),
+        float(additional),
+        float(extra)
+    ])
+    
+
+    #updating session
+    flight_data["fuel_total"]["value"] = round(total_fuel, 1)
+
+    #---TOTAL MASS---#
+    specific_gravity = flight_data["specific_gravity"]
+    if specific_gravity != "" and specific_gravity != 0:
+        #if fuel is in litres, mass is fuel * SG (kg/litre)
+        if session["flight_data"]["settings"]["units_fuel"] == "litre":
+            fuel_mass = total_fuel * float(specific_gravity)
+
+        #if fuel is in gallons, mass is fuel * SG * 8.345 (lbs/gallon)
+        elif session["flight_data"]["settings"]["units_fuel"] == "US_liquid_gallon":
+            fuel_mass = total_fuel * float(specific_gravity) * 8.345
+        flight_data["fuel_mass"]["value"] = round(fuel_mass, 1)
+    else:
+        flight_data["fuel_mass"]["value"] = 0
+ 
+    #---ENDURANCE--- to calculate how long the fuel will last based on burn rate
+    fuel_burn = flight_data["fuel_burn"]["value"] #in units of fuel per hour
+    if fuel_burn != "" and fuel_burn != 0:
+        endurance_hours = total_fuel / float(fuel_burn)
+        hours = int(endurance_hours)
+        minutes = int((endurance_hours - hours) * 60)
+        endurance = f"{hours}hrs {minutes}mins"
+        flight_data["fuel_endurance"] = endurance
+
+    update_unitsRUN() #reapply units after totals have been calculated
+    session.modified = True
+
+    return jsonify({"total_fuel": flight_data["fuel_total"]["output"],
+                     "fuel_mass": flight_data["fuel_mass"]["output"],
+                     "fuel_endurance": flight_data["fuel_endurance"]
+                     }), 200
