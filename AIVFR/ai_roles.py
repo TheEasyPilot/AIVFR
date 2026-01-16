@@ -49,7 +49,22 @@ Noise-sensitive zones
     elif type == 'Brief':
         role = 'ROLE FOR BRIEF'
     
-    elif type == 'Navlog':
-        role = 'ROLE FOR NAVLOG'
+    elif type == 'Fuel':
+        role = '''
+Calculate appropriate time allowances (in minutes) for the following fuel policy elements according to the policy descriptuions provided.
+
+Your calculations should consider the relevant flight data provided, including departure and arrival ICAO codes, distance, and estimated time enroute.
+
+Your response should be in the following JSON format:
+
+{
+    "times" : [trip_time_in_minutes, contingency_time_in_minutes, alternate_time_in_minutes, final_reserve_time_in_minutes, additional_time_in_minutes]
+}
+
+All values should be *integers* representing time in minutes.
+
+YOU MUST STRICTLY OBEY THE ABOVE FORMAT, NO COMMENTING, BRACKETS, OR ANYTHING OUTSIDE OF THIS FORMAT OF ANY SORT SHOULD BE INCLUDED AT ANY POINT UNDER ANY CIRCUMSTANCE.
+Do not ask any questions when outputting.
+'''
     
     return role

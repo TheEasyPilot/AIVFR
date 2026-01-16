@@ -7,8 +7,6 @@ from .ai_roles import fetchRole
 
 main = Blueprint('app', __name__)
 
-APP_VERSION = "0.1.0-alpha"
-
 #------------------------------------------WEBTOOL NAVIGATION-------------------------------------
 #main menu
 @main.route('/') #this will be the first to load up
@@ -16,7 +14,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.1.2-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.1.3-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')

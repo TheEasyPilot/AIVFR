@@ -75,7 +75,7 @@
 
           <div>
             <div class="input" style="margin-bottom: 10px;"><b>Specific Gravity (SG): </b> <input id="specificGravity" type="number" value="{{ flight.specific_gravity }}"></div>
-            <div class="input" style="margin-left: 16px;"><b>Max Tank Capacity: </b> <input id="maxTankCapacity" type="number" value="{{ flight.max_tank_capacity.value if flight.max_tank_capacity.value != 0 else '' }}"> <b>{{ 'Gal' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
+            <div class="input" style="margin-left: 16px;"><b>Max Tank Capacity: </b> <input id="maxTankCapacity" type="number" value="{{ flight.max_tank_capacity.value|round(1) if flight.max_tank_capacity.value != 0 else '' }}"> <b>{{ 'Gal' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
           </div>
         </div>
 
