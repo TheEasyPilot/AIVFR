@@ -2,7 +2,7 @@
 
 {% block head %}  {{ super() }} {# inherit everything from the head but add this too #}
 <link rel="stylesheet" href="{{ url_for('static', filename='fuel.css') }}">
-<script type='module' src="{{ url_for('static', filename='fuel.js') }}" defer></script>
+<script type='module' src="{{ url_for('static', filename='fuel.js') }}"></script>
 {% endblock %}
 
 {% block title %} {# edit whats in the title block #}
@@ -11,9 +11,9 @@
 
 {% block content %} {# edit what's in between the content block #}
       <div id="policyTooltipText">
-        <p style="color: #737373">The provided general policy serves as a default guideline. You are advised to edit it to match your operator's specific policy.</p>
+        <p style="color: #737373">The provided general policy serves as a default guideline, and should be edited to match your operator's specific policy.</p>
         <br>
-        <p style="color: #737373">You can use Autofill to calculate time values based on the currently entered policy.</p>
+        <p style="color: #737373">You can use Autofill to suggest time values based on the currently entered policy, or enter them manually.</p>
       </div>
 <!--=============================HEADER==========================-->
       <div class="pageTitle" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
@@ -69,7 +69,7 @@
         <!--Fuel burn, taxi time, specific gravity-->
         <div id="fuel_info" class="with_highlight" style="display: flex; justify-content: center; gap: 50px; ">
           <div>
-            <div class="input" style="margin-bottom: 10px;"><b>Fuel Burn: </b> <input id="fuelBurn" type="number" value="{{ flight.fuel_burn.value if flight.fuel_burn.value != 0 else '' }}"> <b>{{ 'gph' if settings.units_fuel == 'US_liquid_gallon' else 'L/hr' }}</b></div>
+            <div class="input" style="margin-bottom: 10px;"><b>Fuel Burn: </b> <input id="fuelBurn" type="number" value="{{ flight.fuel_burn.value|round(1) if flight.fuel_burn.value != 0 else '' }}"> <b>{{ 'gph' if settings.units_fuel == 'US_liquid_gallon' else 'L/hr' }}</b></div>
             <div class="input"><b>Taxi Time: </b> <input id="taxiTime" type="number" value="{{ flight.taxi_time }}"> <b>mins</b></div>
           </div>
 
@@ -82,24 +82,24 @@
         <!--Fuel Required-->
         <div id="fuel_required" class="with_highlight">
           <h2 style="margin-bottom: 20px;">Fuel Required</h2>
-          <p class="elements" style="margin-bottom: 20px;">Taxi Fuel: <b>{{ flight.fuel_taxi.output }} </b></p>
-          <p class="elements" style="margin-bottom: 20px;">Trip Fuel: <b>{{ flight.fuel_trip.output }}</b></p>
-          <p class="elements" style="margin-bottom: 20px;">Contingency: <b>{{ flight.fuel_contingency.output }}</b></p>
-          <p class="elements" style="margin-bottom: 20px;">Alternate: <b>{{ flight.fuel_alternate.output }}</b></p>
-          <p class="elements" style="margin-bottom: 20px;">Final Reserve: <b>{{ flight.fuel_finalReserve.output }}</b></p>
-          <p class="elements" style="margin-bottom: 20px;">Additional: <b>{{ flight.fuel_additional.output }}</b></p>
+          <p style="margin-bottom: 20px;">Taxi Fuel: <b><span id="fuel_taxi">{{ flight.fuel_taxi.output }}</span></b></p>
+          <p style="margin-bottom: 20px;">Trip Fuel: <b><span id="fuel_trip">{{ flight.fuel_trip.output }}</span></b></p>
+          <p style="margin-bottom: 20px;">Contingency: <b><span id="fuel_contingency">{{ flight.fuel_contingency.output }}</span></b></p>
+          <p style="margin-bottom: 20px;">Alternate: <b><span id="fuel_alternate">{{ flight.fuel_alternate.output }}</span></b></p>
+          <p style="margin-bottom: 20px;">Final Reserve: <b><span id="fuel_finalReserve">{{ flight.fuel_finalReserve.output }}</span></b></p>
+          <p style="margin-bottom: 20px;">Additional: <b><span id="fuel_additional">{{ flight.fuel_additional.output }}</span></b></p>
           <div class="input">Extra (PIC discretion): <input id="extraFuel" type="number" value="{{ flight.fuel_extra.value if flight.fuel_extra.value != 0 else '' }}"> <b>{{ 'Gal' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
 
           <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
           <!--Totals-->
           <span class="totals" id="totalFuel" style="margin-top: 20px;">Total: {{ flight.fuel_total.output }}</span>
           <span class="totals" id="fuelMass" style="margin-top: 10px;">Mass: {{ flight.fuel_mass.output }}</span>
-          <span class="totals" id="fuelEndurance" style="margin-top: 10px;">Endurance: {{ flight.fuel_endurance }}</span>
+          <p class="totals" id="fuelEndurance" style="margin-top: 10px;">Endurance: {{ flight.fuel_endurance }}</p>
         </div>
 
         <!--Determining stopover requirement-->
         <div id="stopovers">
-          <div id="stopoverRequired"><p><b>Excess Fuel: </b>Stop-overs are required for this route.</p></div>
+          <div id="stopoverRequired" style="display: none;"><p><b>Excess Fuel: </b>Stop-overs are required for this route.</p></div>
           <div id="stopoverNotRequired">No stop-overs are required for this route.</div>
         </div>
       </div>

@@ -35,7 +35,7 @@
 #fuel_info { /*fuel burn, taxi time etc*/
     grid-column: 2;
     grid-row: 1;
-    min-height: fit-content;
+    max-height: fit-content;
     font-size: 14px;
     
 }

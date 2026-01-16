@@ -16,7 +16,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.1.1-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.1.2-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
@@ -82,6 +82,7 @@ UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding set
 def update_units():
     units_changed = session["flight_data"]["settings"].get("units_changed", "False") == "True"
     for key, item in session["flight_data"]["flight"].items():
+        #only process items that are dictionaries with a "class" key (i.e. unit-based items)
         if isinstance(item, dict) and "class" in item:
             category = item["class"]
             if category in UNIT_MAP:
@@ -96,15 +97,13 @@ def update_units():
 
                 if units_changed:
                     #Convert value from previous unit to new unit
-                    prev_unit = session["flight_data"]["settings"].get(prev_unit_key, display_unit)
+                    prev_unit = session["flight_data"]["settings"][prev_unit_key]
                     try:
                         prev_quantity = item["value"] * ureg[prev_unit]
                         new_quantity = prev_quantity.to(current_unit)
                         item["value"] = float(new_quantity.magnitude)
                     except Exception:
-                        pass 
-                    #Update previous unit to current
-                    session["flight_data"]["settings"][prev_unit_key] = display_unit
+                        pass                
 
                 #Always update output
                 canonical = item["value"] * current_unit
@@ -113,6 +112,20 @@ def update_units():
                 unit_name = CUSTOM_UNITS.get(unit_name, unit_name)
                 item["output"] = f"{converted.magnitude:.1f} {unit_name}"
 
+    #Update previous unit in session settings
+    for key, item in session["flight_data"]["flight"].items():
+        #only process items that are dictionaries with a "class" key (i.e. unit-based items)
+        if isinstance(item, dict) and "class" in item:
+            category = item["class"]
+            if category in UNIT_MAP:
+                settings_key = UNIT_MAP[category]["settings_key"]
+                display_unit = session["flight_data"]["settings"][settings_key]
+                current_unit = ureg[display_unit]
+
+                #Store previous unit in session settings if not present
+                prev_unit_key = f"prev_{settings_key}"
+                session["flight_data"]["settings"][prev_unit_key] = display_unit
+
     #Reset the flag to show units have been updated
     session["flight_data"]["settings"]["units_changed"] = "False"
     session.modified = True
@@ -120,7 +133,7 @@ def update_units():
 #using custom units cus the default ones are weird
 CUSTOM_UNITS = {
     'nmi' : "NM",
-    'knot' : "kts",
+    'kn' : "kts",
     'kg' : "kg",
     'lb' : "lbs",
     'l' : "L",
@@ -153,6 +166,7 @@ data_template = {
     "settings" : {"theme": "light",
                   "map_style": "normal",
                   "units_changed": "False",
+                  "base_units" : "imperial",
                   "units_airspeed" : "knot",
                   "units_altitude" : "feet",
                   "units_mass": "kilogram",
@@ -255,7 +269,7 @@ data_template = {
         "LDR" : 0,
         "TODA" : 0,
         "LDA" : 0,
-
+        #---------------------MASS AND BALANCE
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA
@@ -1008,9 +1022,9 @@ def calculate_totals():
         if session["flight_data"]["settings"]["units_fuel"] == "litre":
             fuel_mass = total_fuel * float(specific_gravity)
 
-        #if fuel is in gallons, mass is fuel * SG * 8.345 (lbs/gallon)
+        #if fuel is in gallons, mass is fuel * SG * 8.34 (lbs/gallon)
         elif session["flight_data"]["settings"]["units_fuel"] == "US_liquid_gallon":
-            fuel_mass = total_fuel * float(specific_gravity) * 8.345
+            fuel_mass = total_fuel * float(specific_gravity) * 8.34
         flight_data["fuel_mass"]["value"] = round(fuel_mass, 1)
     else:
         flight_data["fuel_mass"]["value"] = 0
@@ -1025,9 +1039,21 @@ def calculate_totals():
         flight_data["fuel_endurance"] = endurance
 
     update_unitsRUN() #reapply units after totals have been calculated
-    session.modified = True
 
+    #----STOPOVER CHECK-----#
+    max_tank_capacity = flight_data["max_tank_capacity"]["value"]
+    if max_tank_capacity != "" and max_tank_capacity != 0:
+        #check if total fuel exceeds max tank capacity
+        if total_fuel > float(max_tank_capacity):
+            stopover_status = True #needed
+        else:
+            stopover_status = False #not needed
+    else:
+        stopover_status = False #cannot determine
+
+    session.modified = True
     return jsonify({"total_fuel": flight_data["fuel_total"]["output"],
                      "fuel_mass": flight_data["fuel_mass"]["output"],
-                     "fuel_endurance": flight_data["fuel_endurance"]
+                     "fuel_endurance": flight_data["fuel_endurance"],
+                     "stopover_status": stopover_status
                      }), 200

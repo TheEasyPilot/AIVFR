@@ -1,2 +1,2 @@
 import { update, updateSettings, showAlert } from "./basePage.js";
-updateSettings("current_page", "/mass-and-balance");
+await updateSettings("current_page", "/mass-and-balance");

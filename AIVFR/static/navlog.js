@@ -1,5 +1,5 @@
 import { update, updateSettings, showAlert } from "./basePage.js";
-updateSettings("current_page", "/navlog");
+await updateSettings("current_page", "/navlog");
 
 const table = document.getElementById('navlogTableBody');
 

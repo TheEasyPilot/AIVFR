@@ -61,7 +61,7 @@ h2 {
 
 /*ONLY the buttons under UNITS*/
 #UnitsButtons {
-    display: flex;
+    display: none; /*hidden until advanced clicked*/
     gap: 10px;
 }
 
@@ -108,7 +108,9 @@ h2 {
 /*map style buttons*/
 
 #Normal.active,
-#Satellite.active {
+#Satellite.active,
+#imperial.active,
+#metric.active {
     background-color: var(--primary);
      }
 
@@ -133,4 +135,35 @@ footer {
 
 a {
     color: gray;
+}
+
+#alertBox {
+    display: none;
+    background-color: hsla(0 100% 50% / 0.6);
+    color: var(--highlight);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    position: fixed;
+    top: 75px;
+    left: 50%;
+    transform: translate(-50%, -50%); /*center the box*/
+    z-index: 200;
+}
+
+h3 {
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: var(--text);
+    margin-top: 20px;
+}
+
+#customDropdown {
+    position: relative;
+    right: 4px;
+    top: 5px;
+    cursor: pointer;
+    color: var(--text);
+    transition: transform 0.3s ease; /*for a smooth rotation*/
 }
