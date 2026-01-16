@@ -1,5 +1,5 @@
 import { update, updateSettings } from "./basePage.js";
-updateSettings("current_page", "/performance");
+await updateSettings("current_page", "/performance");
 
 const todr = document.getElementById('TODR')
 const ldr = document.getElementById('LDR')

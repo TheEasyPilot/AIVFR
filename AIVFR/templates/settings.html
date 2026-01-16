@@ -13,10 +13,11 @@
     <link rel="stylesheet" href="../static/components.css"/>
     <link rel="stylesheet" href="../static/settings.css">
     <link rel="icon" type="image/png" href="../static/FPWT_images/logoAIVFR.png">
-    <script src="../static/settings.js" defer></script>
+    <script type='module' src="../static/settings.js"></script>
     <script src="../static/base.js" defer></script>
   </head>
   <body class="{{ 'dark-mode' if settings.theme == 'dark' else '' }}"> <!--check and set correct theme-->
+<!--=============================HEADER==========================-->
     <header>
       <!--Go back arrow icon--> 
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" id="goBack" onclick="fetch('/units-update').then(() => { goBack(); });" style="cursor: pointer;"><defs><style>.cls-1{fill:none;}</style></defs><title/><g data-name="Layer 2" id="Layer_2"><path d="M13,26a1,1,0,0,1-.71-.29l-9-9a1,1,0,0,1,0-1.42l9-9a1,1,0,1,1,1.42,1.42L5.41,16l8.3,8.29a1,1,0,0,1,0,1.42A1,1,0,0,1,13,26Z"/><path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z"/></g><g id="frame"><rect class="cls-1" height="32" width="32"/></g></svg>
@@ -35,8 +36,9 @@
         <!--title ('settings')-->
         <div id="settings">Settings</div>
       </span>
+      <span id="alertBox"></span>
     </header>
-
+<!--=============================BODY==========================-->
     <div id="options">
       <!--Light/dark toggle-->
       <h2>THEME</h2>
@@ -51,7 +53,12 @@
       <br>
       <!--Units-->
       <h2>UNITS</h2>
-  
+      <div id="baseUnits">
+          <button id="imperial" style="margin-right: 7px;" class="{{ 'active' if settings.base_units == 'imperial' else '' }}">Imperial</button>
+          <span><button id="metric" class="{{ 'active' if settings.base_units == 'metric' else '' }}">Metric</button></span>
+      </div>
+
+      <h3>Custom<svg id="customDropdown" width="30px" height="20px" viewBox="0 0 24 24" fill="CurrentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7071 14.7071C12.3166 15.0976 11.6834 15.0976 11.2929 14.7071L6.29289 9.70711C5.90237 9.31658 5.90237 8.68342 6.29289 8.29289C6.68342 7.90237 7.31658 7.90237 7.70711 8.29289L12 12.5858L16.2929 8.29289C16.6834 7.90237 17.3166 7.90237 17.7071 8.29289C18.0976 8.68342 18.0976 9.31658 17.7071 9.70711L12.7071 14.7071Z" fill="CurrentColor"/></svg></h3>
       <div id="UnitsButtons">
         <div> <!--AIRSPEED-->
           <button style="display: block;" id="airspeed" class="dropdown">Airspeed</button>

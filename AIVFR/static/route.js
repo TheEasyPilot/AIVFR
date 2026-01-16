@@ -1,7 +1,7 @@
 import { update, showAlert, prompt } from "./basePage.js";
 import LatLon from 'https://cdn.jsdelivr.net/npm/geodesy@2.4.0/latlon-spherical.min.js';
 
-updateSettings("current_page", "/route");
+await updateSettings("current_page", "/route");
 
 let map = null;
 
