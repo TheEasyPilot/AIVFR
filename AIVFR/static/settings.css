@@ -171,3 +171,11 @@ h3 {
 button {
     transition: background-color 0.2s;
 }
+
+#imperial, #metric {
+    color: var(--text);
+}
+
+body {
+    transition: background-color 0.2s, color 0.2s;
+}
