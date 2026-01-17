@@ -105,6 +105,7 @@ async function setImperial() {
     await altitudeToFeet();
     await airspeedToKnots();
     await distanceToNauticalMiles();
+    await specificGravityToGalPerlb();
 };
 
 //metric units
@@ -117,6 +118,7 @@ async function setMetric() {
     await altitudeToMetres();
     await airspeedToKnots(); //airspeed remains the same due to standard units
     await distanceToNauticalMiles(); //distance remains the same due to standad units
+    await specificGravityToLPerKg();
 };
 
 imperial.addEventListener("click", () => {
@@ -330,3 +332,12 @@ async function distanceToStatuteMiles() {
 statute_miles.addEventListener("click", () => {
     distanceToStatuteMiles();
 });
+
+//------------------SPECIFIC GRAVITY-------------------------
+async function specificGravityToLPerKg() {
+    await updateSettings("units_specific_gravity", "kg/L");
+}
+
+async function specificGravityToGalPerlb() {
+    await updateSettings("units_specific_gravity", "lb/US_liquid_gallon");
+}

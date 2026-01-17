@@ -61,7 +61,7 @@ maxTankCapacity.addEventListener("change", async () => {
 });
 
 specificGravity.addEventListener("change", async () => {
-  await update("specific_gravity", Number(specificGravity.value));
+  await update("specific_gravity.value", Number(specificGravity.value));
   await calculateTotals();
 });
 

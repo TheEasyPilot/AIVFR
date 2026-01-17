@@ -74,7 +74,7 @@
           </div>
 
           <div>
-            <div class="input" style="margin-bottom: 10px;"><b>Specific Gravity (SG): </b> <input id="specificGravity" type="number" value="{{ flight.specific_gravity }}"></div>
+            <div class="input" style="margin-bottom: 10px;"><b>Specific Gravity (SG): </b> <input id="specificGravity" type="number" value="{{ flight.specific_gravity.value|round(2) }}"></div>
             <div class="input" style="margin-left: 16px;"><b>Max Tank Capacity: </b> <input id="maxTankCapacity" type="number" value="{{ flight.max_tank_capacity.value|round(1) if flight.max_tank_capacity.value != 0 else '' }}"> <b>{{ 'Gal' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
           </div>
         </div>
@@ -88,7 +88,7 @@
           <p style="margin-bottom: 20px;">Alternate: <b><span id="fuel_alternate">{{ flight.fuel_alternate.output }}</span></b></p>
           <p style="margin-bottom: 20px;">Final Reserve: <b><span id="fuel_finalReserve">{{ flight.fuel_finalReserve.output }}</span></b></p>
           <p style="margin-bottom: 20px;">Additional: <b><span id="fuel_additional">{{ flight.fuel_additional.output }}</span></b></p>
-          <div class="input">Extra (PIC discretion): <input id="extraFuel" type="number" value="{{ flight.fuel_extra.value if flight.fuel_extra.value != 0 else '' }}"> <b>{{ 'Gal' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
+          <div class="input">Extra (PIC discretion): <input id="extraFuel" type="number" value="{{ flight.fuel_extra.value|round(1) if flight.fuel_extra.value != 0 else '' }}"> <b>{{ 'Gal' if settings.units_fuel == 'US_liquid_gallon' else 'L' }}</b></div>
 
           <hr size="3.5" color="#cdcdcd" noshade="" style="margin-top: 25px;">
           <!--Totals-->
