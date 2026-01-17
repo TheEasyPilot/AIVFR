@@ -602,27 +602,50 @@ def prompt():
     text = request.json.get("text") #the actual prompt text by user
 
     #making the OpenAI client and making the request
-    try:
-        client = OpenAI()
-        response = client.responses.create(
-            model="gpt-4.1",
-            input=[
-                {
-                    "role" : 'system', "content" : 'You are a helpful flight planning assistant.',
-                    "role" : 'user', "content" : (
-                        fetchRole(type) + "\n\n" 
-                        + text + "\n\n" 
-                        + str(get_waypoints([departure_coords, destination_coords]))
-                        )  
-                }
-            ]
-        )
-        response = response.output[0].content[0].text #parsing the response to just the text
+    if type == "Route":
+        try:
+            client = OpenAI()
+            response = client.responses.create(
+                model="gpt-4.1",
+                input=[
+                    {
+                        "role" : 'system', "content" : 'You are a helpful flight planning assistant.',
+                        "role" : 'user', "content" : (
+                            fetchRole(type) + "\n\n" 
+                            + text + "\n\n" 
+                            + str(get_waypoints([departure_coords, destination_coords]))
+                            )  
+                    }
+                ]
+            )
+            response = response.output[0].content[0].text #parsing the response to just the text
+            
+            return jsonify({"response": response}), 200 #sends back the AI response
         
-        return jsonify({"response": response}), 200 #sends back the AI response
-    
-    except Exception as error:
-        return jsonify({"error": str(error)}), 400
+        except Exception as error:
+            return jsonify({"error": str(error)}), 400
+        
+    else:
+        try:
+            client = OpenAI()
+            response = client.responses.create(
+                model="gpt-4.1",
+                input=[
+                    {
+                        "role" : 'system', "content" : 'You are a helpful flight planning assistant.',
+                        "role" : 'user', "content" : (
+                            fetchRole(type) + "\n\n" 
+                            + text  
+                            )  
+                    }
+                ]
+            )
+            response = response.output[0].content[0].text #parsing the response to just the text
+            
+            return jsonify({"response": response}), 200 #sends back the AI response
+        
+        except Exception as error:
+            return jsonify({"error": str(error)}), 400
     
 #----------------------------------------------WEATHER REPORTS-------------------------------------------------------
 @main.route('/get-weather', methods=["POST"])
