@@ -75,11 +75,12 @@ UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding set
     "airspeed": {"base": ureg.knot, "settings_key": "units_airspeed"},
     "mass": {"base": ureg.kilogram, "settings_key": "units_mass"},
     "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
+    "specific_gravity": {"base": ureg("kg/L"), "settings_key": "units_specific_gravity"},
 }
 
 def update_units():
     units_changed = session["flight_data"]["settings"].get("units_changed", "False") == "True"
-    for key, item in session["flight_data"]["flight"].items():
+    for item in session["flight_data"]["flight"].items():
         #only process items that are dictionaries with a "class" key (i.e. unit-based items)
         if isinstance(item, dict) and "class" in item:
             category = item["class"]
@@ -111,7 +112,7 @@ def update_units():
                 item["output"] = f"{converted.magnitude:.1f} {unit_name}"
 
     #Update previous unit in session settings
-    for key, item in session["flight_data"]["flight"].items():
+    for item in session["flight_data"]["flight"].items():
         #only process items that are dictionaries with a "class" key (i.e. unit-based items)
         if isinstance(item, dict) and "class" in item:
             category = item["class"]
@@ -164,11 +165,12 @@ data_template = {
     "settings" : {"theme": "light",
                   "map_style": "normal",
                   "units_changed": "False",
-                  "base_units" : "imperial",
+                  "base_units" : "metric",
                   "units_airspeed" : "knot",
                   "units_altitude" : "feet",
                   "units_mass": "kilogram",
                   "units_fuel" : "litre",
+                  "units_specific_gravity" : "kg/L",
                   "units_distance" : "nautical_mile",
                   "waypoint_addType" : "City/Town",
                   "current_page" : ""
@@ -258,7 +260,7 @@ data_template = {
         #EDITABLE PARAMETERS#
         "fuel_extra" : {"value" : 0, "class" : "fuel"},
         "fuel_burn" : {"value" : 0, "class" : "fuel"},
-        "specific_gravity" : "",
+        "specific_gravity" : {"value" : 0.72, "class" : "specific_gravity"}, #default value for AVGAS
         "max_tank_capacity" : {"value" : 0, "class" : "fuel"},
         "taxi_time" : "",
 
@@ -1037,15 +1039,10 @@ def calculate_totals():
     flight_data["fuel_total"]["value"] = round(total_fuel, 1)
 
     #---TOTAL MASS---#
-    specific_gravity = flight_data["specific_gravity"]
+    specific_gravity = flight_data["specific_gravity"]["value"]
     if specific_gravity != "" and specific_gravity != 0:
-        #if fuel is in litres, mass is fuel * SG (kg/litre)
-        if session["flight_data"]["settings"]["units_fuel"] == "litre":
-            fuel_mass = total_fuel * float(specific_gravity)
-
-        #if fuel is in gallons, mass is fuel * SG * 8.34 (lbs/gallon)
-        elif session["flight_data"]["settings"]["units_fuel"] == "US_liquid_gallon":
-            fuel_mass = total_fuel * float(specific_gravity) * 8.34
+        #mass = volume * density (specific gravity)
+        fuel_mass = total_fuel * float(specific_gravity)
         flight_data["fuel_mass"]["value"] = round(fuel_mass, 1)
     else:
         flight_data["fuel_mass"]["value"] = 0

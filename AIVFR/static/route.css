@@ -337,3 +337,7 @@ a {
   height: 100%; 
   background-color: var(--popupbg);
 }
+
+button {
+    transition: background-color 0.2s;
+}

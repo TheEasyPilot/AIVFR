@@ -167,3 +167,7 @@ h3 {
     color: var(--text);
     transition: transform 0.3s ease; /*for a smooth rotation*/
 }
+
+button {
+    transition: background-color 0.2s;
+}
