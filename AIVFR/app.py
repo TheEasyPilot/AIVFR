@@ -80,7 +80,7 @@ UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding set
 
 def update_units():
     units_changed = session["flight_data"]["settings"].get("units_changed", "False") == "True"
-    for item in session["flight_data"]["flight"].items():
+    for key, item in session["flight_data"]["flight"].items():
         #only process items that are dictionaries with a "class" key (i.e. unit-based items)
         if isinstance(item, dict) and "class" in item:
             category = item["class"]
@@ -112,7 +112,7 @@ def update_units():
                 item["output"] = f"{converted.magnitude:.1f} {unit_name}"
 
     #Update previous unit in session settings
-    for item in session["flight_data"]["flight"].items():
+    for key, item in session["flight_data"]["flight"].items():
         #only process items that are dictionaries with a "class" key (i.e. unit-based items)
         if isinstance(item, dict) and "class" in item:
             category = item["class"]
