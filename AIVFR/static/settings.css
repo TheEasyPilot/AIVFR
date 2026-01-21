@@ -71,12 +71,18 @@ h2 {
     background-color: black;
     color: white;
     border: 0.1px solid hsl(0 0% 96.1%);
+    transition: transform 0.2s ease-in;
 }
 
 #lightToggle {
     background-color: white;
     color: black;
     border: 0.1px solid hsl(0 0% 12.5%);
+    transition: transform 0.2s ease-in;
+}
+
+#lightToggle:hover, #darkToggle:hover {
+    transform: scale(1.05);
 }
 
 .dropdown {

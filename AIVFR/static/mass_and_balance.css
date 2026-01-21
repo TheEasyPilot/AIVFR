@@ -7,3 +7,71 @@
     background-color: var(--primary);
     pointer-events: none;
 }
+
+.highlight {
+    background-color: var(--highlight);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+#content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+}
+
+#weights_and_moments {
+    margin: 10px;
+    min-height: 500px;
+}
+
+#cg_calculator {
+    margin: 10px;
+    min-height: 350px;
+}
+
+#manouvering_speeds{
+    margin: 10px;
+    height: fit-content;
+}
+
+ #manouvering_speeds input {
+    border: 1px solid var(--onhover);
+ }
+
+input {
+    border: 1px solid var(--text);
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Manrope';
+    font-size: 13px;
+    background-color: var(--bg);
+}
+
+#suggestChange {
+    background-color: var(--highlight);
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    margin-left: 10px;
+    font-family: 'Manrope';
+}
+
+#suggestChange:hover {
+    background-color: var(--primary);
+}
+
+#AI_icon {
+    margin-right: 10px;
+    position: relative;
+}
+h3 {
+    margin-bottom: 15px;
+}

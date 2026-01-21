@@ -35,12 +35,16 @@ for (let buttonId in pairs) {
 
   if (button && LABEL) { //For each matching pair run an event listner for it
     button.addEventListener("mouseenter", () => {
-      LABEL.style.display = "block";
-      gradient.style.display = "block";
+      LABEL.style.visibility = "visible";
+      LABEL.style.opacity = "1";
+      gradient.style.visibility = "visible";
+      gradient.style.opacity = "1";
     });
     button.addEventListener("mouseleave", () => {
-      LABEL.style.display = "none";
-      gradient.style.display = "none";
+      LABEL.style.visibility = "hidden";
+      LABEL.style.opacity = "0";
+      gradient.style.visibility = "hidden";
+      gradient.style.opacity = "0";
     });
 
     //---------selecting another page---------------
