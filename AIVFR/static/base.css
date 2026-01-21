@@ -5,7 +5,8 @@
 --text: hsl(0 0% 0%);
 --onhover: hsl(0 0% 80.4%);
 --popupbg: hsla(0, 0%, 0%, 0.33);
---alternate: hsl(48.54, 83.18%, 79.02%)
+--alternate: hsl(48.54, 83.18%, 79.02%);
+--tableHeader: #e8e6e4;
 }
 
 /*unless dark mode is toggled, then these become the root
@@ -14,10 +15,11 @@ and are used instead*/
 --bg: hsl(0 0% 12.5%);
 --primary: hsl(190 100% 27.6%);
 --highlight: hsl(0 0% 20.8%);
---text: hsl(0 0% 100%);
+--text: hsla(0, 0%, 100%, 0.795);
 --onhover: hsl(0 0% 32.9%);
 --popupbg: hsla(0, 0%, 0%, 0.33);
---alternate: hsl(48.54, 83.18%, 29.02%)
+--alternate: hsl(48.54, 83.18%, 29.02%);
+--tableHeader: hsl(0 0% 30.8%);
 }
 
 .light_mode {
@@ -27,7 +29,8 @@ and are used instead*/
     --text: hsl(0 0% 0%);
     --onhover: hsl(0 0% 80.4%);
     --popupbg: hsla(0, 0%, 0%, 0.33);
-    --alternate: hsl(48.54, 83.18%, 79.02%)
+    --alternate: hsl(48.54, 83.18%, 79.02%);
+    --tableHeader: #e8e6e4;
 }
 
 
