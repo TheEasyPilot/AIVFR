@@ -53,6 +53,7 @@ body {
     height: 50px;
     top: 30px; 
     right: 30px;
+    transition: rotate 0.3s;
 }
 
 #continue {
@@ -61,6 +62,7 @@ body {
 
 #settings:hover {
     cursor: pointer;
+    rotate: 45deg;
 }
 
 
@@ -75,6 +77,11 @@ body {
     border: none;
     padding: 8px 26px;
     border-radius: 5px;
+    transition: translate 0.2s;
+}
+
+.mainMenuButton:hover {
+    translate: 10px;
 }
 
 /* Disclaimer modal Content/Box */
