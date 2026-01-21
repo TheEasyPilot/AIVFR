@@ -80,8 +80,110 @@
       <div id="content">
         <div id="half1">
           <!--Weights and moments-->
+          <!--HEADER-->
           <div id="weights_and_moments" class="highlight">
-            <h3>Weights & Moments</h3>
+            <div style="display: flex; justify-content: space-between">
+              <h3>Weights & Moments</h3>
+              <span>
+                <svg id="table_left"  fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-2{fill:none;}</style></defs><title/><g data-name="Layer 2" id="Layer_2"><path d="M13,26a1,1,0,0,1-.71-.29l-9-9a1,1,0,0,1,0-1.42l9-9a1,1,0,1,1,1.42,1.42L5.41,16l8.3,8.29a1,1,0,0,1,0,1.42A1,1,0,0,1,13,26Z"/><path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z"/></g><g id="frame"><rect class="cls-2" height="32" width="32"/></g></svg>
+                <svg id="table_right" class="active" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-2{fill:none;}</style></defs><title/><g data-name="Layer 2" id="Layer_2"><path d="M13,26a1,1,0,0,1-.71-.29l-9-9a1,1,0,0,1,0-1.42l9-9a1,1,0,1,1,1.42,1.42L5.41,16l8.3,8.29a1,1,0,0,1,0,1.42A1,1,0,0,1,13,26Z"/><path d="M28,17H4a1,1,0,0,1,0-2H28a1,1,0,0,1,0,2Z"/></g><g id="frame"><rect class="cls-2" height="32" width="32"/></g></svg>
+              </span>
+            </div>
+          <!--BODY-->
+          <table id="moments_table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Weight</th>
+                <th>Arm</th>
+                <th>Moment</th>
+              </tr>
+            </thead>
+            <!---------TABLE DISPLAY 1-------->
+            <tbody id="moments_table1" class="active">
+              <tr>
+                <td>Basic Empty Weight</td>
+                <td><input type="number" name="BE_weight" id="weight_basic_empty"></td>
+                <td><input type="number" name="BE_arm" id="arm_basic_empty"></td>
+                <td><input type="number" name="BE_moment" id="moment_basic_empty"></td>
+              </tr>
+              <tr>
+                <td>Oil</td>
+                <td><input type="number" name="oil_weight" id="weight_oil"></td>
+                <td><input type="number" name="oil_arm" id="arm_oil"></td>
+                <td id="moment_oil"></td>
+              </tr>
+              <tr>
+                <td>Pilot 1</td>
+                <td><input type="number" name="pilot1_weight" id="weight_pilot1"></td>
+                <td><input type="number" name="pilot1_arm" id="arm_pilot1"></td>
+                <td id="moment_pilot1"></td>
+              </tr>
+              <tr>
+                <td>Pilot 2</td>
+                <td><input type="number" name="pilot2_weight" id="weight_pilot2"></td>
+                <td><input type="number" name="pilot2_arm" id="arm_pilot2"></td>
+                <td id="moment_pilot2"></td>
+              </tr>
+              <tr>
+                <td>PAX 1</td>
+                <td><input type="number" name="pax1_weight" id="weight_pax1"></td>
+                <td><input type="number" name="pax1_arm" id="arm_pax1"></td>
+                <td id="moment_pax1"></td>
+              </tr>
+              <tr>
+                <td>PAX 2</td>
+                <td><input type="number" name="pax2_weight" id="weight_pax2"></td>
+                <td><input type="number" name="pax2_arm" id="arm_pax2"></td>
+                <td id="moment_pax2"></td>
+              </tr>
+              <tr>
+                <td>Baggage section 1</td>
+                <td><input type="number" name="bag1_weight" id="weight_bag1"></td>
+                <td><input type="number" name="bag1_arm" id="arm_bag1"></td>
+                <td id="moment_bag1"></td>
+              </tr>
+              <tr>
+                <td>Baggage section 2</td>
+                <td><input type="number" name="bag2_weight" id="weight_bag2"></td>
+                <td><input type="number" name="bag2_arm" id="arm_bag2"></td>
+                <td id="moment_bag2"></td>
+              </tr>
+            </tbody>
+            <!---------TABLE DISPLAY 2-------->
+            <tbody id="moments_table2">
+              <tr>
+                <td>Fuel load: Tank 1</td>
+                <td><input type="number" name="fuel1_weight" id="weight_fuel1"></td>
+                <td><input type="number" name="fuel1_arm" id="arm_fuel1"></td>
+                <td id="moment_fuel1"></td>
+              </tr>
+              <tr>
+                <td>Fuel load: Tank 2</td>
+                <td><input type="number" name="fuel2_weight" id="weight_fuel2"></td>
+                <td><input type="number" name="fuel2_arm" id="arm_fuel2"></td>
+                <td id="moment_fuel2"></td>
+              </tr>
+              <tr>
+                <td>Fuel burned on ground: Tank 1</td>
+                <td><input type="number" name="fuel1_burned_weight" id="weight_fuel1_ground_burned"></td>
+                <td><input type="number" name="fuel1_burned_arm" id="arm_fuel1_ground_burned"></td>
+                <td id="moment_fuel1_ground_burned"></td>
+              </tr>
+              <tr>
+                <td>Fuel burned on ground: Tank 2</td>
+                <td><input type="number" name="fuel2_burned_weight" id="weight_fuel2_ground_burned"></td>
+                <td><input type="number" name="fuel2_burned_arm" id="arm_fuel2_ground_burned"></td>
+                <td id="moment_fuel2_ground_burned"></td>
+              </tr>
+              <tr>
+                <td>Fuel burned in flight: Tank 1</td>
+                <td><input type="number" name="fuel1_flight_burned_weight" id="weight_fuel1_flight_burned"></td>
+                <td><input type="number" name="fuel1_flight_burned_arm" id="arm_fuel1_flight_burned"></td>
+                <td id="moment_fuel1_flight_burned"></td>
+              </tr>
+              </tbody>
+          </table>
           </div>
           <!--Footer & change suggest button-->
           <div id="footer" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -100,6 +202,51 @@
               <!--Maximum takeoff weight--><div><b>MTOW:</b> <input type="number" name="Max_Takeoff_Weight" id="MTOW"></div>
               <!--Maximum landing weight--><div><b>MLW :</b> <input type="number" name="Max_Landing_Weight" id="MLW"></div>
             </span>
+          
+          <!--CG table-->
+          <table id="CG_table">
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>Weight</th>
+                <th>Moment</th>
+                <th>C/G</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Basic</td>
+                <td><span id="basic_weight"></span></td>
+                <td><span id="basic_moment"></span></td>
+                <td><span id="basic_CG"></span></td>
+              </tr>
+              <tr>
+                <td>Zero-Fuel</td>
+                <td><span id="zero_fuel_weight"></span></td>
+                <td><span id="zero_fuel_moment"></span></td>
+                <td><span id="zero_fuel_CG"></span></td>
+              </tr>
+              <tr>
+                <td>Ramp</td>
+                <td><span id="ramp_weight"></span></td>
+                <td><span id="ramp_moment"></span></td>
+                <td><span id="ramp_CG"></span></td>
+              </tr>
+              <tr>
+                <td>Takeoff</td>
+                <td><span id="takeoff_weight"></span></td>
+                <td><span id="takeoff_moment"></span></td>
+                <td><span id="takeoff_CG"></span></td>
+              </tr>
+              <tr>
+                <td>Landing</td>
+                <td><span id="landing_weight"></span></td>
+                <td><span id="landing_moment"></span></td>
+                <td><span id="landing_CG"></span></td>
+              </tr>
+            </tbody>
+          </table>
+
           </div>
           <!--Manouvering speeds-->
           <div id="manouvering_speeds" class="highlight">
@@ -119,7 +266,6 @@
               <p>Manouvering Speed: <span id="va_any"></span></p>
           </div>
         </div>
-
       </div>
     </main>
   </body>
