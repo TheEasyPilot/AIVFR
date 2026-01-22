@@ -162,18 +162,19 @@ def update_unitsRUN():
 #also allows setting default values
 
 data_template = {
-    "settings" : {"theme": "light",
-                  "map_style": "normal",
-                  "units_changed": "False",
-                  "base_units" : "metric",
-                  "units_airspeed" : "knot",
-                  "units_altitude" : "feet",
-                  "units_mass": "kilogram",
-                  "units_fuel" : "litre",
-                  "units_specific_gravity" : "kg/L",
-                  "units_distance" : "nautical_mile",
-                  "waypoint_addType" : "City/Town",
-                  "current_page" : ""
+    "settings" : {
+        "theme": "light",
+        "map_style": "normal",
+        "units_changed": "False",
+        "base_units" : "metric",
+        "units_airspeed" : "knot",
+        "units_altitude" : "feet",
+        "units_mass": "kilogram",
+        "units_fuel" : "litre",
+        "units_specific_gravity" : "kg/L",
+        "units_distance" : "nautical_mile",
+        "waypoint_addType" : "City/Town",
+        "current_page" : ""
                   },
     "flight" : {
         #-----------------------ROUTE
@@ -263,13 +264,13 @@ data_template = {
         "specific_gravity" : {"value" : 0.72, "class" : "specific_gravity"}, #default value for AVGAS
         "max_tank_capacity" : {"value" : 0, "class" : "fuel"},
         "taxi_time" : "",
-
+        #---------------------MASS AND BALANCE
         #---------------------PERFORMANCE
         "TODR" : 0,
         "LDR" : 0,
         "TODA" : 0,
         "LDA" : 0,
-        #---------------------MASS AND BALANCE
+        
     }
 }
 #--------------------------------UPDATING/MODIFYING DATA
