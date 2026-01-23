@@ -7,6 +7,7 @@
 --popupbg: hsla(0, 0%, 0%, 0.33);
 --alternate: hsl(48.54, 83.18%, 79.02%);
 --tableHeader: #e8e6e4;
+--inputHighlight: hsla(190, 100%, 42.5%, 0.5);
 }
 
 /*unless dark mode is toggled, then these become the root
@@ -20,6 +21,7 @@ and are used instead*/
 --popupbg: hsla(0, 0%, 0%, 0.33);
 --alternate: hsl(48.54, 83.18%, 29.02%);
 --tableHeader: hsl(0 0% 30.8%);
+--inputHighlight: hsla(190, 100%, 27.6%, 0.5);
 }
 
 .light_mode {
@@ -31,6 +33,7 @@ and are used instead*/
     --popupbg: hsla(0, 0%, 0%, 0.33);
     --alternate: hsl(48.54, 83.18%, 79.02%);
     --tableHeader: #e8e6e4;
+    --inputHighlight: hsla(190, 100%, 42.5%, 0.5);
 }
 
 
@@ -44,10 +47,18 @@ body {
     color: var(--text);
 }
 
-/*Remove spinners from number inputs*/
+/*remove spinners from number inputs*/
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
+input, textarea, select {
+    outline: none;
+    transition: box-shadow 0.1s ease-in-out;
+}
+
+input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 3px var(--inputHighlight);   
+}
