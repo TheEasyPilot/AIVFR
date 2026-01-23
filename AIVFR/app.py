@@ -265,6 +265,119 @@ data_template = {
         "max_tank_capacity" : {"value" : 0, "class" : "fuel"},
         "taxi_time" : "",
         #---------------------MASS AND BALANCE
+        #BASIC INPUTS#
+        "MTOW" : {"value" : 0, "class" : "mass"},
+        "MLW" : {"value" : 0, "class" : "mass"},
+        "MGW" : {"value" : 0, "class" : "mass"},
+        "va_MGW" : {"value" : 0, "class" : "airspeed"},
+        "Any_Weight" : {"value" : 0, "class" : "mass"},
+        "va_any" : {"value" : 0, "class" : "airspeed"},
+        "va_takeoff" : {"value" : 0, "class" : "airspeed"},
+        "va_landing" : {"value" : 0, "class" : "airspeed"},
+        #WEIGHT/BALANCE INPUTS#
+        "weight_items" : {
+            "basic_empty" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "oil" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "pilot1" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "pilot2" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "PAX1" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "PAX2" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "baggage1" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "baggage2" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "fuel_load1" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "fuel_load2" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,
+            },
+            "fuel_ground_burned1" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "fuel_ground_burned2" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "fuel_flight_burned1" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+            "fuel_flight_burned2" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "arm" : 0,
+                "moment" : 0,              
+            },
+
+        },
+
+        #CG OUTPUTS#
+        "CG_calulations" : {
+            "basic_condition" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "moment" : 0,
+                "CG" : 0
+            },
+            "zero_fuel_condition" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "moment" : 0,
+                "CG" : 0
+            },
+            "ramp_condition" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "moment" : 0,
+                "CG" : 0
+            },
+            "takeoff_condition" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "moment" : 0,
+                "CG" : 0
+            },
+            "landing_condition" : {
+                "weight" : {"value" : 0, "class" : "mass"},
+                "moment" : 0,
+                "CG" : 0
+            }
+        },
+
         #---------------------PERFORMANCE
         "TODR" : 0,
         "LDR" : 0,

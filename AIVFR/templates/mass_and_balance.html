@@ -41,85 +41,91 @@
             <!---------TABLE DISPLAY 1-------->
             <tbody id="moments_table1" class="active">
               <tr>
-                <td>Basic Empty Weight</td>
-                <td><input type="number" name="BE_weight" id="weight_basic_empty"></td>
-                <td><input type="number" name="BE_arm" id="arm_basic_empty"></td>
-                <td><input type="number" name="BE_moment" id="moment_basic_empty"></td>
+                <td>Basic Empty</td>
+                <td><input type="number" name="BE_weight" id="weight_basic_empty" value="{{ flight.weight_items.basic_empty.weight.value if flight.weight_items.basic_empty.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="BE_arm" id="arm_basic_empty" value="{{ flight.weight_items.basic_empty.arm if flight.weight_items.basic_empty.arm != 0 else '' }}"></td>
+                <td><input type="number" name="BE_moment" id="moment_basic_empty" value="{{ flight.weight_items.basic_empty.moment if flight.weight_items.basic_empty.moment != 0 else '' }}"></td>
               </tr>
               <tr>
                 <td>Oil</td>
-                <td><input type="number" name="oil_weight" id="weight_oil"></td>
-                <td><input type="number" name="oil_arm" id="arm_oil"></td>
-                <td id="moment_oil"></td>
+                <td><input type="number" name="oil_weight" id="weight_oil" value="{{ flight.weight_items.oil.weight.value if flight.weight_items.oil.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="oil_arm" id="arm_oil" value="{{ flight.weight_items.oil.arm if flight.weight_items.oil.arm != 0 else '' }}"></td>
+                <td id="moment_oil">{{ flight.weight_items.oil.moment if flight.weight_items.oil.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Pilot 1</td>
-                <td><input type="number" name="pilot1_weight" id="weight_pilot1"></td>
-                <td><input type="number" name="pilot1_arm" id="arm_pilot1"></td>
-                <td id="moment_pilot1"></td>
+                <td><input type="number" name="pilot1_weight" id="weight_pilot1" value="{{ flight.weight_items.pilot1.weight.value if flight.weight_items.pilot1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="pilot1_arm" id="arm_pilot1" value="{{ flight.weight_items.pilot1.arm if flight.weight_items.pilot1.arm != 0 else '' }}"></td>
+                <td id="moment_pilot1">{{ flight.weight_items.pilot1.moment if flight.weight_items.pilot1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Pilot 2</td>
-                <td><input type="number" name="pilot2_weight" id="weight_pilot2"></td>
-                <td><input type="number" name="pilot2_arm" id="arm_pilot2"></td>
-                <td id="moment_pilot2"></td>
+                <td><input type="number" name="pilot2_weight" id="weight_pilot2" value="{{ flight.weight_items.pilot2.weight.value if flight.weight_items.pilot2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="pilot2_arm" id="arm_pilot2" value="{{ flight.weight_items.pilot2.arm if flight.weight_items.pilot2.arm != 0 else '' }}"></td>
+                <td id="moment_pilot2">{{ flight.weight_items.pilot2.moment if flight.weight_items.pilot2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>PAX 1</td>
-                <td><input type="number" name="pax1_weight" id="weight_pax1"></td>
-                <td><input type="number" name="pax1_arm" id="arm_pax1"></td>
-                <td id="moment_pax1"></td>
+                <td><input type="number" name="pax1_weight" id="weight_pax1" value="{{ flight.weight_items.PAX1.weight.value if flight.weight_items.PAX1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="pax1_arm" id="arm_pax1" value="{{ flight.weight_items.PAX1.arm if flight.weight_items.PAX1.arm != 0 else '' }}"></td>
+                <td id="moment_pax1">{{ flight.weight_items.PAX1.moment if flight.weight_items.PAX1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>PAX 2</td>
-                <td><input type="number" name="pax2_weight" id="weight_pax2"></td>
-                <td><input type="number" name="pax2_arm" id="arm_pax2"></td>
-                <td id="moment_pax2"></td>
+                <td><input type="number" name="pax2_weight" id="weight_pax2" value="{{ flight.weight_items.PAX2.weight.value if flight.weight_items.PAX2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="pax2_arm" id="arm_pax2" value="{{ flight.weight_items.PAX2.arm if flight.weight_items.PAX2.arm != 0 else '' }}"></td>
+                <td id="moment_pax2">{{ flight.weight_items.PAX2.moment if flight.weight_items.PAX2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Baggage section 1</td>
-                <td><input type="number" name="bag1_weight" id="weight_bag1"></td>
-                <td><input type="number" name="bag1_arm" id="arm_bag1"></td>
-                <td id="moment_bag1"></td>
+                <td><input type="number" name="bag1_weight" id="weight_baggage1" value="{{ flight.weight_items.baggage1.weight.value if flight.weight_items.baggage1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="bag1_arm" id="arm_baggage1" value="{{ flight.weight_items.baggage1.arm if flight.weight_items.baggage1.arm != 0 else '' }}"></td>
+                <td id="moment_baggage1">{{ flight.weight_items.baggage1.moment if flight.weight_items.baggage1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Baggage section 2</td>
-                <td><input type="number" name="bag2_weight" id="weight_bag2"></td>
-                <td><input type="number" name="bag2_arm" id="arm_bag2"></td>
-                <td id="moment_bag2"></td>
+                <td><input type="number" name="bag2_weight" id="weight_baggage2" value="{{ flight.weight_items.baggage2.weight.value if flight.weight_items.baggage2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="bag2_arm" id="arm_baggage2" value="{{ flight.weight_items.baggage2.arm if flight.weight_items.baggage2.arm != 0 else '' }}"></td>
+                <td id="moment_baggage2">{{ flight.weight_items.baggage2.moment if flight.weight_items.baggage2.moment != 0 else '' }}</td>
               </tr>
             </tbody>
             <!---------TABLE DISPLAY 2-------->
             <tbody id="moments_table2">
               <tr>
                 <td>Fuel load: Tank 1</td>
-                <td><input type="number" name="fuel1_weight" id="weight_fuel1"></td>
-                <td><input type="number" name="fuel1_arm" id="arm_fuel1"></td>
-                <td id="moment_fuel1"></td>
+                <td><input type="number" name="fuel_load1_weight" id="weight_fuel_load1" value="{{ flight.weight_items.fuel_load1.weight.value if flight.weight_items.fuel_load1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel_load1_arm" id="arm_fuel_load1" value="{{ flight.weight_items.fuel_load1.arm if flight.weight_items.fuel_load1.arm != 0 else '' }}"></td>
+                <td id="moment_fuel_load1">{{ flight.weight_items.fuel_load1.moment if flight.weight_items.fuel_load1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel load: Tank 2</td>
-                <td><input type="number" name="fuel2_weight" id="weight_fuel2"></td>
-                <td><input type="number" name="fuel2_arm" id="arm_fuel2"></td>
-                <td id="moment_fuel2"></td>
+                <td><input type="number" name="fuel_load2_weight" id="weight_fuel_load2" value="{{ flight.weight_items.fuel_load2.weight.value if flight.weight_items.fuel_load2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel_load2_arm" id="arm_fuel_load2" value="{{ flight.weight_items.fuel_load2.arm if flight.weight_items.fuel_load2.arm != 0 else '' }}"></td>
+                <td id="moment_fuel_load2">{{ flight.weight_items.fuel_load2.moment if flight.weight_items.fuel_load2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel burned on ground: Tank 1</td>
-                <td><input type="number" name="fuel1_burned_weight" id="weight_fuel1_ground_burned"></td>
-                <td><input type="number" name="fuel1_burned_arm" id="arm_fuel1_ground_burned"></td>
-                <td id="moment_fuel1_ground_burned"></td>
+                <td><input type="number" name="fuel1_burned_weight" id="weight_fuel_ground_burned1" value="{{ flight.weight_items.fuel_ground_burned1.weight.value if flight.weight_items.fuel_ground_burned1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel1_burned_arm" id="arm_fuel_ground_burned1" value="{{ flight.weight_items.fuel_ground_burned1.arm if flight.weight_items.fuel_ground_burned1.arm != 0 else '' }}"></td>
+                <td id="moment_fuel_ground_burned1">{{ flight.weight_items.fuel_ground_burned1.moment if flight.weight_items.fuel_ground_burned1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel burned on ground: Tank 2</td>
-                <td><input type="number" name="fuel2_burned_weight" id="weight_fuel2_ground_burned"></td>
-                <td><input type="number" name="fuel2_burned_arm" id="arm_fuel2_ground_burned"></td>
-                <td id="moment_fuel2_ground_burned"></td>
+                <td><input type="number" name="fuel2_burned_weight" id="weight_fuel_ground_burned2" value="{{ flight.weight_items.fuel_ground_burned2.weight.value if flight.weight_items.fuel_ground_burned2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel2_burned_arm" id="arm_fuel_ground_burned2" value="{{ flight.weight_items.fuel_ground_burned2.arm if flight.weight_items.fuel_ground_burned2.arm != 0 else '' }}"></td>
+                <td id="moment_fuel_ground_burned2">{{ flight.weight_items.fuel_ground_burned2.moment if flight.weight_items.fuel_ground_burned2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel burned in flight: Tank 1</td>
-                <td><input type="number" name="fuel1_flight_burned_weight" id="weight_fuel1_flight_burned"></td>
-                <td><input type="number" name="fuel1_flight_burned_arm" id="arm_fuel1_flight_burned"></td>
-                <td id="moment_fuel1_flight_burned"></td>
+                <td><input type="number" name="fuel1_flight_burned_weight" id="weight_fuel_flight_burned1" value="{{ flight.weight_items.fuel_flight_burned1.weight.value if flight.weight_items.fuel_flight_burned1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel1_flight_burned_arm" id="arm_fuel_flight_burned1" value="{{ flight.weight_items.fuel_flight_burned1.arm if flight.weight_items.fuel_flight_burned1.arm != 0 else '' }}"></td>
+                <td id="moment_fuel_flight_burned1">{{ flight.weight_items.fuel_flight_burned1.moment if flight.weight_items.fuel_flight_burned1.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Fuel burned in flight: Tank 2</td>
+                <td><input type="number" name="fuel2_flight_burned_weight" id="weight_fuel_flight_burned2" value="{{ flight.weight_items.fuel_flight_burned2.weight.value if flight.weight_items.fuel_flight_burned2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel2_flight_burned_arm" id="arm_fuel_flight_burned2" value="{{ flight.weight_items.fuel_flight_burned2.arm if flight.weight_items.fuel_flight_burned2.arm != 0 else '' }}"></td>
+                <td id="moment_fuel_flight_burned2">{{ flight.weight_items.fuel_flight_burned2.moment if flight.weight_items.fuel_flight_burned2.moment != 0 else '' }}</td>
               </tr>
               </tbody>
           </table>
@@ -138,8 +144,8 @@
           <!--CG calculator-->
           <div id="cg_calculator">
             <span style="display: flex; justify-content: center; gap: 50px; flex-wrap: wrap;">
-              <!--Maximum takeoff weight--><div><b>MTOW:</b> <input type="number" name="Max_Takeoff_Weight" id="MTOW"></div>
-              <!--Maximum landing weight--><div><b>MLW :</b> <input type="number" name="Max_Landing_Weight" id="MLW"></div>
+              <!--Maximum takeoff weight--><div><b>MTOW:</b> <input type="number" name="Max_Takeoff_Weight" id="MTOW" value="{{ flight.MTOW.value if flight.MTOW.value != 0 else '' }}"></div>
+              <!--Maximum landing weight--><div><b>MLW :</b> <input type="number" name="Max_Landing_Weight" id="MLW" value="{{ flight.MLW.value if flight.MLW.value != 0 else '' }}"></div>
             </span>
           
           <!--CG table-->
@@ -155,33 +161,33 @@
             <tbody>
               <tr>
                 <td>Basic</td>
-                <td><span id="basic_weight"></span></td>
-                <td><span id="basic_moment"></span></td>
-                <td><span id="basic_CG"></span></td>
+                <td><span id="basic_weight"></span>{{ flight.CG_calulations.basic_condition.weight.value if flight.CG_calulations.basic_condition.weight.value != 0 else '' }}</td>
+                <td><span id="basic_moment"></span>{{ flight.CG_calulations.basic_condition.moment if flight.CG_calulations.basic_condition.moment != 0 else '' }}</td>
+                <td><span id="basic_CG"></span>{{ flight.CG_calulations.basic_condition.CG if flight.CG_calulations.basic_condition.CG != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Zero-Fuel</td>
-                <td><span id="zero_fuel_weight"></span></td>
-                <td><span id="zero_fuel_moment"></span></td>
-                <td><span id="zero_fuel_CG"></span></td>
+                <td><span id="zero_fuel_weight"></span>{{ flight.CG_calulations.zero_fuel_condition.weight.value if flight.CG_calulations.zero_fuel_condition.weight.value != 0 else '' }}</td>
+                <td><span id="zero_fuel_moment"></span>{{ flight.CG_calulations.zero_fuel_condition.moment if flight.CG_calulations.zero_fuel_condition.moment != 0 else '' }}</td>
+                <td><span id="zero_fuel_CG"></span>{{ flight.CG_calulations.zero_fuel_condition.CG if flight.CG_calulations.zero_fuel_condition.CG != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Ramp</td>
-                <td><span id="ramp_weight"></span></td>
-                <td><span id="ramp_moment"></span></td>
-                <td><span id="ramp_CG"></span></td>
+                <td><span id="ramp_weight"></span>{{ flight.CG_calulations.ramp_condition.weight.value if flight.CG_calulations.ramp_condition.weight.value != 0 else '' }}</td>
+                <td><span id="ramp_moment"></span>{{ flight.CG_calulations.ramp_condition.moment if flight.CG_calulations.ramp_condition.moment != 0 else '' }}</td>
+                <td><span id="ramp_CG"></span>{{ flight.CG_calulations.ramp_condition.CG if flight.CG_calulations.ramp_condition.CG != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Takeoff</td>
-                <td><span id="takeoff_weight"></span></td>
-                <td><span id="takeoff_moment"></span></td>
-                <td><span id="takeoff_CG"></span></td>
+                <td><span id="takeoff_weight"></span>{{ flight.CG_calulations.takeoff_condition.weight.value if flight.CG_calulations.takeoff_condition.weight.value != 0 else '' }}</td>
+                <td><span id="takeoff_moment"></span>{{ flight.CG_calulations.takeoff_condition.moment if flight.CG_calulations.takeoff_condition.moment != 0 else '' }}</td>
+                <td><span id="takeoff_CG"></span>{{ flight.CG_calulations.takeoff_condition.CG if flight.CG_calulations.takeoff_condition.CG != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Landing</td>
-                <td><span id="landing_weight"></span></td>
-                <td><span id="landing_moment"></span></td>
-                <td><span id="landing_CG"></span></td>
+                <td><span id="landing_weight"></span>{{ flight.CG_calulations.landing_condition.weight.value if flight.CG_calulations.landing_condition.weight.value != 0 else '' }}</td>
+                <td><span id="landing_moment"></span>{{ flight.CG_calulations.landing_condition.moment if flight.CG_calulations.landing_condition.moment != 0 else '' }}</td>
+                <td><span id="landing_CG"></span>{{ flight.CG_calulations.landing_condition.CG if flight.CG_calulations.landing_condition.CG != 0 else '' }}</td>
               </tr>
             </tbody>
           </table>
@@ -191,18 +197,18 @@
           <div id="manouvering_speeds" class="highlight">
             <h3>Manouvering Speeds</h3>
             <div style="display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; margin-bottom: 35px;">
-              <!--Va @ MGW--><div><b>V<sub>A</sub> @ MGW:</b> <input type="number" name="Va_MGW" id="va_MGW"></div>
-              <!--Max Gross Weight --><div><b>MGW:</b> <input type="number" name="Max_Gross_Weight" id="MGW"></div>
+              <!--Va @ MGW--><div><b>V<sub>A</sub> @ MGW:</b> <input type="number" name="Va_MGW" id="va_MGW" value="{{ flight.va_MGW.value if flight.va_MGW.value != 0 else '' }}"></div>
+              <!--Max Gross Weight --><div><b>MGW:</b> <input type="number" name="Max_Gross_Weight" id="MGW" value="{{ flight.MGW.value if flight.MGW.value != 0 else '' }}"></div>
             </div>
 
               <div style="display: flex; flex-direction: column; gap: 10px; flex-wrap: wrap; margin-bottom: 25px;">
-                <p>V<sub>A</sub> Takeoff: <span id="va_takeoff"></span></p>
-                <p>V<sub>A</sub> Landing: <span id="va_landing"></span></p>
+                <p>V<sub>A</sub> Takeoff: <span id="va_takeoff">{{ flight.va_takeoff.output }}</span></p>
+                <p>V<sub>A</sub> Landing: <span id="va_landing">{{ flight.va_landing.output }}</span></p>
               </div>
 
               <!--Any weight calculation-->
-              <div style="margin-bottom: 15px;"><b>Any Weight:</b> <input type="number" name="Any_Weight" id="Any_Weight"></div>
-              <p>Manouvering Speed: <span id="va_any"></span></p>
+              <div style="margin-bottom: 15px;"><b>Any Weight:</b> <input type="number" name="Any_Weight" id="Any_Weight" value="{{ flight.Any_Weight.value if flight.Any_Weight.value != 0 else '' }}"></div>
+              <p>Manouvering Speed: <span id="va_any">{{ flight.va_any.output }}</span></p>
           </div>
         </div>
       </div>
