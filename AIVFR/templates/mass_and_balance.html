@@ -34,7 +34,7 @@
               <tr>
                 <th>Item</th>
                 <th>Weight</th>
-                <th>Arm</th>
+                <th>Arm (in)</th>
                 <th>Moment</th>
               </tr>
             </thead>
@@ -66,15 +66,15 @@
               </tr>
               <tr>
                 <td>PAX 1</td>
-                <td><input type="number" name="pax1_weight" id="weight_pax1" value="{{ flight.weight_items.PAX1.weight.value if flight.weight_items.PAX1.weight.value != 0 else '' }}"></td>
-                <td><input type="number" name="pax1_arm" id="arm_pax1" value="{{ flight.weight_items.PAX1.arm if flight.weight_items.PAX1.arm != 0 else '' }}"></td>
-                <td id="moment_pax1">{{ flight.weight_items.PAX1.moment if flight.weight_items.PAX1.moment != 0 else '' }}</td>
+                <td><input type="number" name="PAX1_weight" id="weight_PAX1" value="{{ flight.weight_items.PAX1.weight.value if flight.weight_items.PAX1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="PAX1_arm" id="arm_PAX1" value="{{ flight.weight_items.PAX1.arm if flight.weight_items.PAX1.arm != 0 else '' }}"></td>
+                <td id="moment_PAX1">{{ flight.weight_items.PAX1.moment if flight.weight_items.PAX1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>PAX 2</td>
-                <td><input type="number" name="pax2_weight" id="weight_pax2" value="{{ flight.weight_items.PAX2.weight.value if flight.weight_items.PAX2.weight.value != 0 else '' }}"></td>
-                <td><input type="number" name="pax2_arm" id="arm_pax2" value="{{ flight.weight_items.PAX2.arm if flight.weight_items.PAX2.arm != 0 else '' }}"></td>
-                <td id="moment_pax2">{{ flight.weight_items.PAX2.moment if flight.weight_items.PAX2.moment != 0 else '' }}</td>
+                <td><input type="number" name="PAX2_weight" id="weight_PAX2" value="{{ flight.weight_items.PAX2.weight.value if flight.weight_items.PAX2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="PAX2_arm" id="arm_PAX2" value="{{ flight.weight_items.PAX2.arm if flight.weight_items.PAX2.arm != 0 else '' }}"></td>
+                <td id="moment_PAX2">{{ flight.weight_items.PAX2.moment if flight.weight_items.PAX2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Baggage section 1</td>
@@ -161,33 +161,33 @@
             <tbody>
               <tr>
                 <td>Basic</td>
-                <td><span id="basic_weight"></span>{{ flight.CG_calulations.basic_condition.weight.value if flight.CG_calulations.basic_condition.weight.value != 0 else '' }}</td>
-                <td><span id="basic_moment"></span>{{ flight.CG_calulations.basic_condition.moment if flight.CG_calulations.basic_condition.moment != 0 else '' }}</td>
-                <td><span id="basic_CG"></span>{{ flight.CG_calulations.basic_condition.CG if flight.CG_calulations.basic_condition.CG != 0 else '' }}</td>
+                <td><span id="basic_weight">{{ flight.CG_calculations.basic_condition.weight.value if flight.CG_calculations.basic_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="basic_moment">{{ flight.CG_calculations.basic_condition.moment if flight.CG_calculations.basic_condition.moment != 0 else '' }}</span></td>
+                <td><span id="basic_CG">{{ flight.CG_calculations.basic_condition.CG|round(2) if flight.CG_calculations.basic_condition.CG != 0 else '' }}</span></td>
               </tr>
               <tr>
                 <td>Zero-Fuel</td>
-                <td><span id="zero_fuel_weight"></span>{{ flight.CG_calulations.zero_fuel_condition.weight.value if flight.CG_calulations.zero_fuel_condition.weight.value != 0 else '' }}</td>
-                <td><span id="zero_fuel_moment"></span>{{ flight.CG_calulations.zero_fuel_condition.moment if flight.CG_calulations.zero_fuel_condition.moment != 0 else '' }}</td>
-                <td><span id="zero_fuel_CG"></span>{{ flight.CG_calulations.zero_fuel_condition.CG if flight.CG_calulations.zero_fuel_condition.CG != 0 else '' }}</td>
+                <td><span id="zero_fuel_weight">{{ flight.CG_calculations.zero_fuel_condition.weight.value if flight.CG_calculations.zero_fuel_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="zero_fuel_moment">{{ flight.CG_calculations.zero_fuel_condition.moment if flight.CG_calculations.zero_fuel_condition.moment != 0 else '' }}</span></td>
+                <td><span id="zero_fuel_CG">{{ flight.CG_calculations.zero_fuel_condition.CG|round(2) if flight.CG_calculations.zero_fuel_condition.CG != 0 else '' }}</span></td>
               </tr>
               <tr>
                 <td>Ramp</td>
-                <td><span id="ramp_weight"></span>{{ flight.CG_calulations.ramp_condition.weight.value if flight.CG_calulations.ramp_condition.weight.value != 0 else '' }}</td>
-                <td><span id="ramp_moment"></span>{{ flight.CG_calulations.ramp_condition.moment if flight.CG_calulations.ramp_condition.moment != 0 else '' }}</td>
-                <td><span id="ramp_CG"></span>{{ flight.CG_calulations.ramp_condition.CG if flight.CG_calulations.ramp_condition.CG != 0 else '' }}</td>
+                <td><span id="ramp_weight">{{ flight.CG_calculations.ramp_condition.weight.value if flight.CG_calculations.ramp_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="ramp_moment">{{ flight.CG_calculations.ramp_condition.moment if flight.CG_calculations.ramp_condition.moment != 0 else '' }}</span></td>
+                <td><span id="ramp_CG">{{ flight.CG_calculations.ramp_condition.CG|round(2) if flight.CG_calculations.ramp_condition.CG != 0 else '' }}</span></td>
               </tr>
               <tr>
                 <td>Takeoff</td>
-                <td><span id="takeoff_weight"></span>{{ flight.CG_calulations.takeoff_condition.weight.value if flight.CG_calulations.takeoff_condition.weight.value != 0 else '' }}</td>
-                <td><span id="takeoff_moment"></span>{{ flight.CG_calulations.takeoff_condition.moment if flight.CG_calulations.takeoff_condition.moment != 0 else '' }}</td>
-                <td><span id="takeoff_CG"></span>{{ flight.CG_calulations.takeoff_condition.CG if flight.CG_calulations.takeoff_condition.CG != 0 else '' }}</td>
+                <td><span id="takeoff_weight">{{ flight.CG_calculations.takeoff_condition.weight.value if flight.CG_calculations.takeoff_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="takeoff_moment">{{ flight.CG_calculations.takeoff_condition.moment if flight.CG_calculations.takeoff_condition.moment != 0 else '' }}</span></td>
+                <td><span id="takeoff_CG">{{ flight.CG_calculations.takeoff_condition.CG|round(2) if flight.CG_calculations.takeoff_condition.CG != 0 else '' }}</span></td>
               </tr>
               <tr>
                 <td>Landing</td>
-                <td><span id="landing_weight"></span>{{ flight.CG_calulations.landing_condition.weight.value if flight.CG_calulations.landing_condition.weight.value != 0 else '' }}</td>
-                <td><span id="landing_moment"></span>{{ flight.CG_calulations.landing_condition.moment if flight.CG_calulations.landing_condition.moment != 0 else '' }}</td>
-                <td><span id="landing_CG"></span>{{ flight.CG_calulations.landing_condition.CG if flight.CG_calulations.landing_condition.CG != 0 else '' }}</td>
+                <td><span id="landing_weight">{{ flight.CG_calculations.landing_condition.weight.value if flight.CG_calculations.landing_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="landing_moment">{{ flight.CG_calculations.landing_condition.moment if flight.CG_calculations.landing_condition.moment != 0 else '' }}</span></td>
+                <td><span id="landing_CG">{{ flight.CG_calculations.landing_condition.CG|round(2) if flight.CG_calculations.landing_condition.CG != 0 else '' }}</span></td>
               </tr>
             </tbody>
           </table>
