@@ -14,7 +14,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.1.3-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.1.5-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
@@ -350,7 +350,7 @@ data_template = {
         },
 
         #CG OUTPUTS#
-        "CG_calulations" : {
+        "CG_calculations" : {
             "basic_condition" : {
                 "weight" : {"value" : 0, "class" : "mass"},
                 "moment" : 0,
@@ -416,7 +416,6 @@ def update_flight():
         target = target[k]
 
     target[keys[-1]] = value
-
     update_units() #update units in case a unit value was changed
     session.modified = True
     return jsonify(session["flight_data"])

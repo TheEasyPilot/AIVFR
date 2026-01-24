@@ -98,6 +98,10 @@ th {
     background-color: var(--tableHeader);
 }
 
+td {
+    font-weight: 600;
+}
+
 #table_left, #table_right {
     width: 35px;
     height: 35px;
