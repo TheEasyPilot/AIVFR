@@ -14,7 +14,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.1.5-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.1.6-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
@@ -26,7 +26,7 @@ def settingsMenu():
 def dashboard():
     return render_template('dashboard.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
 
-#Route tab
+#route tab
 @main.route('/route')
 def routeTab():
     return render_template('route.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
@@ -80,7 +80,8 @@ UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding set
 
 def update_units():
     units_changed = session["flight_data"]["settings"].get("units_changed", "False") == "True"
-    for key, item in session["flight_data"]["flight"].items():
+
+    def process_item(item):
         #only process items that are dictionaries with a "class" key (i.e. unit-based items)
         if isinstance(item, dict) and "class" in item:
             category = item["class"]
@@ -89,13 +90,13 @@ def update_units():
                 display_unit = session["flight_data"]["settings"][settings_key]
                 current_unit = ureg[display_unit]
 
-                #Store previous unit in session settings if not present
+                #store previous unit in session settings if not present
                 prev_unit_key = f"prev_{settings_key}"
                 if prev_unit_key not in session["flight_data"]["settings"]:
                     session["flight_data"]["settings"][prev_unit_key] = display_unit
 
                 if units_changed:
-                    #Convert value from previous unit to new unit
+                    #convert value from previous unit to new unit
                     prev_unit = session["flight_data"]["settings"][prev_unit_key]
                     try:
                         prev_quantity = item["value"] * ureg[prev_unit]
@@ -104,28 +105,40 @@ def update_units():
                     except Exception:
                         pass                
 
-                #Always update output
+                #always update output
                 canonical = item["value"] * current_unit
                 converted = canonical.to(current_unit)
                 unit_name = str(converted.units)
                 unit_name = CUSTOM_UNITS.get(unit_name, unit_name)
                 item["output"] = f"{converted.magnitude:.1f} {unit_name}"
+        
+        elif isinstance(item, dict):
+            for subkey, subitem in item.items():
+                process_item(subitem)
 
-    #Update previous unit in session settings
+    #process all items in flight data
     for key, item in session["flight_data"]["flight"].items():
-        #only process items that are dictionaries with a "class" key (i.e. unit-based items)
+        process_item(item)
+
+    #update previous unit in session settings
+    def process_prev_unit(item):
         if isinstance(item, dict) and "class" in item:
             category = item["class"]
             if category in UNIT_MAP:
                 settings_key = UNIT_MAP[category]["settings_key"]
                 display_unit = session["flight_data"]["settings"][settings_key]
-                current_unit = ureg[display_unit]
-
-                #Store previous unit in session settings if not present
+                #store previous unit in session settings if not present
                 prev_unit_key = f"prev_{settings_key}"
                 session["flight_data"]["settings"][prev_unit_key] = display_unit
 
-    #Reset the flag to show units have been updated
+        elif isinstance(item, dict):
+            for subkey, subitem in item.items():
+                process_prev_unit(subitem)
+        
+    for key, item in session["flight_data"]["flight"].items():
+        process_prev_unit(item)
+
+    #reset the flag to show units have been updated
     session["flight_data"]["settings"]["units_changed"] = "False"
     session.modified = True
 
@@ -388,7 +401,7 @@ data_template = {
 }
 #--------------------------------UPDATING/MODIFYING DATA
 
-#Updating Settings data
+#updating Settings data
 @main.route("/update-settings", methods=["POST"])
 def update_settings():
     key = request.json.get("key")
@@ -400,7 +413,7 @@ def update_settings():
 
     return jsonify(session["flight_data"])
 
-#Updating flight data
+#updating flight data
 @main.route("/update-flight", methods=["POST"])
 def update_flight():
     key = request.json.get("key")
@@ -517,7 +530,7 @@ def fetch_airport_details():
 
 #------------------------------------------ROUTE MAP
 
-#Send the API keys to frontend
+#send the API keys to frontend
 @main.route("/get-api-keys")
 def get_api_keys():
     return jsonify({
@@ -537,7 +550,7 @@ def get_cityCoords():
     if response.status_code == requests.codes.ok:
         data = response.json()
         if data:
-            city_info = data[0]  #Get the first matching city
+            city_info = data[0]  #get the first matching city
             #get the necessary info
             name = city_info.get('name')
             country = city_info.get('country')
@@ -1057,7 +1070,7 @@ def calculate_row(row_index):
         try:
             row["HDG (°T)"]["value"] = calc_HDG(tas, track, wind_dir, wind_spd)
             row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
-        except ValueError: #Return 'ERROR' for all fields if a calculation cannot be done
+        except ValueError: #return 'ERROR' for all fields if a calculation cannot be done
             return jsonify({"hdgT": "ERROR", "hdgM": "ERROR", "gs": "ERROR", "time": "ERROR"})
 
         #ground speed
@@ -1188,3 +1201,15 @@ def calculate_totals():
                      "fuel_endurance": flight_data["fuel_endurance"],
                      "stopover_status": stopover_status
                      }), 200
+
+
+#----------------------------------------------MASS & BALANCE-------------------------------------
+
+#---------UPDAING CG TABLE
+@main.route('/update-cg-table', methods=["POST"])
+def update_cg_table():
+    table = request.json.get("table") #expecting the full cg table as a list of dicts
+    session["flight_data"]["flight"]["CG_calculations"] = table
+    update_unitsRUN() #reapply units after CG table update
+    session.modified = True
+    return jsonify({"status": "success"}), 200
