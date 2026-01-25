@@ -42,49 +42,49 @@
             <tbody id="moments_table1" class="active">
               <tr>
                 <td>Basic Empty</td>
-                <td><input type="number" name="BE_weight" id="weight_basic_empty" value="{{ flight.weight_items.basic_empty.weight.value if flight.weight_items.basic_empty.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="BE_weight" id="weight_basic_empty" value="{{ flight.weight_items.basic_empty.weight.value|round(1) if flight.weight_items.basic_empty.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="BE_arm" id="arm_basic_empty" value="{{ flight.weight_items.basic_empty.arm if flight.weight_items.basic_empty.arm != 0 else '' }}"></td>
                 <td><input type="number" name="BE_moment" id="moment_basic_empty" value="{{ flight.weight_items.basic_empty.moment if flight.weight_items.basic_empty.moment != 0 else '' }}"></td>
               </tr>
               <tr>
                 <td>Oil</td>
-                <td><input type="number" name="oil_weight" id="weight_oil" value="{{ flight.weight_items.oil.weight.value if flight.weight_items.oil.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="oil_weight" id="weight_oil" value="{{ flight.weight_items.oil.weight.value|round(1) if flight.weight_items.oil.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="oil_arm" id="arm_oil" value="{{ flight.weight_items.oil.arm if flight.weight_items.oil.arm != 0 else '' }}"></td>
                 <td id="moment_oil">{{ flight.weight_items.oil.moment if flight.weight_items.oil.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Pilot 1</td>
-                <td><input type="number" name="pilot1_weight" id="weight_pilot1" value="{{ flight.weight_items.pilot1.weight.value if flight.weight_items.pilot1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="pilot1_weight" id="weight_pilot1" value="{{ flight.weight_items.pilot1.weight.value|round(1) if flight.weight_items.pilot1.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="pilot1_arm" id="arm_pilot1" value="{{ flight.weight_items.pilot1.arm if flight.weight_items.pilot1.arm != 0 else '' }}"></td>
                 <td id="moment_pilot1">{{ flight.weight_items.pilot1.moment if flight.weight_items.pilot1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Pilot 2</td>
-                <td><input type="number" name="pilot2_weight" id="weight_pilot2" value="{{ flight.weight_items.pilot2.weight.value if flight.weight_items.pilot2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="pilot2_weight" id="weight_pilot2" value="{{ flight.weight_items.pilot2.weight.value|round(1) if flight.weight_items.pilot2.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="pilot2_arm" id="arm_pilot2" value="{{ flight.weight_items.pilot2.arm if flight.weight_items.pilot2.arm != 0 else '' }}"></td>
                 <td id="moment_pilot2">{{ flight.weight_items.pilot2.moment if flight.weight_items.pilot2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>PAX 1</td>
-                <td><input type="number" name="PAX1_weight" id="weight_PAX1" value="{{ flight.weight_items.PAX1.weight.value if flight.weight_items.PAX1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="PAX1_weight" id="weight_PAX1" value="{{ flight.weight_items.PAX1.weight.value|round(1) if flight.weight_items.PAX1.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="PAX1_arm" id="arm_PAX1" value="{{ flight.weight_items.PAX1.arm if flight.weight_items.PAX1.arm != 0 else '' }}"></td>
                 <td id="moment_PAX1">{{ flight.weight_items.PAX1.moment if flight.weight_items.PAX1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>PAX 2</td>
-                <td><input type="number" name="PAX2_weight" id="weight_PAX2" value="{{ flight.weight_items.PAX2.weight.value if flight.weight_items.PAX2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="PAX2_weight" id="weight_PAX2" value="{{ flight.weight_items.PAX2.weight.value|round(1) if flight.weight_items.PAX2.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="PAX2_arm" id="arm_PAX2" value="{{ flight.weight_items.PAX2.arm if flight.weight_items.PAX2.arm != 0 else '' }}"></td>
                 <td id="moment_PAX2">{{ flight.weight_items.PAX2.moment if flight.weight_items.PAX2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Baggage section 1</td>
-                <td><input type="number" name="bag1_weight" id="weight_baggage1" value="{{ flight.weight_items.baggage1.weight.value if flight.weight_items.baggage1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="bag1_weight" id="weight_baggage1" value="{{ flight.weight_items.baggage1.weight.value|round(1) if flight.weight_items.baggage1.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="bag1_arm" id="arm_baggage1" value="{{ flight.weight_items.baggage1.arm if flight.weight_items.baggage1.arm != 0 else '' }}"></td>
                 <td id="moment_baggage1">{{ flight.weight_items.baggage1.moment if flight.weight_items.baggage1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Baggage section 2</td>
-                <td><input type="number" name="bag2_weight" id="weight_baggage2" value="{{ flight.weight_items.baggage2.weight.value if flight.weight_items.baggage2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="bag2_weight" id="weight_baggage2" value="{{ flight.weight_items.baggage2.weight.value|round(1) if flight.weight_items.baggage2.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="bag2_arm" id="arm_baggage2" value="{{ flight.weight_items.baggage2.arm if flight.weight_items.baggage2.arm != 0 else '' }}"></td>
                 <td id="moment_baggage2">{{ flight.weight_items.baggage2.moment if flight.weight_items.baggage2.moment != 0 else '' }}</td>
               </tr>
@@ -93,37 +93,37 @@
             <tbody id="moments_table2">
               <tr>
                 <td>Fuel load: Tank 1</td>
-                <td><input type="number" name="fuel_load1_weight" id="weight_fuel_load1" value="{{ flight.weight_items.fuel_load1.weight.value if flight.weight_items.fuel_load1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel_load1_weight" id="weight_fuel_load1" value="{{ flight.weight_items.fuel_load1.weight.value|round(1) if flight.weight_items.fuel_load1.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="fuel_load1_arm" id="arm_fuel_load1" value="{{ flight.weight_items.fuel_load1.arm if flight.weight_items.fuel_load1.arm != 0 else '' }}"></td>
                 <td id="moment_fuel_load1">{{ flight.weight_items.fuel_load1.moment if flight.weight_items.fuel_load1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel load: Tank 2</td>
-                <td><input type="number" name="fuel_load2_weight" id="weight_fuel_load2" value="{{ flight.weight_items.fuel_load2.weight.value if flight.weight_items.fuel_load2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel_load2_weight" id="weight_fuel_load2" value="{{ flight.weight_items.fuel_load2.weight.value|round(1) if flight.weight_items.fuel_load2.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="fuel_load2_arm" id="arm_fuel_load2" value="{{ flight.weight_items.fuel_load2.arm if flight.weight_items.fuel_load2.arm != 0 else '' }}"></td>
                 <td id="moment_fuel_load2">{{ flight.weight_items.fuel_load2.moment if flight.weight_items.fuel_load2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel burned on ground: Tank 1</td>
-                <td><input type="number" name="fuel1_burned_weight" id="weight_fuel_ground_burned1" value="{{ flight.weight_items.fuel_ground_burned1.weight.value if flight.weight_items.fuel_ground_burned1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel1_burned_weight" id="weight_fuel_ground_burned1" value="{{ flight.weight_items.fuel_ground_burned1.weight.value|round(1) if flight.weight_items.fuel_ground_burned1.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="fuel1_burned_arm" id="arm_fuel_ground_burned1" value="{{ flight.weight_items.fuel_ground_burned1.arm if flight.weight_items.fuel_ground_burned1.arm != 0 else '' }}"></td>
                 <td id="moment_fuel_ground_burned1">{{ flight.weight_items.fuel_ground_burned1.moment if flight.weight_items.fuel_ground_burned1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel burned on ground: Tank 2</td>
-                <td><input type="number" name="fuel2_burned_weight" id="weight_fuel_ground_burned2" value="{{ flight.weight_items.fuel_ground_burned2.weight.value if flight.weight_items.fuel_ground_burned2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel2_burned_weight" id="weight_fuel_ground_burned2" value="{{ flight.weight_items.fuel_ground_burned2.weight.value|round(1) if flight.weight_items.fuel_ground_burned2.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="fuel2_burned_arm" id="arm_fuel_ground_burned2" value="{{ flight.weight_items.fuel_ground_burned2.arm if flight.weight_items.fuel_ground_burned2.arm != 0 else '' }}"></td>
                 <td id="moment_fuel_ground_burned2">{{ flight.weight_items.fuel_ground_burned2.moment if flight.weight_items.fuel_ground_burned2.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel burned in flight: Tank 1</td>
-                <td><input type="number" name="fuel1_flight_burned_weight" id="weight_fuel_flight_burned1" value="{{ flight.weight_items.fuel_flight_burned1.weight.value if flight.weight_items.fuel_flight_burned1.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel1_flight_burned_weight" id="weight_fuel_flight_burned1" value="{{ flight.weight_items.fuel_flight_burned1.weight.value|round(1) if flight.weight_items.fuel_flight_burned1.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="fuel1_flight_burned_arm" id="arm_fuel_flight_burned1" value="{{ flight.weight_items.fuel_flight_burned1.arm if flight.weight_items.fuel_flight_burned1.arm != 0 else '' }}"></td>
                 <td id="moment_fuel_flight_burned1">{{ flight.weight_items.fuel_flight_burned1.moment if flight.weight_items.fuel_flight_burned1.moment != 0 else '' }}</td>
               </tr>
               <tr>
                 <td>Fuel burned in flight: Tank 2</td>
-                <td><input type="number" name="fuel2_flight_burned_weight" id="weight_fuel_flight_burned2" value="{{ flight.weight_items.fuel_flight_burned2.weight.value if flight.weight_items.fuel_flight_burned2.weight.value != 0 else '' }}"></td>
+                <td><input type="number" name="fuel2_flight_burned_weight" id="weight_fuel_flight_burned2" value="{{ flight.weight_items.fuel_flight_burned2.weight.value|round(1) if flight.weight_items.fuel_flight_burned2.weight.value != 0 else '' }}"></td>
                 <td><input type="number" name="fuel2_flight_burned_arm" id="arm_fuel_flight_burned2" value="{{ flight.weight_items.fuel_flight_burned2.arm if flight.weight_items.fuel_flight_burned2.arm != 0 else '' }}"></td>
                 <td id="moment_fuel_flight_burned2">{{ flight.weight_items.fuel_flight_burned2.moment if flight.weight_items.fuel_flight_burned2.moment != 0 else '' }}</td>
               </tr>

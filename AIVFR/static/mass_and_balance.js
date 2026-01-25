@@ -85,15 +85,18 @@ const moment_basic_empty = document.getElementById('moment_basic_empty');
 weight_basic_empty.addEventListener('input', async () => {
     await update('weight_items.basic_empty.weight.value', Number(weight_basic_empty.value));
     await calculateMoment('basic_empty');
+    await calculateCG();
 });
 
 arm_basic_empty.addEventListener('input', async () => {
     await update('weight_items.basic_empty.arm', Number(arm_basic_empty.value));
     await calculateMoment('basic_empty');
+    await calculateCG();
 });
 
 moment_basic_empty.addEventListener('input', async () => {
     await update('weight_items.basic_empty.moment', Number(moment_basic_empty.value));
+    await calculateCG();
     await calculateCG();
 });
 
@@ -106,12 +109,14 @@ const moment_oil = document.getElementById('moment_oil');
 weight_oil.addEventListener('input', async () => {
     await update('weight_items.oil.weight.value', Number(weight_oil.value));
     await calculateMoment('oil');
+    await calculateCG();
 
 });
 
 arm_oil.addEventListener('input', async () => {
     await update('weight_items.oil.arm', Number(arm_oil.value));
     await calculateMoment('oil');
+    await calculateCG();
 });
 
 //PILOT1
@@ -123,11 +128,13 @@ const moment_pilot1 = document.getElementById('moment_pilot1');
 weight_pilot1.addEventListener('input', async () => {
     await update('weight_items.pilot1.weight.value', Number(weight_pilot1.value));
     await calculateMoment('pilot1');
+    await calculateCG();
 });
 
 arm_pilot1.addEventListener('input', async () => {
     await update('weight_items.pilot1.arm', Number(arm_pilot1.value));
     await calculateMoment('pilot1');
+    await calculateCG();
 });
 
 //PILOT2
@@ -139,11 +146,13 @@ const moment_pilot2 = document.getElementById('moment_pilot2');
 weight_pilot2.addEventListener('input', async () => {
     await update('weight_items.pilot2.weight.value', Number(weight_pilot2.value));
     await calculateMoment('pilot2');
+    await calculateCG();
 });
 
 arm_pilot2.addEventListener('input', async () => {
     await update('weight_items.pilot2.arm', Number(arm_pilot2.value));
     await calculateMoment('pilot2');
+    await calculateCG();
 });
 
 //PAX1 (PAX = Passenger)
@@ -155,11 +164,13 @@ const moment_PAX1 = document.getElementById('moment_PAX1');
 weight_PAX1.addEventListener('input', async () => {
     await update('weight_items.PAX1.weight.value', Number(weight_PAX1.value));
     await calculateMoment('PAX1');
+    await calculateCG();
 });
 
 arm_PAX1.addEventListener('input', async () => {
     await update('weight_items.PAX1.arm', Number(arm_PAX1.value));
     await calculateMoment('PAX1');
+    await calculateCG();
 });
 
 //PAX2
@@ -171,11 +182,13 @@ const moment_PAX2 = document.getElementById('moment_PAX2');
 weight_PAX2.addEventListener('input', async () => {
     await update('weight_items.PAX2.weight.value', Number(weight_PAX2.value));
     await calculateMoment('PAX2');
+    await calculateCG();
 });
 
 arm_PAX2.addEventListener('input', async () => {
     await update('weight_items.PAX2.arm', Number(arm_PAX2.value));
     await calculateMoment('PAX2');
+    await calculateCG();
 });
 
 //BAGGAGE1
@@ -187,11 +200,13 @@ const moment_baggage1 = document.getElementById('moment_baggage1');
 weight_baggage1.addEventListener('input', async () => {
     await update('weight_items.baggage1.weight.value', Number(weight_baggage1.value));
     await calculateMoment('baggage1');
+    await calculateCG();
 });
 
 arm_baggage1.addEventListener('input', async () => {
     await update('weight_items.baggage1.arm', Number(arm_baggage1.value));
     await calculateMoment('baggage1');
+    await calculateCG();
 });
 
 //BAGGAGE2
@@ -203,11 +218,13 @@ const moment_baggage2 = document.getElementById('moment_baggage2');
 weight_baggage2.addEventListener('input', async () => {
     await update('weight_items.baggage2.weight.value', Number(weight_baggage2.value));
     await calculateMoment('baggage2');
+    await calculateCG();
 });
 
 arm_baggage2.addEventListener('input', async () => {
     await update('weight_items.baggage2.arm', Number(arm_baggage2.value));
     await calculateMoment('baggage2');
+    await calculateCG();
 });
 
 //FUEL lOAD1
@@ -219,11 +236,13 @@ const moment_fuel_load1 = document.getElementById('moment_fuel_load1');
 weight_fuel_load1.addEventListener('input', async () => {
     await update('weight_items.fuel_load1.weight.value', Number(weight_fuel_load1.value));
     await calculateMoment('fuel_load1');
+    await calculateCG();
 });
 
 arm_fuel_load1.addEventListener('input', async () => {
     await update('weight_items.fuel_load1.arm', Number(arm_fuel_load1.value));
     await calculateMoment('fuel_load1');
+    await calculateCG();
 });
 
 //FUEL lOAD2
@@ -235,11 +254,13 @@ const moment_fuel_load2 = document.getElementById('moment_fuel_load2');
 weight_fuel_load2.addEventListener('input', async () => {
     await update('weight_items.fuel_load2.weight.value', Number(weight_fuel_load2.value));
     await calculateMoment('fuel_load2');
+    await calculateCG();
 });
 
 arm_fuel_load2.addEventListener('input', async () => {
     await update('weight_items.fuel_load2.arm', Number(arm_fuel_load2.value));
     await calculateMoment('fuel_load2');
+    await calculateCG();
 });
 
 //FUEL BURNED ON GROUND TANK 1
@@ -251,11 +272,13 @@ const moment_fuel_ground_burned1 = document.getElementById('moment_fuel_ground_b
 weight_fuel_ground_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned1.weight.value', Number(weight_fuel_ground_burned1.value));
     await calculateMoment('fuel_ground_burned1');
+    await calculateCG();
 });
 
 arm_fuel_ground_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned1.arm', Number(arm_fuel_ground_burned1.value));
     await calculateMoment('fuel_ground_burned1');
+    await calculateCG();
 });
 
 //FUEL BURNED ON GROUND TANK2
@@ -267,11 +290,13 @@ const moment_fuel_ground_burned2 = document.getElementById('moment_fuel_ground_b
 weight_fuel_ground_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned2.weight.value', Number(weight_fuel_ground_burned2.value));
     await calculateMoment('fuel_ground_burned2');
+    await calculateCG();
 });
 
 arm_fuel_ground_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned2.arm', Number(arm_fuel_ground_burned2.value));
     await calculateMoment('fuel_ground_burned2');
+    await calculateCG();
 });
 
 //FUEL BURNED IN FLIGHT TANK1
@@ -283,11 +308,13 @@ const moment_fuel_flight_burned1 = document.getElementById('moment_fuel_flight_b
 weight_fuel_flight_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned1.weight.value', Number(weight_fuel_flight_burned1.value));
     await calculateMoment('fuel_flight_burned1');
+    await calculateCG();
 });
 
 arm_fuel_flight_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned1.arm', Number(arm_fuel_flight_burned1.value));
     await calculateMoment('fuel_flight_burned1');
+    await calculateCG();
 });
 
 //FUEL BURNED IN FLIGHT TANK2
@@ -299,11 +326,13 @@ const moment_fuel_flight_burned2 = document.getElementById('moment_fuel_flight_b
 weight_fuel_flight_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned2.weight.value', Number(weight_fuel_flight_burned2.value));
     await calculateMoment('fuel_flight_burned2');
+    await calculateCG();
 });
 
 arm_fuel_flight_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned2.arm', Number(arm_fuel_flight_burned2.value));
     await calculateMoment('fuel_flight_burned2');
+    await calculateCG();
 });
 
 //--------------CG OUTPUTs
@@ -335,7 +364,17 @@ const landing_CG = document.getElementById('landing_CG');
 
 //------------------------------CALCULATING MOMENTS--------------------------
 
-async function calculateMoment(target) {
+async function calculateMoment(target='none') {
+
+    if (target === 'none') {
+        //no field means calculate all moments
+        for (const item of ['basic_empty', 'oil', 'pilot1', 'pilot2', 'PAX1', 'PAX2', 'baggage1', 'baggage2', 'fuel_load1', 'fuel_load2', 'fuel_ground_burned1', 'fuel_ground_burned2', 'fuel_flight_burned1', 'fuel_flight_burned2']) {
+            await calculateMoment(item);
+        }
+        await calculateCG();
+        return;
+    }
+
     //target acts as the id to identify which moment cell is being calculated
     const weight = document.getElementById(`weight_${target}`); //used here as suffix
     const arm = document.getElementById(`arm_${target}`);
@@ -350,7 +389,7 @@ async function calculateMoment(target) {
     }
 
     //moment = weight * arm
-    const calculated_moment = (Number(weight.value) * Number(arm.value));
+    const calculated_moment = roundifDecimal(Number(weight.value) * Number(arm.value));
 
     if (target === 'basic_empty') { //exception for basic empty as moment is an input field
     moment.value = calculated_moment;
@@ -360,7 +399,6 @@ async function calculateMoment(target) {
 
     //updating the session with new moment
     await update(`weight_items.${target}.moment`, calculated_moment);
-    await calculateCG();
 }
 
 //-------------------------------CALCULATING CG-----------------------
@@ -419,36 +457,58 @@ async function calculateCG() {
         const CG_output = document.getElementById(`${conditions_output[items.indexOf(condition)]}CG`);
 
         //updating the output fields
-        weight_output.textContent = total_weight !== 0 ? total_weight : '';
-        moment_output.textContent = total_moment !== 0 ? total_moment : '';
+        weight_output.textContent = roundifDecimal(total_weight) !== 0 ? roundifDecimal(total_weight) : '';
+        moment_output.textContent = roundifDecimal(total_moment) !== 0 ? roundifDecimal(total_moment) : '';
         
         //calculating CG = moment / weight
         if (total_weight === 0 || total_moment === 0) {
             CG_output.textContent = '';
         } else {
             var calculated_CG = total_moment / total_weight;
-            CG_output.textContent = calculated_CG !== 0 ? roundifDecimal(calculated_CG) : '';
+            CG_output.textContent = roundifDecimal(calculated_CG) !== 0 ? roundifDecimal(calculated_CG) : '';
         }
     });
     //finally update session with new values in the CG table
-    await update('CG_calculations.basic_condition.weight.value', Number(basic_weight.textContent));
-    await update('CG_calculations.basic_condition.moment', Number(basic_moment.textContent));
-    await update('CG_calculations.basic_condition.CG', Number(basic_CG.textContent));
+    const response = await fetch("/update-cg-table", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ table: {
+        //send the entire table as one into backend
+        basic_condition: {
+            weight: {"value" : Number(basic_weight.textContent), class : 'mass'},
+            moment: Number(basic_moment.textContent),
+            CG: Number(basic_CG.textContent)
+        },
+        zero_fuel_condition: {
+            weight: {"value" : Number(zero_fuel_weight.textContent), class : 'mass'},
+            moment: Number(zero_fuel_moment.textContent),
+            CG: Number(zero_fuel_CG.textContent)
+        },
+        ramp_condition: {
+            weight: {"value" : Number(ramp_weight.textContent), class : 'mass'},
+            moment: Number(ramp_moment.textContent),
+            CG: Number(ramp_CG.textContent)
+        },
+        takeoff_condition: {
+            weight: {"value" : Number(takeoff_weight.textContent), class : 'mass'},
+            moment: Number(takeoff_moment.textContent),
+            CG: Number(takeoff_CG.textContent)
+        },
+        landing_condition: {
+            weight: {"value" : Number(landing_weight.textContent), class : 'mass'},
+            moment: Number(landing_moment.textContent),
+            CG: Number(landing_CG.textContent)
+        }
+    } }),
+    });
+    const data = await response.json();
 
-    await update('CG_calculations.zero_fuel_condition.weight.value', Number(zero_fuel_weight.textContent));
-    await update('CG_calculations.zero_fuel_condition.moment', Number(zero_fuel_moment.textContent));
-    await update('CG_calculations.zero_fuel_condition.CG', Number(zero_fuel_CG.textContent));
-
-    await update('CG_calculations.ramp_condition.weight.value', Number(ramp_weight.textContent));
-    await update('CG_calculations.ramp_condition.moment', Number(ramp_moment.textContent));
-    await update('CG_calculations.ramp_condition.CG', Number(ramp_CG.textContent));
-
-    await update('CG_calculations.takeoff_condition.weight.value', Number(takeoff_weight.textContent));
-    await update('CG_calculations.takeoff_condition.moment', Number(takeoff_moment.textContent));
-    await update('CG_calculations.takeoff_condition.CG', Number(takeoff_CG.textContent));
-
-    await update('CG_calculations.landing_condition.weight.value', Number(landing_weight.textContent));
-    await update('CG_calculations.landing_condition.moment', Number(landing_moment.textContent));
-    await update('CG_calculations.landing_condition.CG', Number(landing_CG.textContent));
-
+    if (data.status !== 'success') {
+        showAlert('An error occurred whilst saving the calculated data.');
     }
+}
+
+//---------On page load:
+await calculateMoment(); //initial calculation of all moments
