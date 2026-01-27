@@ -1,6 +1,18 @@
 import { update, updateSettings, showAlert } from "./basePage.js";
 await updateSettings("current_page", "/mass-and-balance");
 
+//-------symmetric arm checkbox handling
+const symmetricArmCheckbox = document.getElementById('symmetricArmCheckbox');
+
+//Event listener for checkbox changes
+symmetricArmCheckbox.addEventListener('change', async () => {
+    if (symmetricArmCheckbox.checked) {
+        await updateSettings('fill_symmetric_arms', true);
+    } else {
+        await updateSettings('fill_symmetric_arms', false);
+    }
+});
+
 //functuon to round only if number has fractinal part
 function roundifDecimal(num) {
     if (num % 1 !== 0) {
@@ -76,6 +88,13 @@ Any_Weight.addEventListener('input', () => {
 
 //----------------WEIGHT/BALANCE INPUTS
 
+//Arm setting check
+async function checkSymmetricArms() {
+    const response = await fetch('/get-settings');
+    const data = await response.json();
+    return data.fill_symmetric_arms;
+}
+
 //BASIC EMPTY
 const weight_basic_empty = document.getElementById('weight_basic_empty');
 const arm_basic_empty = document.getElementById('arm_basic_empty');
@@ -133,7 +152,15 @@ weight_pilot1.addEventListener('input', async () => {
 
 arm_pilot1.addEventListener('input', async () => {
     await update('weight_items.pilot1.arm', Number(arm_pilot1.value));
-    await calculateMoment('pilot1');
+
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update pilot2 arm as well
+        arm_pilot2.value = arm_pilot1.value;
+        await update('weight_items.pilot2.arm', Number(arm_pilot2.value));
+        await calculateMoment('pilot2');
+    } else {
+        await calculateMoment('pilot1');
+    }
     await calculateCG();
 });
 
@@ -151,7 +178,15 @@ weight_pilot2.addEventListener('input', async () => {
 
 arm_pilot2.addEventListener('input', async () => {
     await update('weight_items.pilot2.arm', Number(arm_pilot2.value));
-    await calculateMoment('pilot2');
+
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update pilot1 arm as well
+        arm_pilot1.value = arm_pilot2.value;
+        await update('weight_items.pilot1.arm', Number(arm_pilot1.value));
+        await calculateMoment('pilot1');
+    } else {
+        await calculateMoment('pilot2');
+    }
     await calculateCG();
 });
 
@@ -169,7 +204,15 @@ weight_PAX1.addEventListener('input', async () => {
 
 arm_PAX1.addEventListener('input', async () => {
     await update('weight_items.PAX1.arm', Number(arm_PAX1.value));
-    await calculateMoment('PAX1');
+
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update PAX2 arm as well
+        arm_PAX2.value = arm_PAX1.value;
+        await update('weight_items.PAX2.arm', Number(arm_PAX2.value));
+        await calculateMoment('PAX2');
+    } else {
+        await calculateMoment('PAX1');
+    }
     await calculateCG();
 });
 
@@ -187,7 +230,15 @@ weight_PAX2.addEventListener('input', async () => {
 
 arm_PAX2.addEventListener('input', async () => {
     await update('weight_items.PAX2.arm', Number(arm_PAX2.value));
-    await calculateMoment('PAX2');
+
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update PAX1 arm as well
+        arm_PAX1.value = arm_PAX2.value;
+        await update('weight_items.PAX1.arm', Number(arm_PAX1.value));
+        await calculateMoment('PAX1');
+    } else {
+        await calculateMoment('PAX2');
+    }
     await calculateCG();
 });
 
@@ -227,6 +278,29 @@ arm_baggage2.addEventListener('input', async () => {
     await calculateCG();
 });
 
+//setting all fuel arms to same value (for symmetric arms)
+async function setFuelArms(arm_value) {
+    arm_fuel_load1.value = arm_value;
+    arm_fuel_load2.value = arm_value;
+    arm_fuel_ground_burned1.value = arm_value;
+    arm_fuel_ground_burned2.value = arm_value;
+    arm_fuel_flight_burned1.value = arm_value;
+    arm_fuel_flight_burned2.value = arm_value;
+
+    await update('weight_items.fuel_load1.arm', Number(arm_fuel_load1.value));
+    await calculateMoment('fuel_load1');
+    await update('weight_items.fuel_load2.arm', Number(arm_fuel_load2.value));
+    await calculateMoment('fuel_load2');
+    await update('weight_items.fuel_ground_burned1.arm', Number(arm_fuel_ground_burned1.value));
+    await calculateMoment('fuel_ground_burned1');
+    await update('weight_items.fuel_ground_burned2.arm', Number(arm_fuel_ground_burned2.value));
+    await calculateMoment('fuel_ground_burned2');
+    await update('weight_items.fuel_flight_burned1.arm', Number(arm_fuel_flight_burned1.value));
+    await calculateMoment('fuel_flight_burned1');
+    await update('weight_items.fuel_flight_burned2.arm', Number(arm_fuel_flight_burned2.value));
+    await calculateMoment('fuel_flight_burned2');
+}
+
 //FUEL lOAD1
 const weight_fuel_load1 = document.getElementById('weight_fuel_load1');
 const arm_fuel_load1 = document.getElementById('arm_fuel_load1');
@@ -241,7 +315,13 @@ weight_fuel_load1.addEventListener('input', async () => {
 
 arm_fuel_load1.addEventListener('input', async () => {
     await update('weight_items.fuel_load1.arm', Number(arm_fuel_load1.value));
-    await calculateMoment('fuel_load1');
+
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update all other fuel values as well
+        await setFuelArms(arm_fuel_load1.value);
+    } else {
+        await calculateMoment('fuel_load1');
+    }
     await calculateCG();
 });
 
@@ -259,7 +339,13 @@ weight_fuel_load2.addEventListener('input', async () => {
 
 arm_fuel_load2.addEventListener('input', async () => {
     await update('weight_items.fuel_load2.arm', Number(arm_fuel_load2.value));
-    await calculateMoment('fuel_load2');
+
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update all other fuel values as well
+        await setFuelArms(arm_fuel_load2.value);
+    } else {
+        await calculateMoment('fuel_load2');
+    }
     await calculateCG();
 });
 
@@ -277,7 +363,13 @@ weight_fuel_ground_burned1.addEventListener('input', async () => {
 
 arm_fuel_ground_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned1.arm', Number(arm_fuel_ground_burned1.value));
-    await calculateMoment('fuel_ground_burned1');
+
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update all other fuel values as well
+        await setFuelArms(arm_fuel_ground_burned1.value);
+    } else {
+        await calculateMoment('fuel_ground_burned1');
+    }
     await calculateCG();
 });
 
@@ -295,7 +387,12 @@ weight_fuel_ground_burned2.addEventListener('input', async () => {
 
 arm_fuel_ground_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned2.arm', Number(arm_fuel_ground_burned2.value));
-    await calculateMoment('fuel_ground_burned2');
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update all other fuel values as well
+        await setFuelArms(arm_fuel_ground_burned2.value);
+    } else {
+        await calculateMoment('fuel_ground_burned2');
+    }
     await calculateCG();
 });
 
@@ -313,7 +410,12 @@ weight_fuel_flight_burned1.addEventListener('input', async () => {
 
 arm_fuel_flight_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned1.arm', Number(arm_fuel_flight_burned1.value));
-    await calculateMoment('fuel_flight_burned1');
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update all other fuel values as well
+        await setFuelArms(arm_fuel_flight_burned1.value);
+    } else {
+        await calculateMoment('fuel_flight_burned1');
+    }
     await calculateCG();
 });
 
@@ -331,7 +433,12 @@ weight_fuel_flight_burned2.addEventListener('input', async () => {
 
 arm_fuel_flight_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned2.arm', Number(arm_fuel_flight_burned2.value));
-    await calculateMoment('fuel_flight_burned2');
+    if (await checkSymmetricArms()) {
+        //if symmetric arms is checked, update all other fuel values as well
+        await setFuelArms(arm_fuel_flight_burned2.value);
+    } else {
+        await calculateMoment('fuel_flight_burned2');
+    }
     await calculateCG();
 });
 
@@ -371,7 +478,6 @@ async function calculateMoment(target='none') {
         for (const item of ['basic_empty', 'oil', 'pilot1', 'pilot2', 'PAX1', 'PAX2', 'baggage1', 'baggage2', 'fuel_load1', 'fuel_load2', 'fuel_ground_burned1', 'fuel_ground_burned2', 'fuel_flight_burned1', 'fuel_flight_burned2']) {
             await calculateMoment(item);
         }
-        await calculateCG();
         return;
     }
 
@@ -384,7 +490,6 @@ async function calculateMoment(target='none') {
     if (weight.value === '' || arm.value === '') {
         moment.textContent = '';
         await update(`weight_items.${target}.moment`, 0);
-        await calculateCG();
         return;
     }
 
@@ -511,4 +616,8 @@ async function calculateCG() {
 }
 
 //---------On page load:
+const CG_table = document.getElementById('CG_table');
+CG_table.style.opacity = 0.4; //indicate loading
 await calculateMoment(); //initial calculation of all moments
+await calculateCG();
+CG_table.style.opacity = 1;

@@ -90,13 +90,18 @@ export async function updateSettings(key, value) {
 //-------Alert Box--------------
 const alertBox = document.getElementById("alertBox");
 
-export function showAlert(message) {
+export async function showAlert(message) {
     alertBox.textContent = message;
-    alertBox.style.display = "inline";
-    setTimeout(() => {
-        alertBox.style.display = "none";
-        alertBox.textContent = "";
-    }, 3000);
+    alertBox.style.visibility = "visible";
+    alertBox.style.transform = "translateY(7px) translateX(-50%)"; //slide down effect
+    alertBox.style.opacity = "1";
+    setTimeout(async () => {
+      alertBox.style.transform = "translateY(-7px) translateX(-50%)"; //slide up effect
+      alertBox.style.visibility = "hidden";
+      alertBox.style.opacity = "0";
+      await new Promise(resolve => setTimeout(resolve, 500)); //wait for opacity transition
+      alertBox.textContent = "";
+    }, 5000);
 }
 
 //--------------------AI Prompting------
