@@ -14,7 +14,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.1.6-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.6.7-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
@@ -187,7 +187,8 @@ data_template = {
         "units_specific_gravity" : "kg/L",
         "units_distance" : "nautical_mile",
         "waypoint_addType" : "City/Town",
-        "current_page" : ""
+        "current_page" : "",
+        "fill_symmetric_arms" : True,
                   },
     "flight" : {
         #-----------------------ROUTE
@@ -1164,15 +1165,33 @@ def calculate_totals():
     #updating session
     flight_data["fuel_total"]["value"] = round(total_fuel, 1)
 
-    #---TOTAL MASS---#
+    #---MASSES---#
     specific_gravity = flight_data["specific_gravity"]["value"]
     if specific_gravity != "" and specific_gravity != 0:
         #mass = volume * density (specific gravity)
         fuel_mass = total_fuel * float(specific_gravity)
         flight_data["fuel_mass"]["value"] = round(fuel_mass, 1)
+        #distributing fuel mass equally between 2 tanks for weight and balance
+        flight_data["weight_items"]["fuel_load1"]["weight"]["value"] = fuel_mass / 2
+        flight_data["weight_items"]["fuel_load2"]["weight"]["value"] = fuel_mass / 2
+
+        #fuel burned on ground
+        flight_data["weight_items"]["fuel_ground_burned1"]["weight"]["value"] = (float(taxi) * float(specific_gravity)) / 2
+        flight_data["weight_items"]["fuel_ground_burned2"]["weight"]["value"] = (float(taxi) * float(specific_gravity)) / 2
+
+        #fuel burned in flight
+        flight_data["weight_items"]["fuel_flight_burned1"]["weight"]["value"] = (float(trip) * float(specific_gravity)) / 2
+        flight_data["weight_items"]["fuel_flight_burned2"]["weight"]["value"] = (float(trip) * float(specific_gravity)) / 2
+
     else:
         flight_data["fuel_mass"]["value"] = 0
- 
+        flight_data["weight_items"]["fuel_load1"]["weight"]["value"] = 0
+        flight_data["weight_items"]["fuel_load2"]["weight"]["value"] = 0
+        flight_data["weight_items"]["fuel_ground_burned1"]["weight"]["value"] = 0
+        flight_data["weight_items"]["fuel_ground_burned2"]["weight"]["value"] = 0
+        flight_data["weight_items"]["fuel_flight_burned1"]["weight"]["value"] = 0
+        flight_data["weight_items"]["fuel_flight_burned2"]["weight"]["value"] = 0
+
     #---ENDURANCE--- to calculate how long the fuel will last based on burn rate
     fuel_burn = flight_data["fuel_burn"]["value"] #in units of fuel per hour
     if fuel_burn != "" and fuel_burn != 0:

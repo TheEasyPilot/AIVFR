@@ -582,18 +582,18 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             }
 
             //prevent adding departure or arrival airport as a waypoint
-            if (waypoint.value.toUpperCase() == departureAirport || waypoint.value.toUpperCase() == destinationAirport) {
-                showAlert("You cannot add the departure or arrival aerodrome as a waypoint.");
-                waypoint.value = '';
-                addWaypointContainer.classList.remove('loading')
-                return;
-
-            } else if (departureAirport == '' || destinationAirport == '') {
+            if (departureAirport == '' || destinationAirport == '') {
                 showAlert("Please make sure both departure and arrival aerodromes are set before adding waypoints.");
                 waypoint.value = '';
                 addWaypointContainer.classList.remove('loading')
                 return;
-            }
+                
+            } else if (waypoint.value.toUpperCase() == departureAirport || waypoint.value.toUpperCase() == destinationAirport) {
+                showAlert("You cannot add the departure or arrival aerodrome as a waypoint.");
+                waypoint.value = '';
+                addWaypointContainer.classList.remove('loading')
+                return;
+            } 
 
             //if all is valid a waypoint can be added
             if (addType == 'City/Town') {

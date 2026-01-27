@@ -152,3 +152,62 @@ td {
 #table_right:hover {
     transform: rotate(180deg) scale(1.1);
 }
+
+#CG_table {
+    transition: opacity 0.5s ease;
+}
+
+/*slider for symmetric arm toggle*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+
+/*hiding default checkbox*/
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/*custom slider*/
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--onhover);
+  transition: .4s ease-out;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--highlight);
+  transition: .4s ease-out;
+}
+
+input:checked + .slider {
+  background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+/*rounding the slider*/
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

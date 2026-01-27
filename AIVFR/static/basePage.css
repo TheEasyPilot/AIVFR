@@ -170,7 +170,7 @@ hr  {
 
 /*alert box*/
 #alertBox {
-    display: none;
+    visibility: hidden;
     background-color: hsla(0 100% 50% / 0.6);
     color: var(--highlight);
     padding: 5px 10px;
@@ -178,10 +178,12 @@ hr  {
     font-weight: 600;
     cursor: pointer;
     position: fixed;
-    top: 75px;
+    top: 55px;
     left: 50%;
     transform: translate(-50%, -50%); /*center the box*/
     z-index: 200;
+    transition: visibility 0.5s, opacity 0.5s, transform 0.5s;
+    opacity: 0;
 }
 
 /*-----Navlog pdf template------*/
