@@ -287,25 +287,14 @@ arm_baggage2.addEventListener('input', async () => {
 
 //setting all fuel arms to same value (for symmetric arms)
 async function setFuelArms(arm_value) {
-    arm_fuel_load1.value = arm_value;
-    arm_fuel_load2.value = arm_value;
-    arm_fuel_ground_burned1.value = arm_value;
-    arm_fuel_ground_burned2.value = arm_value;
-    arm_fuel_flight_burned1.value = arm_value;
-    arm_fuel_flight_burned2.value = arm_value;
+    let fuel_items = ['fuel_load1', 'fuel_load2', 'fuel_ground_burned1', 'fuel_ground_burned2', 'fuel_flight_burned1', 'fuel_flight_burned2'];
 
-    await update('weight_items.fuel_load1.arm', Number(arm_fuel_load1.value));
-    await calculateMoment('fuel_load1');
-    await update('weight_items.fuel_load2.arm', Number(arm_fuel_load2.value));
-    await calculateMoment('fuel_load2');
-    await update('weight_items.fuel_ground_burned1.arm', Number(arm_fuel_ground_burned1.value));
-    await calculateMoment('fuel_ground_burned1');
-    await update('weight_items.fuel_ground_burned2.arm', Number(arm_fuel_ground_burned2.value));
-    await calculateMoment('fuel_ground_burned2');
-    await update('weight_items.fuel_flight_burned1.arm', Number(arm_fuel_flight_burned1.value));
-    await calculateMoment('fuel_flight_burned1');
-    await update('weight_items.fuel_flight_burned2.arm', Number(arm_fuel_flight_burned2.value));
-    await calculateMoment('fuel_flight_burned2');
+    fuel_items.forEach( async (item) => {
+        const arm_element = document.getElementById(`arm_${item}`);
+        arm_element.value = arm_value;
+        await update(`weight_items.${item}.arm`, Number(arm_element.value));
+        await calculateMoment(item);
+    });
 }
 
 //FUEL lOAD1
