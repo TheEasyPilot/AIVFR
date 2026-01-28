@@ -153,8 +153,8 @@ td {
     transform: rotate(180deg) scale(1.1);
 }
 
-#CG_table {
-    transition: opacity 0.5s ease;
+#CG_table td {
+    transition: 0.5s ease;
 }
 
 /*slider for symmetric arm toggle*/
@@ -192,7 +192,7 @@ td {
   left: 4px;
   bottom: 4px;
   background-color: var(--highlight);
-  transition: .4s ease-out;
+  transition: 0.4s ease-out;
 }
 
 input:checked + .slider {
@@ -210,4 +210,9 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+#CG_table td.active {
+    background-color: hsla(0 100% 50% / 0.6);
+    color: var(--bg);
 }

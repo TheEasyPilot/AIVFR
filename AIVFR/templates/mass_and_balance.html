@@ -209,13 +209,13 @@
             </div>
 
               <div style="display: flex; flex-direction: column; gap: 10px; flex-wrap: wrap; margin-bottom: 25px;">
-                <p>V<sub>A</sub> Takeoff: <span id="va_takeoff">{{ flight.va_takeoff.output }}</span></p>
-                <p>V<sub>A</sub> Landing: <span id="va_landing">{{ flight.va_landing.output }}</span></p>
+                <p>V<sub>A</sub> Takeoff: <b><span id="va_takeoff">{{ flight.va_takeoff.output }}</span></b></p>
+                <p>V<sub>A</sub> Landing: <b><span id="va_landing">{{ flight.va_landing.output }}</span></b></p>
               </div>
 
               <!--Any weight calculation-->
               <div style="margin-bottom: 15px;"><b>Any Weight:</b> <input type="number" name="Any_Weight" id="Any_Weight" value="{{ flight.Any_Weight.value if flight.Any_Weight.value != 0 else '' }}"></div>
-              <p>Manouvering Speed: <span id="va_any">{{ flight.va_any.output }}</span></p>
+              <p>Manouvering Speed: <b><span id="va_any">{{ flight.va_any.output }}</span></b></p>
           </div>
         </div>
       </div>
