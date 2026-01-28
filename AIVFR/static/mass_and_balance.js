@@ -66,24 +66,31 @@ const va_takeoff = document.getElementById('va_takeoff'); //Manouvering Speed at
 const va_landing = document.getElementById('va_landing'); //Manouvering Speed at Landing Weight
 
 //Event listeners for basic inputs
-MTOW.addEventListener('input', () => {
-    update('MTOW.value', Number(MTOW.value));
+MTOW.addEventListener('input', async () => {
+    await update('MTOW.value', Number(MTOW.value));
+    await checkWeights();
 });
 
-MLW.addEventListener('input', () => {
-    update('MLW.value', Number(MLW.value));
+MLW.addEventListener('input', async () => {
+    await update('MLW.value', Number(MLW.value));
+    await checkWeights();
 });
 
-MGW.addEventListener('input', () => {
-    update('MGW.value', Number(MGW.value));
+MGW.addEventListener('input', async () => {
+    await update('MGW.value', Number(MGW.value));
+    await checkWeights();
+    await calculateVa_takeoffAndLanding();
+    
 });
 
-va_MGW.addEventListener('input', () => {
-    update('va_MGW.value', Number(va_MGW.value));
+va_MGW.addEventListener('input', async () => {
+    await update('va_MGW.value', Number(va_MGW.value));
+    await calculateVa_takeoffAndLanding();
 });
 
-Any_Weight.addEventListener('input', () => {
-    update('Any_Weight.value', Number(Any_Weight.value));
+Any_Weight.addEventListener('input', async () => {
+    await update('Any_Weight.value', Number(Any_Weight.value));
+    await calculateVa_any();
 });
 
 //----------------WEIGHT/BALANCE INPUTS
@@ -613,6 +620,8 @@ async function calculateCG() {
     if (data.status !== 'success') {
         showAlert('An error occurred whilst saving the calculated data.');
     }
+    await calculateVa_takeoffAndLanding()
+    await checkWeights();
 }
 
 //---------On page load:
@@ -621,3 +630,81 @@ CG_table.style.opacity = 0.4; //indicate loading
 await calculateMoment(); //initial calculation of all moments
 await calculateCG();
 CG_table.style.opacity = 1;
+
+//-----------------------MANOEUVRING SPEEDS----------------//
+
+//manoeuvering speeds for takeoff and landing
+async function calculateVa_takeoffAndLanding() {
+    
+    //ensure no calculaton occurs if any input is missing
+    if (takeoff_weight.textContent === '' || landing_weight.textContent === '' || MGW.value === '' || va_MGW.value === '') {
+        va_takeoff.textContent = '';
+        va_landing.textContent = '';
+        return;
+    }
+
+    //manoeuvring speed = Va @ max gross weight * sqrt(weight / max gross weight)
+    const Va_takeoff = Number(va_MGW.value) * Math.sqrt(Number(takeoff_weight.textContent)/Number(MGW.value))
+    const Va_landing = Number(va_MGW.value) * Math.sqrt(Number(landing_weight.textContent)/Number(MGW.value))
+    
+    await update('va_takeoff.value', Number(Va_takeoff));
+    await update('va_landing.value', Number(Va_landing));
+
+    //fetch output string from session to display
+    const resp = await fetch('get-flight')
+    const data = await resp.json();
+    va_takeoff.textContent = data.va_takeoff.output
+    va_landing.textContent = data.va_landing.output
+}
+
+
+//manouvering speed for any weight
+async function calculateVa_any() {
+    const Va_any = va_MGW.value * Math.sqrt(Any_Weight.value/MGW.value)
+    await update('va_any.value', Number(Va_any));
+
+    //fetch output string from session to display
+    const resp = await fetch('get-flight')
+    const data = await resp.json();
+    const va_any_output = data.va_any.output
+    va_any.textContent = va_any_output
+}
+
+//-------Checking weights limits
+async function checkWeights() {
+    //basic, zero-fuel and ramp weights should not exceed MGW
+    const ground_weights = [basic_weight, zero_fuel_weight, ramp_weight];
+
+    ground_weights.forEach((weight) => {
+        if (weight.textContent !== '' && MGW.value !== '') {
+            if (Number(weight.textContent) > Number(MGW.value)) {
+                weight.parentElement.classList.add('active');
+            } else {
+                weight.parentElement.classList.remove('active');
+            }
+        } else {
+            weight.parentElement.classList.remove('active');
+        }
+    });
+    //takeoff weight should not exceed MTOW
+    if (takeoff_weight.textContent !== '' && MTOW.value !== '') {
+        if (Number(takeoff_weight.textContent) > Number(MTOW.value)) {
+            takeoff_weight.parentElement.classList.add('active');
+        } else {
+            takeoff_weight.parentElement.classList.remove('active');
+        }
+    } else {
+        takeoff_weight.parentElement.classList.remove('active');
+    }
+
+    //landing weight should not exceed MLW
+    if (landing_weight.textContent !== '' && MLW.value !== '') {
+        if (Number(landing_weight.textContent) > Number(MLW.value)) {
+            landing_weight.parentElement.classList.add('active');
+        } else {
+            landing_weight.parentElement.classList.remove('active');
+        }
+    } else {
+        landing_weight.parentElement.classList.remove('active');
+    }
+}

@@ -14,7 +14,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.6.7-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.6.8-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
@@ -428,7 +428,6 @@ def update_flight():
         if k not in target or not isinstance(target[k], dict):
             return jsonify({"error": "Invalid key path"}), 400
         target = target[k]
-
     target[keys[-1]] = value
     update_units() #update units in case a unit value was changed
     session.modified = True
