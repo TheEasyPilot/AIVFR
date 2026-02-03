@@ -14,7 +14,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.6.8-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.7.0-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #settings menu
 @main.route('/settings')
@@ -247,7 +247,7 @@ data_template = {
             "time_allowed" : "",
         },
         "fuelPolicy_contingency" : {
-            "policy" : "Either 5% of Trip, 3% if Enroute alternative aerodrome available, or Whatever is sufficient for 20min of flight. Whichever higher.",
+            "policy" : "10% of trip fuel, 5% if Enroute alternative aerodrome available.",
             "time_allowed" : "",
         },
         "fuelPolicy_alternate" : {
@@ -255,11 +255,11 @@ data_template = {
             "time_allowed" : "",
         },
         "fuelPolicy_finalReserve" : {
-            "policy" : "Enough for 45 min Flight time",
+            "policy" : "For 10 minutes at maximum continuous cruise power at 1 500 ft (450 m) above the destination under VFR by day, taking off and landing at the same aerodrome / landing site, and always remaining within sight of that aerodrome / landing site; Enough for 30 minutes at holding speed at 1 500 ft (450 m) above the destination under VFR by day; and for 45 minutes at holding speed at 1 500 ft (450 m) above the destination or destination alternate aerodrome under VFR flights by night.",
             "time_allowed" : "",
         },
         "fuelPolicy_additional" : {
-            "policy" : "Enough for 15 mins holding time",
+            "policy" : "Enough for 15 mins holding time. Only required for turbine-engine or complex motor-powered aircraft.",
             "time_allowed" : "",
         },
         #FUEL VALUES - NON EDITABLE#
@@ -391,6 +391,7 @@ data_template = {
                 "CG" : 0
             }
         },
+        "AI_suggestion" : "",
 
         #---------------------PERFORMANCE
         "TODR" : 0,
@@ -723,14 +724,13 @@ def get_waypoints(coords):
 #------------------------Making a prompt
 @main.route('/prompt', methods=["POST"])
 def prompt():
-    departure_coords = session["flight_data"]["flight"]["route"][0]
-    destination_coords = session["flight_data"]["flight"]["route"][-1]
-
     type = request.json.get("type") #expecting 'Route', 'Brief' or 'Navlog'
     text = request.json.get("text") #the actual prompt text by user
 
     #making the OpenAI client and making the request
     if type == "Route":
+        departure_coords = session["flight_data"]["flight"]["route"][0]
+        destination_coords = session["flight_data"]["flight"]["route"][-1]
         try:
             client = OpenAI()
             response = client.responses.create(
@@ -769,7 +769,6 @@ def prompt():
                 ]
             )
             response = response.output[0].content[0].text #parsing the response to just the text
-            
             return jsonify({"response": response}), 200 #sends back the AI response
         
         except Exception as error:
