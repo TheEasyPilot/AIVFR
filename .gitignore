@@ -8,3 +8,6 @@
 
 #Python cache
 __pycache__/
+
+#changelog template
+changelog_template.md
