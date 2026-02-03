@@ -1,4 +1,4 @@
-import { update, updateSettings, showAlert } from "./basePage.js";
+import { update, updateSettings, showAlert, prompt } from "./basePage.js";
 await updateSettings("current_page", "/mass-and-balance");
 
 //-------symmetric arm checkbox handling
@@ -165,6 +165,7 @@ arm_pilot1.addEventListener('input', async () => {
         arm_pilot2.value = arm_pilot1.value;
         await update('weight_items.pilot2.arm', Number(arm_pilot2.value));
         await calculateMoment('pilot2');
+        await calculateMoment('pilot1');
     } else {
         await calculateMoment('pilot1');
     }
@@ -191,6 +192,7 @@ arm_pilot2.addEventListener('input', async () => {
         arm_pilot1.value = arm_pilot2.value;
         await update('weight_items.pilot1.arm', Number(arm_pilot1.value));
         await calculateMoment('pilot1');
+        await calculateMoment('pilot2');
     } else {
         await calculateMoment('pilot2');
     }
@@ -217,6 +219,7 @@ arm_PAX1.addEventListener('input', async () => {
         arm_PAX2.value = arm_PAX1.value;
         await update('weight_items.PAX2.arm', Number(arm_PAX2.value));
         await calculateMoment('PAX2');
+        await calculateMoment('PAX1');
     } else {
         await calculateMoment('PAX1');
     }
@@ -243,6 +246,7 @@ arm_PAX2.addEventListener('input', async () => {
         arm_PAX1.value = arm_PAX2.value;
         await update('weight_items.PAX1.arm', Number(arm_PAX1.value));
         await calculateMoment('PAX1');
+        await calculateMoment('PAX2');
     } else {
         await calculateMoment('PAX2');
     }
@@ -285,16 +289,32 @@ arm_baggage2.addEventListener('input', async () => {
     await calculateCG();
 });
 
+// Utility function to create a delay
+
+var abort = false;
+
 //setting all fuel arms to same value (for symmetric arms)
 async function setFuelArms(arm_value) {
+    abort = false;
     let fuel_items = ['fuel_load1', 'fuel_load2', 'fuel_ground_burned1', 'fuel_ground_burned2', 'fuel_flight_burned1', 'fuel_flight_burned2'];
-
+    
+    //immediately display the changes on screen
     fuel_items.forEach( async (item) => {
         const arm_element = document.getElementById(`arm_${item}`);
         arm_element.value = arm_value;
-        await update(`weight_items.${item}.arm`, Number(arm_element.value));
         await calculateMoment(item);
     });
+
+    //then update the session values
+    for (const item of fuel_items) {
+        if (abort) {
+            abort = false;
+            return;
+        }
+        await calculateMoment(item);
+        await update(`weight_items.${item}.arm`, Number(arm_value));
+    }
+    await update('weight_items.fuel_load1.arm', Number(arm_value)); //discrepancy fix
 }
 
 //FUEL lOAD1
@@ -310,12 +330,12 @@ weight_fuel_load1.addEventListener('input', async () => {
 });
 
 arm_fuel_load1.addEventListener('input', async () => {
-    await update('weight_items.fuel_load1.arm', Number(arm_fuel_load1.value));
-
     if (await checkSymmetricArms()) {
         //if symmetric arms is checked, update all other fuel values as well
+        abort = true; //to prevent synchronous updates
         await setFuelArms(arm_fuel_load1.value);
     } else {
+        await update('weight_items.fuel_load1.arm', Number(arm_fuel_load1.value));
         await calculateMoment('fuel_load1');
     }
     await calculateCG();
@@ -334,12 +354,12 @@ weight_fuel_load2.addEventListener('input', async () => {
 });
 
 arm_fuel_load2.addEventListener('input', async () => {
-    await update('weight_items.fuel_load2.arm', Number(arm_fuel_load2.value));
-
     if (await checkSymmetricArms()) {
         //if symmetric arms is checked, update all other fuel values as well
+        abort = true; //to prevent synchronous updates
         await setFuelArms(arm_fuel_load2.value);
     } else {
+        await update('weight_items.fuel_load2.arm', Number(arm_fuel_load2.value));
         await calculateMoment('fuel_load2');
     }
     await calculateCG();
@@ -358,12 +378,12 @@ weight_fuel_ground_burned1.addEventListener('input', async () => {
 });
 
 arm_fuel_ground_burned1.addEventListener('input', async () => {
-    await update('weight_items.fuel_ground_burned1.arm', Number(arm_fuel_ground_burned1.value));
-
     if (await checkSymmetricArms()) {
         //if symmetric arms is checked, update all other fuel values as well
+        abort = true; //to prevent synchronous updates
         await setFuelArms(arm_fuel_ground_burned1.value);
     } else {
+        await update('weight_items.fuel_ground_burned1.arm', Number(arm_fuel_ground_burned1.value));
         await calculateMoment('fuel_ground_burned1');
     }
     await calculateCG();
@@ -382,11 +402,12 @@ weight_fuel_ground_burned2.addEventListener('input', async () => {
 });
 
 arm_fuel_ground_burned2.addEventListener('input', async () => {
-    await update('weight_items.fuel_ground_burned2.arm', Number(arm_fuel_ground_burned2.value));
     if (await checkSymmetricArms()) {
         //if symmetric arms is checked, update all other fuel values as well
+        abort = true; //to prevent synchronous updates
         await setFuelArms(arm_fuel_ground_burned2.value);
     } else {
+        await update('weight_items.fuel_ground_burned2.arm', Number(arm_fuel_ground_burned2.value));
         await calculateMoment('fuel_ground_burned2');
     }
     await calculateCG();
@@ -405,11 +426,12 @@ weight_fuel_flight_burned1.addEventListener('input', async () => {
 });
 
 arm_fuel_flight_burned1.addEventListener('input', async () => {
-    await update('weight_items.fuel_flight_burned1.arm', Number(arm_fuel_flight_burned1.value));
     if (await checkSymmetricArms()) {
         //if symmetric arms is checked, update all other fuel values as well
+        abort = true; //to prevent synchronous updates
         await setFuelArms(arm_fuel_flight_burned1.value);
     } else {
+        await update('weight_items.fuel_flight_burned1.arm', Number(arm_fuel_flight_burned1.value));
         await calculateMoment('fuel_flight_burned1');
     }
     await calculateCG();
@@ -428,11 +450,12 @@ weight_fuel_flight_burned2.addEventListener('input', async () => {
 });
 
 arm_fuel_flight_burned2.addEventListener('input', async () => {
-    await update('weight_items.fuel_flight_burned2.arm', Number(arm_fuel_flight_burned2.value));
     if (await checkSymmetricArms()) {
         //if symmetric arms is checked, update all other fuel values as well
+        abort = true; //to prevent synchronous updates
         await setFuelArms(arm_fuel_flight_burned2.value);
     } else {
+         await update('weight_items.fuel_flight_burned2.arm', Number(arm_fuel_flight_burned2.value));
         await calculateMoment('fuel_flight_burned2');
     }
     await calculateCG();
@@ -618,6 +641,10 @@ const CG_table = document.getElementById('CG_table');
 CG_table.style.opacity = 0.4; //indicate loading
 await calculateMoment(); //initial calculation of all moments
 await calculateCG();
+
+if (await checkSymmetricArms()) {
+    await setFuelArms(arm_fuel_load1.value);//to ensure all fuel arms are same on load if symmetric arms is checked
+}
 CG_table.style.opacity = 1;
 
 //-----------------------MANOEUVRING SPEEDS----------------//
@@ -697,3 +724,90 @@ async function checkWeights() {
         landing_weight.parentElement.classList.remove('active');
     }
 }
+
+//-----------------------------SUGGESTING A CHANGE----------------------------------//
+
+//-------popup handling
+const suggestionModal = document.getElementById('suggestion');
+const closePopupButton = document.getElementById('closepopup');
+const suggestChangeButton = document.getElementById('suggestChange');
+
+//Event listener to close the popup
+closePopupButton.addEventListener('click', () => {
+    suggestionModal.style.display = 'none';
+});
+
+//Function to open the suggestion popup
+suggestChangeButton.addEventListener('click', async () => {
+    suggestionModal.style.display = 'block';
+    await suggestChange();
+});
+
+
+//-------AI suggestion
+
+const output = document.getElementById("output");
+
+async function suggestChange() {
+    output.style.color = "#737373";
+    output.textContent = "Generating suggestion...";
+
+    const response = await fetch('/get-flight');
+    const flightData = await response.json();
+
+    const promptText = `
+    FLIGHT DATA:
+
+    ROUTE:
+    Departure Airport: ${flightData.departureAirport_name}
+    Arrival Airport: ${flightData.destinationAirport_name}
+    Alternate Airport: ${flightData.alternateAirport_name}
+    Distance: ${flightData.distance.output}
+    Time Enroute: ${flightData.time}
+    Route: ${flightData.route_names}
+
+    FUEL POLICIES:
+    Trip: ${flightData.fuelPolicy_trip}
+    Contingency: ${flightData.fuelPolicy_contingency}
+    Alternate: ${flightData.fuelPolicy_alternate}
+    Final Reserve: ${flightData.fuelPolicy_finalReserve}
+    Additional: ${flightData.fuelPolicy_additional}
+
+    FUEL VALUES:
+    Taxi Fuel: ${flightData.fuel_taxi.output}
+    Trip Fuel: ${flightData.fuel_trip.output}
+    Contingency Fuel: ${flightData.fuel_contingency.output}
+    Alternate Fuel: ${flightData.fuel_alternate.output}
+    Final Reserve Fuel: ${flightData.fuel_finalReserve.output}
+    Additional Fuel: ${flightData.fuel_additional.output}
+    Extra Fuel: ${flightData.fuel_extra.output}
+    Total Fuel: ${flightData.fuel_total.output}
+    Fuel Burn: ${flightData.fuel_burn.output}
+    Fuel Endurance: ${flightData.fuel_endurance.output}
+
+    MASS AND BALANCE:
+    MTOW: ${flightData.MTOW.output}
+    MLW: ${flightData.MLW.output}
+    MGW: ${flightData.MGW.output}
+    
+    Weight and Balance Table:
+    ${JSON.stringify(flightData.weight_items)}
+
+    CG Table:
+    ${JSON.stringify(flightData.CG_calculations)}
+    `
+
+    const aiResponse = await prompt("Mass_and_Balance", promptText);  
+    try {
+        const resp = JSON.parse(aiResponse); //parsing the response to JSON
+        output.style.color = "#000000";
+        console.log(resp);
+        output.textContent = resp.suggestion
+
+    } catch (error) {
+        console.log(error);
+        output.style.color = "#FF0000";
+        output.textContent = "An error occurred while generating the suggestion. Please ensure your route is complete and try again.";
+    }
+}
+

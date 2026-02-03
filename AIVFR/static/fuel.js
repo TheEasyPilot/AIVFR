@@ -242,9 +242,9 @@ autofillButton.addEventListener("click", async () => {
   Additional: ${additionalPolicy.value}
 
   RELEVANT FLIGHT DATA:
-  Departure ICAO: ${flightData.departureAirport_code}
-  Arrival ICAO: ${flightData.destinationAirport_code}
-  Alternate ICAO: ${flightData.alternateAirport_code}
+  Departure Airport: ${flightData.departureAirport_name}
+  Arrival Airport: ${flightData.destinationAirport_name}
+  Alternate Airport: ${flightData.alternateAirport_name}
   Distance: ${flightData.distance.output}
   Time Enroute: ${flightData.time}
   `;

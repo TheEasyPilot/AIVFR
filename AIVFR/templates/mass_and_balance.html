@@ -15,6 +15,17 @@
           <div id="title">MASS & BALANCE</div>
           <span id="alertBox"></span>
       </div>
+      <!---Suggest a change modal-->
+      <div id="suggestion" class="modal">
+        <div class="suggestionContent">
+          <div style="display: flex; justify-content: center; align-items: center">
+            <h3>Suggest a change</h3>
+            <svg id="closepopup" fill="currentColor" width="20" height="20" stroke="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><line stroke-width="4" x1="2" x2="30" y1="2" y2="30"/><line stroke-width="4" x1="2" x2="30" y1="30" y2="2"/></svg>
+          </div>
+          <div id="output"></div>
+          <p style="color: #737373; margin-top: 15px;">This assessment is qualitative and is not aircraft-specific. Final loading must be verified against the aircraft POH.</p>
+        </div>
+      </div>
 <!--===========================BODY==========================-->
       <div id="content">
         <div id="half1">
@@ -209,13 +220,13 @@
             </div>
 
               <div style="display: flex; flex-direction: column; gap: 10px; flex-wrap: wrap; margin-bottom: 25px;">
-                <p>V<sub>A</sub> Takeoff: <b><span id="va_takeoff">{{ flight.va_takeoff.output }}</span></b></p>
-                <p>V<sub>A</sub> Landing: <b><span id="va_landing">{{ flight.va_landing.output }}</span></b></p>
+                <p>V<sub>A</sub> Takeoff: <b><span id="va_takeoff">{{ flight.va_takeoff.output if flight.va_takeoff.value != 0 else '' }}</span></b></p>
+                <p>V<sub>A</sub> Landing: <b><span id="va_landing">{{ flight.va_landing.output if flight.va_landing.value != 0 else '' }}</span></b></p>
               </div>
 
               <!--Any weight calculation-->
               <div style="margin-bottom: 15px;"><b>Any Weight:</b> <input type="number" name="Any_Weight" id="Any_Weight" value="{{ flight.Any_Weight.value if flight.Any_Weight.value != 0 else '' }}"></div>
-              <p>Manouvering Speed: <b><span id="va_any">{{ flight.va_any.output }}</span></b></p>
+              <p>Manouvering Speed: <b><span id="va_any">{{ flight.va_any.output if flight.va_any.value != 0 else '' }}</span></b></p>
           </div>
         </div>
       </div>
