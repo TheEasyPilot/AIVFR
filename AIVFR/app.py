@@ -14,7 +14,7 @@ def index():
     if "flight_data" not in session: #initialise the session if not created already
         session["flight_data"] = data_template.copy()
         update_units()
-    return render_template('menu.html', APP_VERSION="0.7.0-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+    return render_template('menu.html', APP_VERSION="0.7.1-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
 
 #changelog
 @main.route('/changelog')
