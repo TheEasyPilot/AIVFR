@@ -110,7 +110,7 @@
     <div id="changelog">
       Loading changelog... <!--when changelog isn't loaded yet this is shown-->
       <script>
-        fetch('/CHANGELOG.md')
+        fetch('/changelog')
           .then(response => response.text())
           .then(text => {
             //converting markdown to HTML using marked.js
