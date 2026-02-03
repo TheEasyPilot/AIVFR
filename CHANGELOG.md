@@ -4,13 +4,13 @@ AIVFR uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
-### [0.7.1-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.1-alpha) - 2026-02-02 [YANKED]
-
+### [[0.7.1-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.1-alpha)]
 #### Fixed
 
 - Fixed changelog display bug caused by directory fetching issues
+- updated log to include brackets where necessary
 
-### [0.7.0-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.0-alpha) - 2026-02-02
+### [[0.7.0-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.0-alpha)] - 2026-02-02
 
 #### Added
 
