@@ -14,7 +14,7 @@ Fun fact: The very first public version of this tool `v1.0.0-beta` was made as p
 
 This webtool is not adapted for mobile users. For the best experience please use a laptop/tablet.
 
-Use **/debug** to see all the currently stored data for your session.
+Use **`/debug`** to see all the currently stored data for your session.
 
 Please see the attatched full documentation to see the project development aswell as resources/credits.
 
