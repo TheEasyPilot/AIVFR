@@ -2,6 +2,7 @@
     color: var(--text)
 }
 
+
 #logoAI, #logoVFR {
     position: relative;
     bottom: 20px;
@@ -15,6 +16,16 @@
 
 #logoVFR {
     color: var(--text);
+}
+
+#bluePlaneLogo{
+    position: fixed;
+    bottom: -320px;
+    left: 330px;
+    width: 85%;
+    opacity: 0.15;
+    z-index: -1;
+
 }
 
 #logoAlpha {
@@ -237,4 +248,28 @@ footer a:hover {
 
 button {
     transition: background-color 0.2s;
+}
+
+/*------Changelog------*/
+
+#changelog {
+    position: absolute;
+    top: 100px;
+    right: 250px;
+    width: 500px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: var(--highlight);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    font-family: 'Manrope';
+}
+
+/*adding media query to ensure changelog doesn't cover title when screen is small*/
+@media (max-width: 1200px) {
+    #changelog {
+        position: static;
+    }
 }
