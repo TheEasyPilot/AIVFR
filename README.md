@@ -1,10 +1,9 @@
-# <img width="1920" height="1080" alt="AI VFR Webtool UI Design" src="https://github.com/user-attachments/assets/e0f9aed8-6a06-473f-acc3-6d13d3fc6ed4"/>
+# <img width="1920" height="1080" alt="AI VFR Webtool UI Design (1)" src="https://github.com/user-attachments/assets/a5cd6a27-54eb-4a14-973c-2734a586292d" />
+
 [![License](https://img.shields.io/badge/License-CC_BY_NC_4.0-blue)](https://creativecommons.org/licenses/by-nc/4.0/)
 [![Documentation](https://img.shields.io/badge/Download_the_full_documentation-Currently_Unavailable-red)]()
 
 ***An Experimental AI assisted Flight Planning Webtool***
-
-
 
 AIVFR is an experimental AI assisted flight planning webtool for VFR (Visual Flight Rules) pilots in the UK. It gives users the ability to create routes, see weather reports, create and download flight breifings that include Threat and Error Management, pilot logs, and also configure fuel and mass & balance details.
 
