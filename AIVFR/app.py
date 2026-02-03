@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, jsonify, request
+from flask import Blueprint, render_template, send_from_directory, session, jsonify, request
 from math import radians, degrees, sin, asin, cos, sqrt
 import os, pint, requests
 from openai import OpenAI
@@ -15,6 +15,11 @@ def index():
         session["flight_data"] = data_template.copy()
         update_units()
     return render_template('menu.html', APP_VERSION="0.7.0-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
+
+#changelog
+@main.route('/changelog')
+def changelog():
+    return send_from_directory(directory='..', path='CHANGELOG.md')
 
 #settings menu
 @main.route('/settings')
@@ -55,7 +60,6 @@ def massAndBalanceTab():
 @main.route('/performance')
 def performanceTab():
     return render_template('performance.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
 #-------------DEBUGGING
 
 #debug route that allows me to see the flight data at any time
