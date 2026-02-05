@@ -39,3 +39,53 @@
     cursor: not-allowed;
     pointer-events: none;
 }
+
+/*content*/
+
+#content {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.3fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#route_information {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 200px;
+}
+
+#weight_and_performance {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 200px;
+}
+
+#route_details {
+    grid-column: 1;
+    grid-row: 3;
+    min-height: 300px;
+}
+
+#weather_info {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
+#expenses {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+#brief {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+}
+
+.dashboard_content {
+    background-color: var(--highlight);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+
