@@ -8,22 +8,22 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #### Added
 
-- **NEW TAB**: Dashboard. The Dasboard shows a summary of all currently entered flight details, listed below:
+- **NEW TAB**: Dashboard. The Dashboard shows a summary of all currently entered flight details, listed below:
 - Route information:
   - Departure → Arrival
   - Time and distance
   - Alternate aerodrome
     
-- Display aircraft weight and performance:
+- Aircraft weight and performance:
   - Persons on board
   - Cargo weight
   - Fuel
   - Total (ramp)
   - MTOW, MLW
   - TOD, LD
-  - Display route information:
-
-- Route
+  
+- Route details:
+  - Route
   - Cruise and groundspeed
   - Alternate details
   - Display weather reports
