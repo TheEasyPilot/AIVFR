@@ -4,13 +4,43 @@ AIVFR uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
-### [0.7.1-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.1-alpha) - 2026-02-03 [YANKED]
+### [0.8.0-alpha (unreleased)](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.8.0-alpha)
+
+#### Added
+
+- **NEW TAB**: Dashboard. The Dasboard shows a summary of all currently entered flight details, listed below:
+- Route information:
+  - Departure → Arrival
+  - Time and distance
+  - Alternate aerodrome
+    
+- Display aircraft weight and performance:
+  - Persons on board
+  - Cargo weight
+  - Fuel
+  - Total (ramp)
+  - MTOW, MLW
+  - TOD, LD
+  - Display route information:
+
+- Route
+  - Cruise and groundspeed
+  - Alternate details
+  - Display weather reports
+  - Allow the user to add expenses to their flight
+
+- Users can use AI to generate a briefing for the entire flight
+- All flight data can be downloaded as pdf
+
+
+### [0.7.1-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.1-alpha) - 2026-02-02 [YANKED]
+
 #### Fixed
 
 - Fixed changelog display bug caused by directory fetching issues
 - updated log to include brackets where necessary
 
-### [0.7.0-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.0-alpha) - 2026-02-03
+### [0.7.0-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.0-alpha) - 2026-02-02
 
 #### Added
 
