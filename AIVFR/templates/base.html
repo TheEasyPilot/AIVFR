@@ -16,6 +16,15 @@
     <link rel="icon" type="image/png" href="../static/FPWT_images/logoAIVFR.png">
     <script type="module" src="../static/basePage.js" defer></script>
 
+    <!--OG formatting for social media and search engines-->
+    <meta property="og:title" content="{{ og:title if og.title else 'AIVFR - AI Assisted Flight Planning' }}" />
+    <meta property="og:description" content="An experimental AI-Assisted flight planning webtool for pilots flying VFR in the UK.">
+    <meta property="og:image" content="https://www.aivfr.co.uk/static/FPWT_images/logoAIVFR.png">
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:site_name" content="AIVFR">
+
     {% endblock %}
   </head>
   
