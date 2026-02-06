@@ -52,7 +52,7 @@
 #route_information {
     grid-column: 1;
     grid-row: 1;
-    min-height: 200px;
+    min-height: 150px;
 }
 
 #weight_and_performance {
@@ -88,4 +88,94 @@
     padding: 15px;
 }
 
+input {
+    border: 1px solid var(--onhover);
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Manrope';
+    font-size: 13px;
+    background-color: var(--bg);
+}
+
+
+.WP_content {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 10px;
+}
+
+/*content styling*/
+
+/*route information*/
+#route_names {
+    font-family: 'Manrope';
+    font-size: 14px;
+    background-color: var(--bg);
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 10px;
+    min-height: 70px;
+}
+
+#refresh_WX, #refresh_brief {
+    background-color: var(--bg);
+    width: 40px;
+    height: 38px;
+}
+
+#refresh_WX:hover, #refresh_brief:hover {
+    background-color: var(--onhover);
+    cursor: pointer;
+}
+
+/*weather info*/
+.WX_metar {
+    background-color: var(--bg);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/*expenses*/
+#add_expense {
+    background-color: var(--bg);
+    width: 40px;
+    height: 39px;
+}
+
+#add_expense:hover {
+    background-color: var(--onhover);
+    cursor: pointer;
+}
+
+#expenses_content {
+    position: relative;
+    left: 20px;
+    margin-bottom: 10px;
+    height: calc(100% - 100px);
+}
+
+.expense{
+    margin-bottom: 10px;
+}
+
+#total_expense {
+    position: relative;
+    background-color: var(--bg);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/*brief*/
+#AI_brief_output {
+    background-color: var(--bg);
+    padding: 20px;
+    border-radius: 10px;
+    height: calc(100% - 48px);
+    overflow-y: auto;
+}
 
