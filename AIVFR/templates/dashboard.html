@@ -16,61 +16,168 @@
           <div id="title">DASHBOARD</div>
           <span id="alertBox"></span>
           <button id="save">SAVE FLIGHT</button>
-          <!--REMEMBER TO REVERT<button id="save" class="{{ 'savingOrSaved' if flight.saved == 'True' else '' }}">{{ 'SAVED' if flight.saved == 'True' else 'SAVE FLIGHT' }}</button>-->
+          <!--<button id="save" class="{{ 'savingOrSaved' if flight.saved == 'True' else '' }}">{{ 'SAVED' if flight.saved == 'True' else 'SAVE FLIGHT' }}</button>-->
       </div>
 <!--=============================BODY==========================-->
       <div id="content">
-        <!--route information-->
+  <!--ROUTE INFORMATION-->
         <div id="route_information" class="dashboard_content">
-          <!--header-->
+      <!--header-->
           <div id="route_info_header" style="display: flex; align-items: center; gap: 10px;">
             <svg style="width: 25px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g><path d="M0 0h24v24H0z" fill="none"/><path d="M4 15V8.5a4.5 4.5 0 0 1 9 0v7a2.5 2.5 0 1 0 5 0V8.83a3.001 3.001 0 1 1 2 0v6.67a4.5 4.5 0 1 1-9 0v-7a2.5 2.5 0 0 0-5 0V15h3l-4 5-4-5h3zm15-8a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor"/></g></svg>
             <h3>Route information</h3>
           </div>
+      <!--content-->
+          <div id="route_info_content" style="font-size: 15px; margin-top: 15px;">
+            <p><b>ABCD</b> Depart Airport ➔ <b>EFGH</b> Arrival Airport</p>
+            <p style="margin-top: 5px;"><b>X</b> minutes | <b>Y</b> NM</p>
+            <p style="margin-top: 5px;"><b>Alternate:</b> <b>IJKL</b> Alternate Airport</p>
+          </div>
         </div>
 
-        <!--weight and performance-->
+   <!--WEIGHT AND PERFORMANCE-->
         <div id="weight_and_performance" class="dashboard_content">
-          <!--header-->
+      <!--header-->
           <div id="weight_and_performance_header" style="display: flex; align-items: center; gap: 10px;">
             <svg style="width: 25px;" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M256 112C176.6 112 112 176.6 112 256s64.6 144 144 144s144-64.6 144-144S335.4 112 256 112zM256 336c-44.18 0-80-35.82-80-80S211.8 176 256 176c44.18 0 80 35.82 80 80S300.2 336 256 336zM256 224C238.4 224 224 238.4 224 256s14.36 32 32 32s32-14.36 32-32S273.6 224 256 224zM256 0C114.8 0 0 114.8 0 256s114.8 256 256 256s256-114.8 256-256S397.2 0 256 0zM256 448c-106 0-192-85.96-192-192s85.96-192 192-192s192 85.96 192 192S362 448 256 448z"/></svg>
             <h3>Weight and performance</h3>
           </div>
+      <!--content-->
+          <p><b>Aircraft:</b><input style="margin-left: 10px; width: 150px; margin-top: 15px;" type="text" placeholder="Enter Aircraft"></p>
+          <div id="weight_and_performance_content" style="font-size: 15px; margin-top: 5px;">
+            <div class="WP_content" style="margin-top: 15px;">
+              <p><b>POB: </b>X</p>
+              <p><b>Cargo: </b>X</p>
+              <p><b>Fuel: </b>X</p>
+            </div>
+            <div class="WP_content">
+              <p><b>Ramp: </b>X</p>
+              <p><b>TOW: </b>X</p>
+              <p><b>LW: </b>X</p>
+            </div>
+            <div class="WP_content">
+              <p><b>TODR: </b>X</p>
+              <p><b>LDR: </b>X</p>
+            </div>
+          </div>
         </div>
 
-        <!--route details-->
+  <!--ROUTE DETAILS-->
         <div id="route_details" class="dashboard_content">
-          <!--header-->
+       <!--header-->
           <div id="route_details_header" style="display: flex; align-items: center; gap: 10px;">
             <svg style="width: 25px" id="Layer_1" style="enable-background:new 0 0 128 128;" version="1.1" viewBox="0 0 128 128" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path fill="currentColor"  d="M83,125.5l43-22.1V0.5L83,22.5l-39-20L1,24.6v103l43-22.1L83,125.5z M87,29.4l31-15.9v85l-31,15.9V29.4z M48,13.5l31,15.9   v85L48,98.6V13.5z M40,98.6L9,114.5v-85l31-15.9V98.6z"/></g></svg>
             <h3>Route details</h3>
           </div>
-        </div>
-
-        <!--weather information-->
-        <div id="weather_info" class="dashboard_content">
-          <!--header-->
-          <div id="weather_info_header" style="display: flex; align-items: center; gap: 5px;">
-            <svg style="width: 30px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title/><g data-name="1" id="_1"><path fill="currentColor" d="M353.79,368.64H135.31A81.17,81.17,0,0,1,124.75,207a128.17,128.17,0,0,1,229.67-38.59,100.13,100.13,0,0,1-.63,200.25ZM135.31,236.3a51.17,51.17,0,1,0,0,102.34H353.79a70.13,70.13,0,0,0,0-140.25c-1.9,0-3.9.09-6.13.29a15,15,0,0,1-14.26-7.41,98.17,98.17,0,0,0-181.68,32.59,15,15,0,0,1-15.16,12.47l-.7,0Z"/></g></svg>
-            <h3>Weather</h3>
+      <!--content-->
+          <div id="route_details_content">
+            <div id="route_names">
+              ABCD ➔ WAYPOINT1 ➔ WAYPOINT2 ➔ DEFG
+            </div>
+            <div style="display: flex; gap: 20px; margin-top: 15px;">
+              <p style="margin-bottom: 10px;"><b>Cruise: </b>xxxxft</p>
+              <p><b>GS: </b>X</p>
+            </div>
+            <hr>
+            
+            <p style="margin-bottom: 15px"><b>Alternate</b> (Alternate)</p>
+            <p style="margin-bottom: 5px">Distance from [arrival]: <b>X</b></p>
+            <p style="margin-bottom: 5px">Fuel Required: <b>X</b></p>
+            <p style="margin-bottom: 5px">ETA to alternate: <b>X</b></p>
           </div>
         </div>
 
-        <!--expenses-->
+  <!--WEATHER INFORMATION-->
+        <div id="weather_info" class="dashboard_content">
+      <!--header-->
+          <div id="weather_info_header" style="display: flex; justify-content: space-between;" >
+            <div style="display: flex; align-items: center; gap: 5px;">
+              <svg style="width: 30px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title/><g data-name="1" id="_1"><path fill="currentColor" d="M353.79,368.64H135.31A81.17,81.17,0,0,1,124.75,207a128.17,128.17,0,0,1,229.67-38.59,100.13,100.13,0,0,1-.63,200.25ZM135.31,236.3a51.17,51.17,0,1,0,0,102.34H353.79a70.13,70.13,0,0,0,0-140.25c-1.9,0-3.9.09-6.13.29a15,15,0,0,1-14.26-7.41,98.17,98.17,0,0,0-181.68,32.59,15,15,0,0,1-15.16,12.47l-.7,0Z"/></g></svg>
+              <h3>Weather</h3>
+            </div>
+            <button class="button" id="refresh_WX"><svg style="width: 25px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><style type="text/css">.st0{opacity:0.2;fill:currentColor;stroke:currentColor ;stroke-width:0.05;stroke-miterlimit:10;}</style><g id="grid_system"/><g id="_icons"><g><path d="M12,21c4.9624,0,9-4.0376,9-9c0-0.3784-0.0239-0.7598-0.0708-1.1338c-0.0688-0.5479-0.5698-0.9346-1.1172-0.8672    c-0.5479,0.0688-0.936,0.5688-0.8672,1.1172C18.981,11.4053,19,11.7007,19,12c0,3.8599-3.1401,7-7,7s-7-3.1401-7-7s3.1401-7,7-7    c1.8568,0,3.6179,0.7455,4.9119,2.0166c0.062,0.0613,0.1177,0.1297,0.1776,0.1935c0.0279,0.0295,0.0533,0.0613,0.0806,0.0914    L15.3794,7.624c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616c0.0874,0.4839,0.5088,0.8228,0.9834,0.8228    c0.0586,0,0.1182-0.0049,0.1782-0.0156l4.1753-0.7524c0.5435-0.0981,0.9048-0.6182,0.8071-1.1616l-0.7524-4.1758    c-0.0986-0.5439-0.6167-0.9058-1.1616-0.8071c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616l0.3109,1.7251    C16.6447,3.9421,14.4072,3,12,3c-4.9624,0-9,4.0376-9,9S7.0376,21,12,21z"/></g></g></svg></button>
+          </div>
+      <!--content-->
+
+          <!--departure weather-->
+          <div id="departure_WX">
+            <!--header-->
+            <div id="departure_WX_header" style="display: flex; align-items: center; gap: 10px;">
+              <b>ABCD</b>Depart Airport
+              <p><b>GRAD</b></p>
+            </div>
+            <!--metar-->
+            <div id="departure_WX_metar" class="WX_metar" style="margin-bottom: 20px;">
+              <p><b>METAR ABCD 010000Z 00000KT 9999 FEW020 25/15 Q1013</b></p>
+            </div>
+          </div>
+
+          <!--arrival weather-->
+          <div id="arrival_WX">
+            <!--header-->
+            <div id="arrival_WX_header" style="display: flex; align-items: center; gap: 10px;">
+              <b>DEFG</b>Arrival Airport
+              <p><b>GRAD</b></p>
+            </div>
+            <!--metar-->
+            <div id="arrival_WX_metar" class="WX_metar" style="margin-bottom: 20px;">
+              <p><b>METAR DEFG 010000Z 00000KT 9999 FEW020 25/15 Q1013</b></p>
+            </div>
+          </div>
+
+          <!--alternate weather-->
+          <div id="alternate_WX">
+            <!--header-->
+            <div id="alternate_WX_header" style="display: flex; align-items: center; gap: 10px;">
+              <b>IJKL</b>Alternate Airport
+              <p><b>GRAD</b></p>
+            </div>
+            <!--metar-->
+            <div id="alternate_WX_metar" class="WX_metar" style="margin-bottom: 20px;">
+              <p><b>METAR IJKL 010000Z 00000KT 9999 FEW020 25/15 Q1013</b></p>
+            </div>
+          </div>
+        </div>
+
+        <!--EXPENSES-->
         <div id="expenses" class="dashboard_content">
           <!--header-->
-          <div id="expenses_header" style="display: flex; align-items: center; gap: 10px;">
-            <svg style="width: 15px" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M302.1 358.1C293.2 407.8 251.4 439.4 192 446.4V480c0 17.67-14.28 32-31.96 32S128 497.7 128 480v-34.96c-.4434-.0645-.8359-.0313-1.281-.0977c-26.19-3.766-53.69-13.2-77.94-21.53l-11.03-3.766C21.03 414 12.03 395.8 17.69 379.1s23.88-25.73 40.56-20.08l11.31 3.859c21.59 7.406 46.03 15.81 66.41 18.73c47.09 6.953 97.06-.8438 103.1-34.09c5.188-28.55-11.16-39.89-87.53-60.7L136.5 282.7C92.59 270.4 1.25 244.9 17.97 153C26.82 104.1 68.44 72.48 128 65.51V32c0-17.67 14.33-32 32.02-32S192 14.33 192 32v34.95c.4414 .0625 .8398 .0449 1.281 .1113c16.91 2.531 36.22 7.469 60.72 15.55c16.81 5.531 25.94 23.61 20.41 40.41c-5.531 16.77-23.69 25.86-40.41 20.38c-20.72-6.812-37.12-11.08-50.16-13.02C137 123.4 86.97 131.2 80.91 164.5C76.5 188.8 85.66 202 153.8 221l14.59 4.016C228.3 241.4 318.9 266.1 302.1 358.1z"/></svg>
-            <h3>Expenses</h3>
+          <div id="expenses_header" style="display: flex; align-items: center; gap: 10px; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <svg style="width: 15px" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M302.1 358.1C293.2 407.8 251.4 439.4 192 446.4V480c0 17.67-14.28 32-31.96 32S128 497.7 128 480v-34.96c-.4434-.0645-.8359-.0313-1.281-.0977c-26.19-3.766-53.69-13.2-77.94-21.53l-11.03-3.766C21.03 414 12.03 395.8 17.69 379.1s23.88-25.73 40.56-20.08l11.31 3.859c21.59 7.406 46.03 15.81 66.41 18.73c47.09 6.953 97.06-.8438 103.1-34.09c5.188-28.55-11.16-39.89-87.53-60.7L136.5 282.7C92.59 270.4 1.25 244.9 17.97 153C26.82 104.1 68.44 72.48 128 65.51V32c0-17.67 14.33-32 32.02-32S192 14.33 192 32v34.95c.4414 .0625 .8398 .0449 1.281 .1113c16.91 2.531 36.22 7.469 60.72 15.55c16.81 5.531 25.94 23.61 20.41 40.41c-5.531 16.77-23.69 25.86-40.41 20.38c-20.72-6.812-37.12-11.08-50.16-13.02C137 123.4 86.97 131.2 80.91 164.5C76.5 188.8 85.66 202 153.8 221l14.59 4.016C228.3 241.4 318.9 266.1 302.1 358.1z"/></svg>
+              <h3>Expenses</h3>
+            </div>
+            <button class="button" id="add_expense"><svg style="width: 30px" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><rect fill="none" height="256" width="256"/><path d="M216,120H136V40a8,8,0,0,0-16,0v80H40a8,8,0,0,0,0,16h80v80a8,8,0,0,0,16,0V136h80a8,8,0,0,0,0-16Z"/></svg></button>
+          </div>
+          <!--content-->
+          <div id="expenses_content">
+              <ul>
+                <li class="expense">Expense 1: <b>£X</b></li>
+                <li class="expense">Expense 2: <b>£X</b></li>
+                <li class="expense">Expense 3: <b>£X</b></li>
+              </ul>
+          </div>
+          <div id="total_expense" style="display: flex; justify-content: center; margin-bottom: 10px;">
+            <p>Total Flight Cost: <b>£X</b></p> 
           </div>
         </div>
 
-        <!--AI briefing-->
+        <!--AI BRIEFING-->
         <div id="brief" class="dashboard_content">
           <!--header-->
-          <div id="brief_header" style="display: flex; align-items: center; gap: 10px;">
-            <svg fill="currentColor" height="25px" viewBox="0 0 20 20" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M7.39804 12.8085C7.57428 12.9328 7.78476 12.9994 8.00043 12.999C8.21633 12.9992 8.42686 12.9317 8.60243 12.806C8.77993 12.6755 8.91464 12.4952 8.98943 12.288L9.43643 10.915C9.55086 10.5707 9.74391 10.2578 10.0003 10.0011C10.2566 9.74436 10.5693 9.55089 10.9134 9.436L12.3044 8.98499C12.4564 8.93064 12.5936 8.84184 12.7055 8.72555C12.8174 8.60926 12.9008 8.46865 12.9492 8.31473C12.9977 8.1608 13.0098 7.99776 12.9847 7.83836C12.9596 7.67897 12.8979 7.52756 12.8044 7.396C12.6703 7.21007 12.4794 7.07283 12.2604 7.005L10.8854 6.558C10.5409 6.44377 10.2278 6.2508 9.97087 5.99441C9.71396 5.73803 9.52035 5.42528 9.40543 5.081L8.95343 3.693C8.88113 3.49069 8.74761 3.31593 8.57143 3.193C8.43877 3.09927 8.28607 3.03779 8.12548 3.01344C7.96489 2.9891 7.80083 3.00256 7.64636 3.05275C7.49188 3.10295 7.35125 3.1885 7.23564 3.3026C7.12004 3.41669 7.03265 3.55619 6.98043 3.71L6.52343 5.11C6.40884 5.44482 6.21967 5.74923 5.97022 6.00025C5.72076 6.25126 5.41753 6.44232 5.08343 6.559L3.69243 7.007C3.54065 7.06139 3.40352 7.15017 3.29177 7.26638C3.18001 7.3826 3.09666 7.5231 3.04824 7.67688C2.99982 7.83067 2.98764 7.99357 3.01265 8.15285C3.03767 8.31213 3.0992 8.46346 3.19243 8.595C3.32027 8.77445 3.50105 8.90942 3.70943 8.981L5.08343 9.42599C5.52354 9.57248 5.90999 9.84682 6.19343 10.214C6.35585 10.4246 6.4813 10.6613 6.56443 10.914L7.01643 12.305C7.08846 12.5083 7.22179 12.6842 7.39804 12.8085ZM13.5353 16.851C13.6713 16.9472 13.8337 16.9989 14.0003 16.999C14.1654 16.9991 14.3264 16.9481 14.4613 16.853C14.6008 16.7545 14.7058 16.6146 14.7613 16.453L15.0093 15.691C15.0625 15.5326 15.1515 15.3885 15.2693 15.27C15.3867 15.1515 15.5307 15.0627 15.6893 15.011L16.4613 14.759C16.619 14.7045 16.7557 14.6021 16.8523 14.466C16.9257 14.363 16.9736 14.2441 16.9921 14.119C17.0106 13.9939 16.9992 13.8662 16.9588 13.7463C16.9184 13.6265 16.8501 13.518 16.7597 13.4296C16.6692 13.3412 16.5591 13.2756 16.4383 13.238L15.6743 12.989C15.5162 12.9365 15.3724 12.8478 15.2544 12.7302C15.1364 12.6125 15.0473 12.469 14.9943 12.311L14.7423 11.538C14.6886 11.3802 14.586 11.2436 14.4493 11.148C14.3473 11.0751 14.2295 11.0271 14.1056 11.0081C13.9816 10.989 13.8549 10.9994 13.7357 11.0383C13.6164 11.0772 13.508 11.1436 13.4192 11.2322C13.3304 11.3207 13.2636 11.4289 13.2243 11.548L12.9773 12.31C12.925 12.4677 12.8375 12.6113 12.7213 12.73C12.6066 12.8465 12.4667 12.9351 12.3123 12.989L11.5393 13.241C11.3803 13.2949 11.2422 13.3975 11.1447 13.5343C11.0472 13.671 10.9952 13.835 10.9961 14.0029C10.997 14.1708 11.0507 14.3342 11.1496 14.47C11.2486 14.6057 11.3877 14.7068 11.5473 14.759L12.3103 15.006C12.4692 15.0594 12.6136 15.1487 12.7323 15.267C12.8505 15.3853 12.939 15.5299 12.9903 15.689L13.2433 16.463C13.2981 16.6195 13.4001 16.7551 13.5353 16.851Z" fill="#212121"/></svg>
-            <h3>Briefing</h3>
+          <div id="brief_header" style="display: flex; align-items: center; gap: 10px; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <svg fill="currentColor" height="25px" viewBox="0 0 20 20" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M7.39804 12.8085C7.57428 12.9328 7.78476 12.9994 8.00043 12.999C8.21633 12.9992 8.42686 12.9317 8.60243 12.806C8.77993 12.6755 8.91464 12.4952 8.98943 12.288L9.43643 10.915C9.55086 10.5707 9.74391 10.2578 10.0003 10.0011C10.2566 9.74436 10.5693 9.55089 10.9134 9.436L12.3044 8.98499C12.4564 8.93064 12.5936 8.84184 12.7055 8.72555C12.8174 8.60926 12.9008 8.46865 12.9492 8.31473C12.9977 8.1608 13.0098 7.99776 12.9847 7.83836C12.9596 7.67897 12.8979 7.52756 12.8044 7.396C12.6703 7.21007 12.4794 7.07283 12.2604 7.005L10.8854 6.558C10.5409 6.44377 10.2278 6.2508 9.97087 5.99441C9.71396 5.73803 9.52035 5.42528 9.40543 5.081L8.95343 3.693C8.88113 3.49069 8.74761 3.31593 8.57143 3.193C8.43877 3.09927 8.28607 3.03779 8.12548 3.01344C7.96489 2.9891 7.80083 3.00256 7.64636 3.05275C7.49188 3.10295 7.35125 3.1885 7.23564 3.3026C7.12004 3.41669 7.03265 3.55619 6.98043 3.71L6.52343 5.11C6.40884 5.44482 6.21967 5.74923 5.97022 6.00025C5.72076 6.25126 5.41753 6.44232 5.08343 6.559L3.69243 7.007C3.54065 7.06139 3.40352 7.15017 3.29177 7.26638C3.18001 7.3826 3.09666 7.5231 3.04824 7.67688C2.99982 7.83067 2.98764 7.99357 3.01265 8.15285C3.03767 8.31213 3.0992 8.46346 3.19243 8.595C3.32027 8.77445 3.50105 8.90942 3.70943 8.981L5.08343 9.42599C5.52354 9.57248 5.90999 9.84682 6.19343 10.214C6.35585 10.4246 6.4813 10.6613 6.56443 10.914L7.01643 12.305C7.08846 12.5083 7.22179 12.6842 7.39804 12.8085ZM13.5353 16.851C13.6713 16.9472 13.8337 16.9989 14.0003 16.999C14.1654 16.9991 14.3264 16.9481 14.4613 16.853C14.6008 16.7545 14.7058 16.6146 14.7613 16.453L15.0093 15.691C15.0625 15.5326 15.1515 15.3885 15.2693 15.27C15.3867 15.1515 15.5307 15.0627 15.6893 15.011L16.4613 14.759C16.619 14.7045 16.7557 14.6021 16.8523 14.466C16.9257 14.363 16.9736 14.2441 16.9921 14.119C17.0106 13.9939 16.9992 13.8662 16.9588 13.7463C16.9184 13.6265 16.8501 13.518 16.7597 13.4296C16.6692 13.3412 16.5591 13.2756 16.4383 13.238L15.6743 12.989C15.5162 12.9365 15.3724 12.8478 15.2544 12.7302C15.1364 12.6125 15.0473 12.469 14.9943 12.311L14.7423 11.538C14.6886 11.3802 14.586 11.2436 14.4493 11.148C14.3473 11.0751 14.2295 11.0271 14.1056 11.0081C13.9816 10.989 13.8549 10.9994 13.7357 11.0383C13.6164 11.0772 13.508 11.1436 13.4192 11.2322C13.3304 11.3207 13.2636 11.4289 13.2243 11.548L12.9773 12.31C12.925 12.4677 12.8375 12.6113 12.7213 12.73C12.6066 12.8465 12.4667 12.9351 12.3123 12.989L11.5393 13.241C11.3803 13.2949 11.2422 13.3975 11.1447 13.5343C11.0472 13.671 10.9952 13.835 10.9961 14.0029C10.997 14.1708 11.0507 14.3342 11.1496 14.47C11.2486 14.6057 11.3877 14.7068 11.5473 14.759L12.3103 15.006C12.4692 15.0594 12.6136 15.1487 12.7323 15.267C12.8505 15.3853 12.939 15.5299 12.9903 15.689L13.2433 16.463C13.2981 16.6195 13.4001 16.7551 13.5353 16.851Z" fill="#212121"/></svg>
+              <h3>Briefing</h3>
+            </div>
+            <div style="display: flex; gap: 5px;">
+              <button class="button" id="refresh_brief"><svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg></button>
+              <button class="button" id="refresh_WX"><svg style="width: 25px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><style type="text/css">.st0{opacity:0.2;fill:currentColor;stroke:currentColor ;stroke-width:0.05;stroke-miterlimit:10;}</style><g id="grid_system"/><g id="_icons"><g><path d="M12,21c4.9624,0,9-4.0376,9-9c0-0.3784-0.0239-0.7598-0.0708-1.1338c-0.0688-0.5479-0.5698-0.9346-1.1172-0.8672    c-0.5479,0.0688-0.936,0.5688-0.8672,1.1172C18.981,11.4053,19,11.7007,19,12c0,3.8599-3.1401,7-7,7s-7-3.1401-7-7s3.1401-7,7-7    c1.8568,0,3.6179,0.7455,4.9119,2.0166c0.062,0.0613,0.1177,0.1297,0.1776,0.1935c0.0279,0.0295,0.0533,0.0613,0.0806,0.0914    L15.3794,7.624c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616c0.0874,0.4839,0.5088,0.8228,0.9834,0.8228    c0.0586,0,0.1182-0.0049,0.1782-0.0156l4.1753-0.7524c0.5435-0.0981,0.9048-0.6182,0.8071-1.1616l-0.7524-4.1758    c-0.0986-0.5439-0.6167-0.9058-1.1616-0.8071c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616l0.3109,1.7251    C16.6447,3.9421,14.4072,3,12,3c-4.9624,0-9,4.0376-9,9S7.0376,21,12,21z"/></g></g></svg></button>
+            </div>
+          </div>
+          <!--content-->
+          <div id="AI_brief_output">
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero error vitae, nostrum minima natus explicabo dolorem et placeat ullam rem ratione voluptate, sit obcaecati quia, dolor commodi suscipit iure itaque? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum ducimus assumenda officiis doloremque ut natus unde possimus quos, sunt, ea culpa accusantium velit placeat temporibus eos cupiditate dicta obcaecati! Facilis. Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore neque nam ad sequi sint deserunt animi a, non labore, aliquid magni quidem nesciunt optio? Voluptatibus optio illum nesciunt hic fuga!</p>
           </div>
         </div>
       </div>
