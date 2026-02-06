@@ -29,7 +29,7 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Display weather reports
   - Allow the user to add expenses to their flight
 
-- Added OG formatting for social media and search engines
+- Added Open Graph formatting for social media and search engines
 - Users can use AI to generate a briefing for the entire flight
 - All flight data can be downloaded as pdf
 
