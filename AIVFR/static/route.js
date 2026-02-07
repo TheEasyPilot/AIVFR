@@ -687,6 +687,7 @@ generate.addEventListener('click',  async () => {
         await update('route_gen_justification', response.justification);
         reload_map();
         update_route_names();
+        await updateDistances();
         update("route_changed", "True");
 
         generate.disabled = false; //allow clicking again
