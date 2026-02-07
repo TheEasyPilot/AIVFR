@@ -35,3 +35,10 @@ async function saveFlight() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+
+//teest
+
+const response = await fetch("/get-flight");
+const data = await response.json();
+

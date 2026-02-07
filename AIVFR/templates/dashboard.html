@@ -29,9 +29,9 @@
           </div>
       <!--content-->
           <div id="route_info_content" style="font-size: 15px; margin-top: 15px;">
-            <p><b>ABCD</b> Depart Airport ➔ <b>EFGH</b> Arrival Airport</p>
-            <p style="margin-top: 5px;"><b>X</b> minutes | <b>Y</b> NM</p>
-            <p style="margin-top: 5px;"><b>Alternate:</b> <b>IJKL</b> Alternate Airport</p>
+            <p><b>{{ flight.departureAirport_code }}</b> {{ flight.departureAirport_name }} ➔ <b>{{ flight.destinationAirport_code }}</b> {{ flight.destinationAirport_name }}</p>
+            <p style="margin-top: 5px;">{{ flight.time }} <b>|</b> {{ flight.distance.output }}</p>
+            <p style="margin-top: 5px;"><b>Alternate:</b> <b>{{ flight.alternateAirport_code }}</b> {{ flight.alternateAirport_name }}</p>
           </div>
         </div>
 
@@ -48,16 +48,17 @@
             <div class="WP_content" style="margin-top: 15px;">
               <p><b>POB: </b>X</p>
               <p><b>Cargo: </b>X</p>
-              <p><b>Fuel: </b>X</p>
+              <p><b>Fuel: </b>{{ flight.fuel_mass.output }}</p>
             </div>
             <div class="WP_content">
-              <p><b>Ramp: </b>X</p>
-              <p><b>TOW: </b>X</p>
-              <p><b>LW: </b>X</p>
+              <p><b>Ramp: </b>{{ flight.CG_calculations.ramp_condition.weight.output }}</p>
+              <p><b>TOW: </b>{{ flight.CG_calculations.takeoff_condition.weight.output }}</p>
+              <p><b>LW: </b>{{ flight.CG_calculations.landing_condition.weight.output }}</p>
             </div>
             <div class="WP_content">
-              <p><b>TODR: </b>X</p>
-              <p><b>LDR: </b>X</p>
+              <p><b>TODR: </b>{{ flight.TODR }}m</p>
+              <p><b>LDR: </b>{{ flight.LDR }}m</p>
+              <p><b>Endurance: </b>{{ flight.fuel_endurance}}</p>
             </div>
           </div>
         </div>
@@ -71,19 +72,16 @@
           </div>
       <!--content-->
           <div id="route_details_content">
-            <div id="route_names">
-              ABCD ➔ WAYPOINT1 ➔ WAYPOINT2 ➔ DEFG
-            </div>
+            <div id="route_names">{{ ' ➔ '.join(flight.route_names) if flight.route_names else '' }}</div>
             <div style="display: flex; gap: 20px; margin-top: 15px;">
               <p style="margin-bottom: 10px;"><b>Cruise: </b>xxxxft</p>
               <p><b>GS: </b>X</p>
             </div>
             <hr>
             
-            <p style="margin-bottom: 15px"><b>Alternate</b> (Alternate)</p>
-            <p style="margin-bottom: 5px">Distance from [arrival]: <b>X</b></p>
-            <p style="margin-bottom: 5px">Fuel Required: <b>X</b></p>
-            <p style="margin-bottom: 5px">ETA to alternate: <b>X</b></p>
+            <p style="margin-bottom: 15px"><b>{{ flight.alternateAirport_code }}</b> {{ flight.alternateAirport_name }} (Alternate)</p>
+            <p style="margin-bottom: 5px">Distance from {{ flight.destinationAirport_code }}: <b>{{ flight.NAVLOG.rows[-1]["DIST (NM)"].value }}NM</b></p>
+            <p style="margin-bottom: 5px">Fuel Required: <b>{{ flight.fuel_alternate.output }}</b></p>
           </div>
         </div>
 
@@ -103,7 +101,7 @@
           <div id="departure_WX">
             <!--header-->
             <div id="departure_WX_header" style="display: flex; align-items: center; gap: 10px;">
-              <b>ABCD</b>Depart Airport
+              <b>{{ flight.departureAirport_code }}</b> {{ flight.departureAirport_name }}
               <p><b>GRAD</b></p>
             </div>
             <!--metar-->
@@ -116,7 +114,7 @@
           <div id="arrival_WX">
             <!--header-->
             <div id="arrival_WX_header" style="display: flex; align-items: center; gap: 10px;">
-              <b>DEFG</b>Arrival Airport
+              <b>{{ flight.destinationAirport_code }}</b> {{ flight.destinationAirport_name }}
               <p><b>GRAD</b></p>
             </div>
             <!--metar-->
@@ -129,7 +127,7 @@
           <div id="alternate_WX">
             <!--header-->
             <div id="alternate_WX_header" style="display: flex; align-items: center; gap: 10px;">
-              <b>IJKL</b>Alternate Airport
+              <b>{{ flight.alternateAirport_code }}</b> {{ flight.alternateAirport_name }}
               <p><b>GRAD</b></p>
             </div>
             <!--metar-->
