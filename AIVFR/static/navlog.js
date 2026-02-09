@@ -154,8 +154,31 @@ table.addEventListener('input', async (event) => {
             }
         };
         await fetch('/calc_flight_time')
+        await calculateAvgGS();
     }
 });
+
+
+//------------------CALCULATING AVG GROUND SPEED
+async function calculateAvgGS() {
+
+const response = await fetch('/get-flight')
+const data = await response.json();
+
+let totalGS = 0;
+let countGS = 0;
+
+//taking the groundspeed values from each row and calculating average
+for (const row_index in data.NAVLOG.rows) {
+    const gs = data.NAVLOG.rows[row_index]["GS (KT)"].value;
+    if (gs != 0) { //only include non-zero ground speeds in the average
+        totalGS += gs;
+        countGS += 1;
+    }
+}
+const avgGS = Math.round(totalGS / countGS);
+await update("average_groundspeed.value", avgGS);
+}
 
 //---------------------CLEARING PLOG TABLE
 

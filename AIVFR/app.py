@@ -195,6 +195,10 @@ data_template = {
         "fill_symmetric_arms" : True,
                   },
     "flight" : {
+        #-----------------------DASHBOARD
+        "aircraft" : "",
+        "cargo" : {"value" : 0, "class" : "mass"},
+        "average_groundspeed" : {"value" : 0, "class" : "airspeed"},
         #-----------------------ROUTE
         "saved" : "False",
         "departureAirport_code" : "",
