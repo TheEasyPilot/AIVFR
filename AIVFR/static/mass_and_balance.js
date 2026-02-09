@@ -261,6 +261,7 @@ const moment_baggage1 = document.getElementById('moment_baggage1');
 //Event listeners for baggage 1
 weight_baggage1.addEventListener('input', async () => {
     await update('weight_items.baggage1.weight.value', Number(weight_baggage1.value));
+    await calculateCargo();
     await calculateMoment('baggage1');
     await calculateCG();
 });
@@ -279,6 +280,7 @@ const moment_baggage2 = document.getElementById('moment_baggage2');
 //Event listeners for baggage 2
 weight_baggage2.addEventListener('input', async () => {
     await update('weight_items.baggage2.weight.value', Number(weight_baggage2.value));
+    await calculateCargo();
     await calculateMoment('baggage2');
     await calculateCG();
 });
@@ -725,6 +727,20 @@ async function checkWeights() {
     }
 }
 
+
+//----------------Calculating cargo weight
+async function calculateCargo() {
+    //determining and updating cargo weight for dashboard
+    let cargoWeight = 0;
+
+    if (Number(weight_baggage1.value) != 0) {
+        cargoWeight += Number(weight_baggage1.value);
+    } if (Number(weight_baggage2.value) != 0) {
+        cargoWeight += Number(weight_baggage2.value);
+    }
+    await update("cargo.value", cargoWeight);
+}
+
 //-----------------------------SUGGESTING A CHANGE----------------------------------//
 
 //-------popup handling
@@ -810,4 +826,3 @@ async function suggestChange() {
         output.textContent = "An error occurred while generating the suggestion. Please ensure your route is complete and try again.";
     }
 }
-
