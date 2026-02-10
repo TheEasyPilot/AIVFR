@@ -237,6 +237,13 @@ data_template = {
         "METAR_arrival_decoded" : "",
         "TAF_arrival_decoded" : "",
         "METAR_arrival_grading" : "",
+        #-----Alternate airport
+        "WX_switch_alt" : "METAR",
+        "METAR_alternate" : "",  
+        "TAF_alternate" : "",
+        "METAR_alternate_decoded" : "",
+        "TAF_alternate_decoded" : "",
+        "METAR_alternate_grading" : "",
         #-----------------------NAVLOG
         "route_changed" : "False",
         "separate_distances" : [], #distances for each point
@@ -787,13 +794,12 @@ def prompt():
 def get_weather():
     airport_code = request.json.get("code") #expecting ICAO code
 
-    url_metar = f"https://api.checkwx.com/metar/{airport_code}/decoded"
-    url_taf = f"https://api.checkwx.com/taf/{airport_code}/decoded"
+    url_metar = f"https://api.checkwx.com/v2/metar/{airport_code}/decoded"
+    url_taf = f"https://api.checkwx.com/v2/taf/{airport_code}/decoded"
 
     #making the requests to the API
     response_metar = requests.request("GET", url_metar, headers={'X-API-Key': api_key_wx})
     response_taf = requests.request("GET", url_taf, headers={'X-API-Key': api_key_wx})
-
 
     if response_metar.status_code == 200 and response_taf.status_code == 200:
         #parsing the responses to JSON
@@ -807,8 +813,8 @@ def get_weather():
     
     except (IndexError, KeyError):
         #use the nearest station if the entred airport has no weather data
-        url_metar = f"https://api.checkwx.com/metar/{airport_code}/nearest/decoded"
-        url_taf = f"https://api.checkwx.com/taf/{airport_code}/nearest/decoded"
+        url_metar = f"https://api.checkwx.com/v2/metar/{airport_code}/nearest/decoded"
+        url_taf = f"https://api.checkwx.com/v2/taf/{airport_code}/nearest/decoded"
 
         response_metar = requests.request("GET", url_metar, headers={'X-API-Key': api_key_wx})
         response_taf = requests.request("GET", url_taf, headers={'X-API-Key': api_key_wx})

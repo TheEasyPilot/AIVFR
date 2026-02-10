@@ -121,13 +121,13 @@ input {
     min-height: 70px;
 }
 
-#refresh_WX, #refresh_brief {
+#refresh_WX, #refresh_brief, #download_plan {
     background-color: var(--bg);
     width: 40px;
     height: 38px;
 }
 
-#refresh_WX:hover, #refresh_brief:hover {
+#refresh_WX:hover, #refresh_brief:hover, #download_plan:hover {
     background-color: var(--onhover);
     cursor: pointer;
 }
@@ -179,3 +179,9 @@ input {
     overflow-y: auto;
 }
 
+/*refresh button feedback*/
+
+#refresh_WX.refreshing, #refresh_brief.refreshing {
+    opacity: 0.6;
+    pointer-events: none;
+}
