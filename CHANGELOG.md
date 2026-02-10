@@ -3,6 +3,8 @@
 AIVFR uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+NOTE: The weather API service (CheckWX) is currently down. Until they fix the issue, Weather reports will not be operative.
+
 ---
 ### [0.8.0-alpha (unreleased)](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.8.0-alpha)
 
@@ -32,6 +34,14 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added Open Graph formatting for social media and search engines
 - Users can use AI to generate a briefing for the entire flight
 - All flight data can be downloaded as pdf
+
+### Fixed
+
+- Weather reports now operative again after errors occurring due to new CheckWX version
+
+### Removed
+
+- Removed cloudbase data from weather reports as CheckWXAPI no longer supports it
 
 
 ### [0.7.1-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.1-alpha) - 2026-02-02 [YANKED]
