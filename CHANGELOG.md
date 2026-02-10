@@ -3,8 +3,6 @@
 AIVFR uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-NOTE: The weather API service (CheckWX) is currently down. Until they fix the issue, Weather reports will not be operative.
-
 ---
 ### [0.8.0-alpha (unreleased)](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.8.0-alpha)
 
