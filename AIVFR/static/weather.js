@@ -332,7 +332,7 @@ update_wx.addEventListener('click', async () => {
     }
 
     } catch (error) {
-        showAlert(error)
+        console.error(error);
     }
 
     //restoring button state
@@ -355,15 +355,17 @@ async function parseMETAR(metar, gradingHTML) {
     const altitude_unit = settings.units_altitude;
 
     //airspeed
-    if (wind_unit == "knot") {
-        var windspeed = `${metar.wind.speed_kts} knots`;
-        var windgusts = `${metar.wind.gust_kts ? metar.wind.gust_kts : "N/A"} knots`;
-    } else if (wind_unit == "kilometer_per_hour") {
-        var windspeed = `${metar.wind.speed_kph} km/h`;
-        var windgusts = `${metar.wind.gust_kph ? metar.wind.gust_kph : "N/A"} km/h`;
-    } else if (wind_unit == "mile_per_hour") {
-        var windspeed = `${metar.wind.speed_mph} mph`;
-        var windgusts = `${metar.wind.gust_mph ? metar.wind.gust_mph : "N/A"} mph`;
+    if (metar.wind  !== "undefined") {
+        if (wind_unit == "knot") {
+            var windspeed = `${metar.wind.speed.kts} knots`;
+            var windgusts = `${metar.wind.gust ? metar.wind.gust.kts : "N/A"} knots`;
+        } else if (wind_unit == "kilometer_per_hour") {
+            var windspeed = `${metar.wind.speed.kph} km/h`;
+            var windgusts = `${metar.wind.gust ? metar.wind.gust.kph : "N/A"} km/h`;
+        } else if (wind_unit == "mile_per_hour") {
+            var windspeed = `${metar.wind.speed.mph} mph`;
+            var windgusts = `${metar.wind.gust ? metar.wind.gust.mph : "N/A"} mph`;
+        }
     }
 
     //altitude
@@ -374,10 +376,6 @@ async function parseMETAR(metar, gradingHTML) {
         catch (TypeError) {
           var ceiling = "N/A";  
         }
-        var cloud_base = `${metar.clouds[0]?.base_feet_agl} feet`;
-        if (cloud_base == "undefined feet") {
-            cloud_base = "N/A";
-        }
 
     } else if (altitude_unit == "meter") {
         try {
@@ -386,20 +384,16 @@ async function parseMETAR(metar, gradingHTML) {
         catch (TypeError) {
           var ceiling = "N/A";  
         }
-        var cloud_base = `${metar.clouds[0]?.base_metres_agl} meters`;
-        if (cloud_base == "undefined meters") {
-            cloud_base = "N/A";
-        }
     }
 
     //other non-unit related values
     const time = metar.observed;
     const visibility = metar.visibility.meters;
-    const visibility_text = metar.visibility.meters_text;
+    const visibility_text = metar.visibility.text;
     const wind_direction = metar.wind.degrees;
     const temperature = metar.temperature.celsius;
     const dewpoint = metar.dewpoint.celsius;
-    const pressure = metar.barometer.hpa;
+    const pressure = metar.pressure.mb;
     const clouds_code = metar.clouds[0].code;
     const clouds_text = metar.clouds[0].text;
     const flight_category = metar.flight_category;
@@ -420,7 +414,7 @@ async function parseMETAR(metar, gradingHTML) {
     //adding items that may be undefined
     try {
     
-    if (metar.wind.gust_kts || metar.wind.gust_kph || metar.wind.gust_mph) {
+    if (metar.wind.gust) {
         decoded_METAR += `
     <b>Wind Gusts:</b> ${windgusts}`;
     }
@@ -433,18 +427,13 @@ async function parseMETAR(metar, gradingHTML) {
     <b>Ceiling:</b> ${ceiling}`;
     }
 
-    if (cloud_base) {
-        decoded_METAR += `
-    <b>Cloud Base:</b> ${cloud_base}`;
-    }
-
     if (conditions) {
         decoded_METAR += `
     <b>Conditions:</b> ${conditions}`;
     }
 
     } catch (error) {
-        showAlert(error) //tST
+        console.error(error);
     }
 
     //grading
@@ -464,8 +453,7 @@ function parseTAF(taf) {
     wind: f.wind ?? null,
     visibility: f.visibility ?? null,
     clouds: (f.clouds ?? []).map(cloud => ({
-        type: cloud.text,
-        base_ft: cloud.base_feet_agl
+        type: cloud.text
     })),
     conditions: (f.conditions ?? []).map(cond => cond.text),
     change: f.change?.indicator?.text ?? null,
@@ -488,14 +476,14 @@ function parseTAF(taf) {
         }
 
         if (period.wind) {
-            decoded_TAF += `  <b>Wind:</b> ${period.wind.degrees}° at ${period.wind.speed_kts} knots\n`;
+            decoded_TAF += `  <b>Wind:</b> ${period.wind.degrees}° at ${period.wind.speed.kts} knots\n`;
         }
         if (period.visibility) {
             decoded_TAF += `  <b>Visibility:</b> ${period.visibility.meters} meters (${period.visibility.meters_text})\n`;
         }
         if (period.clouds.length > 0) {
             period.clouds.forEach(cloud => {
-                decoded_TAF += `  <b>Clouds:</b> ${cloud.type} at ${cloud.base_ft} feet AGL\n`;
+                decoded_TAF += `  <b>Clouds:</b> ${cloud.type}\n`;
             });
         }
     });
