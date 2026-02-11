@@ -145,6 +145,7 @@ input {
     background-color: var(--bg);
     width: 40px;
     height: 39px;
+    transition: 0.3s;
 }
 
 #add_expense:hover {
@@ -165,9 +166,20 @@ input {
 
 #total_expense {
     position: relative;
+    visibility: visible;
+    opacity: 1;
     background-color: var(--bg);
     padding: 10px;
     border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+    z-index: 11;
+}
+
+#total_expense.hidden {
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 +20px;
+    transition: all 0.3s ease-in-out;
 }
 
 /*brief*/
@@ -184,4 +196,65 @@ input {
 #refresh_WX.refreshing, #refresh_brief.refreshing {
     opacity: 0.6;
     pointer-events: none;
+}
+
+#add_expense.adding {
+    background-color: var(--alert);
+    transition: 0.3s ease-out;
+}
+
+#add_expense_icon {
+    transition: 0.3s ease-out;
+}
+
+#add_expense_icon.adding {
+    transform: rotate(45deg);
+    transition: 0.3s ease-out;
+}
+
+#create_expense {
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    background-color: var(--bg);
+    padding: 20px 5px 10px 5px;
+    border-radius: 10px;
+    bottom: 77px;
+    z-index: 10;
+}
+
+#create_expense.hidden {
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 -20px;
+    transition: all 0.3s ease-in-out;
+}
+
+#submit_expense {
+    background-color: var(--primary);
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: 'Manrope';
+    font-weight: 600;
+}
+
+#submit_expense:hover {
+    cursor: pointer;
+}
+
+.expense_item {
+    font-size: medium;
+    font-family: 'Manrope';
+    transition: box-shadow 0.1s ease-in-out
+}
+
+.expense_item:hover {
+    background-color: var(--highlight);
+    box-shadow: 0 0 0 3px var(--alert);
+    cursor: pointer;
+}
+
+#click_to_remove {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
 }

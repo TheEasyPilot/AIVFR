@@ -199,6 +199,7 @@ data_template = {
         "aircraft" : "",
         "cargo" : {"value" : 0, "class" : "mass"},
         "average_groundspeed" : {"value" : 0, "class" : "airspeed"},
+        "expenses" : [],
         #-----------------------ROUTE
         "saved" : "False",
         "departureAirport_code" : "",
@@ -1244,3 +1245,28 @@ def update_cg_table():
     update_unitsRUN() #reapply units after CG table update
     session.modified = True
     return jsonify({"status": "success"}), 200
+
+#---------------------------------------------DASHBOARD-------------------------------------
+
+#---------ADDING AN EXPENSE
+@main.route('/add-expense', methods=["POST"])
+def add_expense():
+    expense = request.json.get("expense") #expecting an array [expense name, amount]
+    session["flight_data"]["flight"]["expenses"].append(expense)
+    session.modified = True
+    return jsonify({"status": "success"}), 200
+
+#---------REMOVING AN EXPENSE
+@main.route('/remove-expense', methods=["POST"])
+def remove_expense():
+    name = request.json.get("name") #expecting the name of the expense to remove
+    try:
+        #find the expense index with the specific name, then remove it
+        for index, expense in enumerate(session["flight_data"]["flight"]["expenses"]):
+            if expense[0] == name:
+                session["flight_data"]["flight"]["expenses"].pop(index)
+                break
+        session.modified = True
+        return jsonify({"status": "success"}), 200
+    except IndexError: #shouldn't be possible as a click is required on frontend
+        return jsonify({"error": "Invalid expense index"}), 400

@@ -8,6 +8,7 @@
 --alternate: hsl(48.54, 83.18%, 79.02%);
 --tableHeader: #e8e6e4;
 --inputHighlight: hsla(190, 100%, 42.5%, 0.5);
+--alert: hsla(0 100% 50% / 0.6);
 }
 
 /*unless dark mode is toggled, then these become the root
@@ -22,6 +23,7 @@ and are used instead*/
 --alternate: hsl(48.54, 83.18%, 29.02%);
 --tableHeader: hsl(0 0% 30.8%);
 --inputHighlight: hsla(190, 100%, 27.6%, 0.5);
+--alert: hsla(0 100% 50% / 0.6);
 }
 
 .light_mode {
@@ -34,6 +36,7 @@ and are used instead*/
     --alternate: hsl(48.54, 83.18%, 79.02%);
     --tableHeader: #e8e6e4;
     --inputHighlight: hsla(190, 100%, 42.5%, 0.5);
+    --alert: hsla(0 100% 50% / 0.6);
 }
 
 
