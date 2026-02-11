@@ -197,11 +197,165 @@ async function displayWeather() {
     refreshWX.classList.remove("refreshing");
 }
 
-//--on page load:
-await displayWeather();
-
 //refreshing the weather data
 
 refreshWX.addEventListener("click", () => {
     displayWeather();
 })
+
+//----------------------EXPENSES---------------------------
+//---------------------Adding expenses
+const add_expense_button = document.getElementById("add_expense");
+const add_expense_icon = document.getElementById("add_expense_icon");
+const create_expense = document.getElementById("create_expense"); //container for adding expenses
+const total_expense = document.getElementById("total_expense"); //total expenses display
+
+//managing add expense (+) button and containers using class toggles
+add_expense_button.addEventListener("click", () => {
+    if (add_expense_button.classList.contains("adding")) {
+        add_expense_button.classList.remove("adding");
+        add_expense_icon.classList.remove("adding");
+        create_expense.classList.add("hidden");
+        total_expense.classList.remove("hidden");
+    } else {
+        add_expense_button.classList.add("adding");
+        add_expense_icon.classList.add("adding");
+        create_expense.classList.remove("hidden");
+        total_expense.classList.add("hidden");
+    }
+})
+
+//adding an expense
+async function addExpense(name, price) {
+    //updating the session
+    const response = await fetch("/add-expense", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ expense : [name, price] }), //sends off the expense data to the backend
+    });
+
+    if (!response.ok) {
+        showAlert("Error adding expense");
+        return;
+    }
+}
+
+const submit_expense = document.getElementById("submit_expense");
+
+
+submit_expense.addEventListener("click", async () => {
+    try {
+        //feedback for add button pressing
+        submit_expense.style.opacity = "0.6";
+        submit_expense.textContent = "...";
+        submit_expense.style.pointerEvents = "none"; //prevent multiple clicks
+
+        const expense_name = document.getElementById("expense_name")
+        const expense_cost = document.getElementById("expense_cost")
+        //user cant submit empty fields
+        if (expense_name.value === "" || expense_cost.value === "") {
+            showAlert("Please enter both an expense name and price");
+            submit_expense.style.opacity = "1";
+            submit_expense.textContent = "Add";
+            submit_expense.style.pointerEvents = "auto";
+            return;
+
+        } else {
+        await addExpense(expense_name.value, expense_cost.value);
+        await displayExpenses(); //update the expenses list and total
+        //reset the input fields
+        expense_name.value = "";
+        expense_cost.value = "";
+
+        //reset the button after a short delay to simulate processing time
+
+        submit_expense.style.opacity = "1";
+        submit_expense.textContent = "Add";
+        submit_expense.style.pointerEvents = "auto";
+        }
+    } catch (error) {
+        console.error(error);}
+
+})
+
+
+async function displayExpenses() {
+    //---displaying expenses list
+    const expenses_content = document.getElementById("expenses_content");
+
+    //fetching the data from session as it may have been updated
+    const response = await fetch("/get-flight");
+    const data = await response.json();
+
+    //iterate through the expenses and display them in list format
+    let expensesHTML = `<div>`;
+    for (let i = 0; i < data.expenses.length; i++) {
+        expensesHTML += `<button class='expense_item Expense_item' style='margin-right: 10px;'>${data.expenses[i][0]}: <b class='Expense_item' >£${data.expenses[i][1]}</b></button>`;
+    }
+    expensesHTML += `</div>`;
+    expenses_content.innerHTML = expensesHTML;
+
+    //---calculating and displaying total expenses
+
+    //iterate through the expenses price and total them
+    const total_expense = document.getElementById("total_expense")
+    let total = 0;
+    for (let i = 0; i < data.expenses.length; i++) {
+        total += parseFloat(data.expenses[i][1]);
+    };
+    total_expense.innerHTML = `<p>Total Flight Cost: <b>£${total.toFixed(2)}</b></p>`; //2dp for price
+}
+
+//---------------------Removing expenses
+const click_to_remove = document.getElementById("click_to_remove");
+document.getElementById("expenses_content").addEventListener("mouseover", async (event) => {
+    if (event.target.classList.contains("Expense_item")) {
+        click_to_remove.style.opacity = "1";
+    }})
+
+document.getElementById("expenses_content").addEventListener("mouseout", async (event) => {
+    if (event.target.classList.contains("Expense_item")) {
+        click_to_remove.style.opacity = "0";
+    }})
+
+
+//on click, if the target is an expense item the name is extracted
+document.getElementById("expenses_content").addEventListener("click", async (event) => {
+    if (event.target.classList.contains("Expense_item")) {
+
+        //sometimes the click registers on the bold price text within the button, 
+        //so we need to check for that too and extract the name from the parent element instead
+        if (event.target.classList.contains("expense_item")) {
+        var expense_text = event.target.textContent;
+        } else {
+        var expense_text = event.target.parentElement.textContent;
+        }
+
+        //get the name part of the expense (value before the colon)
+        const expense_name = expense_text.split(":")[0];
+
+        //send the name to the backend to remove the expense from session
+        const response = await fetch("/remove-expense", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: expense_name }), //sends off the expense name to the backend
+        });
+
+        if (!response.ok) {
+            showAlert("Error removing expense");
+            return;
+        }
+
+        click_to_remove.style.opacity = "0";
+        await displayExpenses(); //update the expenses list and total
+    }
+})
+
+//--on page load:
+await displayWeather();
+await displayExpenses();
+
