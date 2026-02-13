@@ -32,6 +32,7 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added Open Graph formatting for social media and search engines
 - Users can use AI to generate a briefing for the entire flight
 - All flight data can be downloaded as pdf
+- Switched the flight data file away from a flask session cookie to an actual database
 
 ### Fixed
 
