@@ -43,6 +43,7 @@ Initial development is complete! AIVFR is now in beta where it will probably sta
 ### Removed
 
 - Removed cloudbase data from weather reports as CheckWXAPI no longer supports it
+- Navlog will now clear completely if you edit your route. Removed ability for table data to be saved due to complications with row-order and making (will be fixed in future updates)
 
 
 ### [0.7.1-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.1-alpha) - 2026-02-02 [YANKED]
