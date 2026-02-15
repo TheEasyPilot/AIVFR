@@ -1,4 +1,4 @@
-import { update, updateSettings, showAlert } from "./basePage.js";
+import { update, updateSettings, showAlert, prompt } from "./basePage.js";
 
 await updateSettings("current_page", "/dashboard");
 //------SAVE BUTTON-------
@@ -305,6 +305,11 @@ async function displayExpenses() {
     for (let i = 0; i < data.expenses.length; i++) {
         total += parseFloat(data.expenses[i][1]);
     };
+
+    //message for no expenses
+    if (data.expenses.length == 0) {
+        expenses_content.innerHTML = "<p>No Expenses. Click the + button to add one.</p>";
+    }
     total_expense.innerHTML = `<p>Total Flight Cost: <b>£${total.toFixed(2)}</b></p>`; //2dp for price
 }
 
@@ -329,8 +334,12 @@ document.getElementById("expenses_content").addEventListener("click", async (eve
         //so we need to check for that too and extract the name from the parent element instead
         if (event.target.classList.contains("expense_item")) {
         var expense_text = event.target.textContent;
+        event.target.style.opacity = "0.6"; //feedback for clicking the expense
+        event.target.style.cursor = "not-allowed"; //prevent multiple clicks on the same item
         } else {
         var expense_text = event.target.parentElement.textContent;
+        event.target.parentElement.style.opacity = "0.6"; //feedback for clicking the expense
+        event.target.parentElement.style.cursor = "not-allowed"; //prevent multiple clicks on the same item
         }
 
         //get the name part of the expense (value before the colon)
@@ -355,7 +364,98 @@ document.getElementById("expenses_content").addEventListener("click", async (eve
     }
 })
 
+//--------------------------AI BREIF-----------------------
+
+const refresh_brief= document.getElementById("refresh_brief");
+const AI_brief_output = document.getElementById("AI_brief_output");
+
+refresh_brief.addEventListener("click", async () => {
+    refresh_brief.style.opacity = "0.6";
+    refresh_brief.style.pointerEvents = "none"; //prevent multiple clicks while generating
+
+    const response = await fetch('/get-flight');
+    const flightData = await response.json();
+
+    const promptText = `
+    FLIGHT DATA:
+
+    ROUTE:
+    Departure Airport: ${flightData.departureAirport_name}
+    Arrival Airport: ${flightData.destinationAirport_name}
+    Alternate Airport: ${flightData.alternateAirport_name}
+    Distance: ${flightData.distance.output}
+    Time Enroute: ${flightData.time}
+    Route: ${flightData.route_names}
+
+    WEATHER:
+    Departure Airport METAR: ${METAR_departure.textContent} (${departure_WX_grading.textContent})
+    Arrival Airport METAR: ${METAR_arrival.textContent} (${arrival_WX_grading.textContent})
+    Alternate Airport METAR: ${METAR_alternate.textContent} (${alternate_WX_grading.textContent})
+    Departure Airport TAF: ${flightData.TAF_departure}
+    Arrival Airport TAF: ${flightData.TAF_arrival}
+    Alternate Airport TAF: ${flightData.TAF_alternate}
+
+    FUEL POLICIES:
+    Trip: ${flightData.fuelPolicy_trip}
+    Contingency: ${flightData.fuelPolicy_contingency}
+    Alternate: ${flightData.fuelPolicy_alternate}
+    Final Reserve: ${flightData.fuelPolicy_finalReserve}
+    Additional: ${flightData.fuelPolicy_additional}
+
+    FUEL VALUES:
+    Taxi Fuel: ${flightData.fuel_taxi.output}
+    Trip Fuel: ${flightData.fuel_trip.output}
+    Contingency Fuel: ${flightData.fuel_contingency.output}
+    Alternate Fuel: ${flightData.fuel_alternate.output}
+    Final Reserve Fuel: ${flightData.fuel_finalReserve.output}
+    Additional Fuel: ${flightData.fuel_additional.output}
+    Extra Fuel: ${flightData.fuel_extra.output}
+    Total Fuel: ${flightData.fuel_total.output}
+    Fuel Burn: ${flightData.fuel_burn.output}
+    Fuel Endurance: ${flightData.fuel_endurance.output}
+
+    MASS AND BALANCE:
+    MTOW: ${flightData.MTOW.output}
+    MLW: ${flightData.MLW.output}
+    MGW: ${flightData.MGW.output}
+
+    Navigation log:
+    ${JSON.stringify(flightData.NAVLOG)}
+    
+    Weight and Balance Table:
+    ${JSON.stringify(flightData.weight_items)}
+
+    CG Table:
+    ${JSON.stringify(flightData.CG_calculations)}
+    `;
+
+    AI_brief_output.innerHTML = "<p style='color: #737373;'>Generating brief...</p>";
+
+    const aiResponse = await prompt("Brief", promptText);  
+    try {
+        const resp = JSON.parse(aiResponse); //parsing the response to JSON
+        console.log(resp);
+        AI_brief_output.style.color = "#000000";
+        AI_brief_output.innerHTML = `<p>${resp.briefing}</p>`;
+        update("brief", resp.briefing);
+
+    } catch (error) {
+        console.error(error);
+        AI_brief_output.style.color = "#FF0000";
+        AI_brief_output.innerHTML = "<p> An error occurred while generating the brief. Please ensure your route is complete and try again.</p>";
+    }
+    refresh_brief.style.opacity = "1";
+    refresh_brief.style.pointerEvents = "auto";
+})
+
+
 //--on page load:
+
+//user cannot generate a brief if their route is not yet initialized
+if (!data.flight.destinationAirport_code) {
+    refresh_brief.style.opacity = "0.4";
+    refresh_brief.style.pointerEvents = "none";
+}
 await displayWeather();
 await displayExpenses();
 

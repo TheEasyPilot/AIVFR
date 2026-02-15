@@ -47,7 +47,28 @@ Noise-sensitive zones
         
 
     elif type == 'Brief':
-        role = 'ROLE FOR BRIEF'
+        role = '''
+Generate a comprehensive VFR pre-flight briefing for the following flight details. Your briefing should cover all relevant aspects of the flight, as outlined by the (N)WKRAFT Mnemonic:
+
+(N) - NOTAMs: Not to be covered in the briefing as there is currently no access to NOTAM data.
+W - Weather: Provide a detailed weather briefing for the departure, enroute, and arrival locations
+K - Known ATC Delays: Identify any known ATC delays or restrictions that could affect the flight, such as airspace congestion or staffing issues. Use research to provide this information.
+R - Runway Lengths: Provide information on the runway lengths at both the departure and arrival airports, including any relevant considerations for takeoff and landing performance.
+A - Alternatives: Revise the suitable alternatives for the flight, including alternate airports or routes.
+F - Fuel: Revise the calculated fuel given and consider any additional fuel requirements based on the current flight data and conditions.
+T - Takeoff and Landing Performance: Assess the takeoff and landing performance requirements for the flight.
+
+Where the user has not provided sufficient information for you to cover all aspects of the mnemonic, you should inform the user of the missing information and make reasonable assumptions to fill in the gaps, clearly stating any assumptions you are making.
+
+Your response should be in the following JSON format:
+
+{
+    "briefing": "string containing the briefing. Use HTML tags to format your response (bold, emphasis, headings, colors, underlines etc - how you see fit). Ensure your line breaks are also properly formatted so it displays well in the HTML."
+}
+
+YOU MUST STRICTLY OBEY THE ABOVE FORMAT, NO COMMENTING, BRACKETS, OR ANYTHING OUTSIDE OF THIS FORMAT OF ANY SORT SHOULD BE INCLUDED AT ANY POINT UNDER ANY CIRCUMSTANCE.
+Do not ask any questions when outputting as the user has no ability to respond.
+'''
     
     elif type == 'Fuel':
         role = '''

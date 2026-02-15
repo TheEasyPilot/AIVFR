@@ -530,6 +530,7 @@ async function calculateMoment(target='none') {
 //-------------------------------CALCULATING CG-----------------------
 
 async function calculateCG() {
+    CG_table.style.opacity = 0.4; //loading feedback
     const items = [['basic_empty', 'oil', 'pilot1', 'pilot2'], //basic condition
                    ['PAX1', 'PAX2', 'baggage1', 'baggage2'], //zero fuel condition
                    ['fuel_load1', 'fuel_load2'], //ramp condition
@@ -594,6 +595,7 @@ async function calculateCG() {
             CG_output.textContent = roundifDecimal(calculated_CG) !== 0 ? roundifDecimal(calculated_CG) : '';
         }
     });
+    CG_table.style.opacity = 1; 
     //finally update session with new values in the CG table
     const response = await fetch("/update-cg-table", {
     method: "POST",
@@ -817,11 +819,10 @@ async function suggestChange() {
     try {
         const resp = JSON.parse(aiResponse); //parsing the response to JSON
         output.style.color = "#000000";
-        console.log(resp);
         output.textContent = resp.suggestion
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         output.style.color = "#FF0000";
         output.textContent = "An error occurred while generating the suggestion. Please ensure your route is complete and try again.";
     }
