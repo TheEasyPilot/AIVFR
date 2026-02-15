@@ -371,7 +371,7 @@ async function parseMETAR(metar, gradingHTML) {
     //altitude
     if (altitude_unit == "feet") {
         try {
-          var ceiling = `${metar.ceiling[0]?.feet} feet`;  
+          var ceiling = `${metar.ceiling? metar.ceiling.feet : "N/A"} feet`;  
         }
         catch (TypeError) {
           var ceiling = "N/A";  
@@ -379,7 +379,7 @@ async function parseMETAR(metar, gradingHTML) {
 
     } else if (altitude_unit == "meter") {
         try {
-          var ceiling = `${metar.ceiling[0]?.meters} meters`;  
+          var ceiling = `${metar.ceiling? metar.ceiling.meters : "N/A"} meters`;  
         }
         catch (TypeError) {
           var ceiling = "N/A";  
@@ -388,8 +388,8 @@ async function parseMETAR(metar, gradingHTML) {
 
     //other non-unit related values
     const time = metar.observed;
-    const visibility = metar.visibility.meters;
-    const visibility_text = metar.visibility.text;
+    const visibility = metar.visibility? metar.visibility.meters : "N/A";
+    const visibility_text = metar.visibility? metar.visibility.meters_text : "N/A";
     const wind_direction = metar.wind.degrees;
     const temperature = metar.temperature.celsius;
     const dewpoint = metar.dewpoint.celsius;
@@ -397,9 +397,10 @@ async function parseMETAR(metar, gradingHTML) {
     const clouds_code = metar.clouds[0].code;
     const clouds_text = metar.clouds[0].text;
     const flight_category = metar.flight_category;
-    const humidity = metar.humidity.percent;
+    const humidity = metar.humidity;
     const conditions_fetch = metar.conditions?.map(cond => cond.text)
     const conditions = conditions_fetch?.join(', ')
+    const remarks = metar.remarks? metar.remarks : "No remarks";
 
     //constructing decoded METAR string
     let decoded_METAR = `<b>Time of observation:</b> ${time}
@@ -432,6 +433,9 @@ async function parseMETAR(metar, gradingHTML) {
     <b>Conditions:</b> ${conditions}`;
     }
 
+    decoded_METAR += `
+    <b>Remarks:</b> ${remarks.join(', ')}`;
+
     } catch (error) {
         console.error(error);
     }
@@ -448,25 +452,27 @@ async function parseMETAR(metar, gradingHTML) {
 function parseTAF(taf) {
     //parsing taf data depending on available fields
     const parsed_TAF = taf.forecast.map(f => ({
-    start: f.timestamp?.from,
-    end: f.timestamp?.to,
+    start: f.change.period.from,
+    end: f.change.period.to,
     wind: f.wind ?? null,
     visibility: f.visibility ?? null,
     clouds: (f.clouds ?? []).map(cloud => ({
         type: cloud.text
     })),
     conditions: (f.conditions ?? []).map(cond => cond.text),
-    change: f.change?.indicator?.text ?? null,
+    change: f.change?.text ?? null,
     probability: f.change?.probability ?? null
     }));
 
-    let decoded_TAF = '';
+    let decoded_TAF = `
+<b>TAF Issued at</b> ${taf.issued}
+    `;
 
     //constructing decoded TAF string
     parsed_TAF.forEach(period => { //iterate through each forecast period
         decoded_TAF += `\n<b>From:</b> ${period.start} <b>To:</b> ${period.end}\n`;
         if (period.change) { //if an item is undefined, it will be skipped
-            decoded_TAF += `  <b>Change Indicator:</b> ${period.change}\n`;
+            decoded_TAF += `  <b>Change Type:</b> ${period.change}\n`;
         }
         if (period.probability) {
             decoded_TAF += `  <b>Probability:</b> ${period.probability}%\n`;
@@ -479,7 +485,7 @@ function parseTAF(taf) {
             decoded_TAF += `  <b>Wind:</b> ${period.wind.degrees}° at ${period.wind.speed.kts} knots\n`;
         }
         if (period.visibility) {
-            decoded_TAF += `  <b>Visibility:</b> ${period.visibility.meters} meters (${period.visibility.meters_text})\n`;
+            decoded_TAF += `  <b>Visibility:</b> ${period.visibility.text}\n`;
         }
         if (period.clouds.length > 0) {
             period.clouds.forEach(cloud => {

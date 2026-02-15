@@ -9,7 +9,10 @@ await fetch('/get-flight')
     .then(async FlightData => {
     const route_changed = FlightData.route_changed;
     if (route_changed === "True") {
-        await makePLOG(); //allows for re-cration of PLOG, with calculations etc
+        await fetch('/clearNavlog');
+        await refreshPLOG();
+        //below feature halted due to complications of adding rows and will be implemented in future updates
+        //await makePLOG(); //allows for re-cration of PLOG, with calculations etc
         update("route_changed", "False");
     } else {
         await refreshPLOG();

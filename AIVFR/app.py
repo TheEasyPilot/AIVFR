@@ -1,179 +1,15 @@
 from flask import Blueprint, render_template, send_from_directory, session, jsonify, request
+from .models import Flight
+from .extentions import db
 from math import radians, degrees, sin, asin, cos, sqrt
-import os, pint, requests
+import os, pint, requests, json
 from openai import OpenAI
 from dotenv import load_dotenv
 from .ai_roles import fetchRole
 
 main = Blueprint('app', __name__)
 
-#------------------------------------------WEBTOOL NAVIGATION-------------------------------------
-#main menu
-@main.route('/') #this will be the first to load up
-def index():
-    if "flight_data" not in session: #initialise the session if not created already
-        session["flight_data"] = data_template.copy()
-        update_units()
-    return render_template('menu.html', APP_VERSION="0.7.1-alpha", data=session["flight_data"], settings=session["flight_data"]["settings"])
-
-#changelog
-@main.route('/changelog')
-def changelog():
-    return send_from_directory(directory='..', path='CHANGELOG.md')
-
-#settings menu
-@main.route('/settings')
-def settingsMenu():
-    return render_template('settings.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
-#dashboard
-@main.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
-#route tab
-@main.route('/route')
-def routeTab():
-    return render_template('route.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
-#weather tab
-@main.route('/weather')
-def weatherTab():
-    return render_template('weather.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
-#navigation log tab
-@main.route('/navlog')
-def navlogTab():
-    return render_template('navlog.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
-#fuel tab
-@main.route('/fuel')
-def fuelTab():
-    return render_template('fuel.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
-#mass and balance tab
-@main.route('/mass-and-balance')
-def massAndBalanceTab():
-    return render_template('mass_and_balance.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-
-#performance tab
-@main.route('/performance')
-def performanceTab():
-    return render_template('performance.html', settings=session["flight_data"]["settings"], flight=session["flight_data"]["flight"])
-#-------------DEBUGGING
-
-#debug route that allows me to see the flight data at any time
-@main.route('/debug')
-def debug_session():
-    return jsonify(session.get("flight_data", {}))
-#-------------------------------------------------UNITS CHANGING-------------------------------------
-
-ureg = pint.UnitRegistry()
-ureg.formatter.default_format = "~" #use the shortened version by default
-
-
-UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding settings key
-    #for the unit that will actually be displayed
-    "distance": {"base": ureg.nautical_mile, "settings_key": "units_distance"},
-    "altitude": {"base": ureg.feet, "settings_key": "units_altitude"},
-    "airspeed": {"base": ureg.knot, "settings_key": "units_airspeed"},
-    "mass": {"base": ureg.kilogram, "settings_key": "units_mass"},
-    "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
-    "specific_gravity": {"base": ureg("kg/L"), "settings_key": "units_specific_gravity"},
-}
-
-def update_units():
-    units_changed = session["flight_data"]["settings"].get("units_changed", "False") == "True"
-
-    def process_item(item):
-        #only process items that are dictionaries with a "class" key (i.e. unit-based items)
-        if isinstance(item, dict) and "class" in item:
-            category = item["class"]
-            if category in UNIT_MAP:
-                settings_key = UNIT_MAP[category]["settings_key"]
-                display_unit = session["flight_data"]["settings"][settings_key]
-                current_unit = ureg[display_unit]
-
-                #store previous unit in session settings if not present
-                prev_unit_key = f"prev_{settings_key}"
-                if prev_unit_key not in session["flight_data"]["settings"]:
-                    session["flight_data"]["settings"][prev_unit_key] = display_unit
-
-                if units_changed:
-                    #convert value from previous unit to new unit
-                    prev_unit = session["flight_data"]["settings"][prev_unit_key]
-                    try:
-                        prev_quantity = item["value"] * ureg[prev_unit]
-                        new_quantity = prev_quantity.to(current_unit)
-                        item["value"] = float(new_quantity.magnitude)
-                    except Exception:
-                        pass                
-
-                #always update output
-                canonical = item["value"] * current_unit
-                converted = canonical.to(current_unit)
-                unit_name = str(converted.units)
-                unit_name = CUSTOM_UNITS.get(unit_name, unit_name)
-                item["output"] = f"{converted.magnitude:.1f} {unit_name}"
-        
-        elif isinstance(item, dict):
-            for subkey, subitem in item.items():
-                process_item(subitem)
-
-    #process all items in flight data
-    for key, item in session["flight_data"]["flight"].items():
-        process_item(item)
-
-    #update previous unit in session settings
-    def process_prev_unit(item):
-        if isinstance(item, dict) and "class" in item:
-            category = item["class"]
-            if category in UNIT_MAP:
-                settings_key = UNIT_MAP[category]["settings_key"]
-                display_unit = session["flight_data"]["settings"][settings_key]
-                #store previous unit in session settings if not present
-                prev_unit_key = f"prev_{settings_key}"
-                session["flight_data"]["settings"][prev_unit_key] = display_unit
-
-        elif isinstance(item, dict):
-            for subkey, subitem in item.items():
-                process_prev_unit(subitem)
-        
-    for key, item in session["flight_data"]["flight"].items():
-        process_prev_unit(item)
-
-    #reset the flag to show units have been updated
-    session["flight_data"]["settings"]["units_changed"] = "False"
-    session.modified = True
-
-#using custom units cus the default ones are weird
-CUSTOM_UNITS = {
-    'nmi' : "NM",
-    'kn' : "kts",
-    'kg' : "kg",
-    'lb' : "lbs",
-    'l' : "L",
-    'gal' : "Gal",
-    'feet' : "ft",
-    'meter' : "m",
-    'kilometer' : "km",
-    'smi' : "miles",
-}
-
-@main.route('/units-update')
-def update_unitsRUN():
-    if session["flight_data"]["settings"]["units_changed"] == "True":
-        update_units()
-        session["flight_data"]["settings"]["units_changed"] = "False"
-        session.modified = True
-        return 'updated', 200
-    
-    else:
-        update_units()
-        return 'no change', 200
-
-
-#-------------------------------------------FLIGHT DATA AND SESSION MANAGEMENT------------------------------------
+#-------------------------------------------FLIGHT DATA AND DATABASE MANAGEMENT------------------------------------
 
 #making the template to store flight data during a session
 #also allows setting default values
@@ -200,6 +36,7 @@ data_template = {
         "cargo" : {"value" : 0, "class" : "mass"},
         "average_groundspeed" : {"value" : 0, "class" : "airspeed"},
         "expenses" : [],
+        "brief" : "",
         #-----------------------ROUTE
         "saved" : "False",
         "departureAirport_code" : "",
@@ -417,6 +254,103 @@ data_template = {
         
     }
 }
+
+
+
+
+#------------------------------------------WEBTOOL NAVIGATION-------------------------------------
+
+#-------------------------------SERVER-SIDE FUNCTIONS
+def get_flight_data():
+    flight = Flight.query.get(session["flight_id"])
+    data = json.loads(flight.data)
+    return flight, data
+
+def save(flight, data):
+    flight.data = json.dumps(data)
+    db.session.commit()
+
+def update(path, value):
+    flight, data = get_flight_data()
+    target = data
+
+    #using paths to update nested values (as implemented in frontend)
+    #splitting at the dots for each level
+    keys= path.split(".")
+
+    #iterating through the keys to get to the target value
+    for k in keys[:-1]:
+        if k not in target or not isinstance(target[k], dict):
+            return jsonify({"error": "Invalid key path"}), 400
+        target = target[k]
+    target[keys[-1]] = value
+    save(flight, data)
+    return data, 200
+
+#main menu
+@main.route('/') #this will be the first to load up
+def index():
+    if "flight_id" not in session: #initialise the session if not created already
+        new_flight = Flight(data=json.dumps(data_template))
+        db.session.add(new_flight)
+        db.session.commit()
+        session["flight_id"] = new_flight.id
+        update_units()
+    
+    return render_template('menu.html', APP_VERSION="0.7.1-alpha", data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
+
+#-------------DEBUGGING
+#debug route that allows me to see the flight data at any time
+@main.route('/debug')
+def show_database():
+    return get_flight_data()[1]
+
+@main.route('/changelog')
+def changelog():
+    return send_from_directory('..', 'CHANGELOG.md')
+
+#settings menu
+@main.route('/settings')
+def settingsMenu():
+    return render_template('settings.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#dashboard
+@main.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#route tab
+@main.route('/route')
+def routeTab():
+    return render_template('route.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#weather tab
+@main.route('/weather')
+def weatherTab():
+    return render_template('weather.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#navigation log tab
+@main.route('/navlog')
+def navlogTab():
+    return render_template('navlog.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#fuel tab
+@main.route('/fuel')
+def fuelTab():
+    return render_template('fuel.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#mass and balance tab
+@main.route('/mass-and-balance')
+def massAndBalanceTab():
+    return render_template('mass_and_balance.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#performance tab
+@main.route('/performance')
+def performanceTab():
+    return render_template('performance.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#-----------------------------------CLIENT SIDE FUNCTIONS--------------------------
+
 #--------------------------------UPDATING/MODIFYING DATA
 
 #updating Settings data
@@ -424,44 +358,33 @@ data_template = {
 def update_settings():
     key = request.json.get("key")
     value = request.json.get("value")
-    session["flight_data"]["settings"][key] = value
+    data = update(f'settings.{key}', value)
     if key.startswith("units_"):
-        session["flight_data"]["settings"]["units_changed"] = "True" #flag to show units have changed
-    session.modified = True
-
-    return jsonify(session["flight_data"])
+        update('settings.units_changed', "True") #flag to show units have changed
+    
+    return data
 
 #updating flight data
 @main.route("/update-flight", methods=["POST"])
 def update_flight():
     key = request.json.get("key")
     value = request.json.get("value")
-
-    target = session["flight_data"]["flight"]
-    keys = key.split(".")
-
-    #allowing paths (for items like distance.value)
-    for k in keys[:-1]:
-        if k not in target or not isinstance(target[k], dict):
-            return jsonify({"error": "Invalid key path"}), 400
-        target = target[k]
-    target[keys[-1]] = value
+    data = update(f'flight.{key}', value)
     update_units() #update units in case a unit value was changed
-    session.modified = True
-    return jsonify(session["flight_data"])
+    return data
 #--------------------------------------------READING DATA
 
 @main.route("/get-settings", methods=["GET"])
 def get_settings():
-    return jsonify(session["flight_data"]["settings"])
+    return jsonify(get_flight_data()[1]["settings"])
 
 @main.route("/get-flight", methods=["GET"])
 def get_flight():
-    return jsonify(session["flight_data"]["flight"])
+    return jsonify(get_flight_data()[1]["flight"])
 
 @main.route("/get-all", methods=["GET"])
 def get_all():
-    return jsonify(session["flight_data"])
+    return jsonify(get_flight_data()[1])
 
 #--------------------------------------------IMPORTING DATA
 
@@ -474,10 +397,12 @@ def load_flight():
             raise ValueError("Invalid data format")
         
         #replace the current session data with the new data
-        session.clear()
-        session.update(New_data)
+        flight, data = get_flight_data()
+        data = {} #clear the current data
+        data = New_data #update with the new data
+        save(flight, data) 
         update_units() #update units in case the loaded data has different units
-        session.modified = True
+        
 
         return jsonify({"status": "success", "message": "Flight data loaded successfully."}), 200
     except Exception as error:
@@ -488,22 +413,131 @@ def load_flight():
 #saves the current flight data as a json file
 @main.route("/save-flight")
 def save_flight():
-    return jsonify(dict(session))
+    return jsonify(get_flight_data()[1]), 200
 
 #-----------------------------------------STARTING A NEW FLIGHT
 
 #resets all flight data  but NOT settings
 @main.route("/new-flight")
 def NewFlightRun():
-    while session["flight_data"]["flight"] != data_template["flight"]:
-        session["flight_data"]["flight"] = data_template["flight"]
+    while get_flight_data()[1]["flight"] != data_template["flight"]:
+        flight, data = get_flight_data()
+        data["flight"] = data_template["flight"]
+        save(flight, data)
     update_unitsRUN()
-    session.modified = True
+    
     return jsonify({"status": "success"}), 200
     
 #shows any errors on the actual page
 if __name__ == '__main__':
     main.run()
+
+
+#-------------------------------------------------UNITS CHANGING-------------------------------------
+
+ureg = pint.UnitRegistry()
+ureg.formatter.default_format = "~" #use the shortened version by default
+
+
+UNIT_MAP = { #maps all units to a base unit and a unit and the corresponding settings key
+    #for the unit that will actually be displayed
+    "distance": {"base": ureg.nautical_mile, "settings_key": "units_distance"},
+    "altitude": {"base": ureg.feet, "settings_key": "units_altitude"},
+    "airspeed": {"base": ureg.knot, "settings_key": "units_airspeed"},
+    "mass": {"base": ureg.kilogram, "settings_key": "units_mass"},
+    "fuel": {"base": ureg.litre, "settings_key": "units_fuel"},
+    "specific_gravity": {"base": ureg("kg/L"), "settings_key": "units_specific_gravity"},
+}
+
+def update_units():
+    units_changed = get_flight_data()[1]["settings"].get("units_changed", "False") == "True"
+
+    def process_item(item, path="flight"):
+        #only process items that are dictionaries with a "class" key (i.e. unit-based items)
+        if isinstance(item, dict) and "class" in item:
+            category = item["class"]
+            if category in UNIT_MAP:
+                settings_key = UNIT_MAP[category]["settings_key"]
+                display_unit = get_flight_data()[1]["settings"][settings_key]
+                current_unit = ureg[display_unit]
+
+                #store previous unit in database settings if not present
+                prev_unit_key = f"prev_{settings_key}"
+                if prev_unit_key not in get_flight_data()[1]["settings"]:
+                    update(f'settings.{prev_unit_key}', display_unit)
+
+                if units_changed == "True":
+                    #convert value from previous unit to new unit
+                    prev_unit = get_flight_data()[1]["settings"][prev_unit_key]
+                    try:
+                        prev_quantity = item["value"] * ureg[prev_unit]
+                        new_quantity = prev_quantity.to(current_unit)
+                        update(f'{path}.value', float(new_quantity.magnitude))
+                    except Exception:
+                        pass                
+                
+                #always update output
+                canonical = item["value"] * current_unit
+                converted = canonical.to(current_unit)
+                unit_name = str(converted.units)
+                unit_name = CUSTOM_UNITS.get(unit_name, unit_name)
+                update(f'{path}.output', f"{converted.magnitude:.1f} {unit_name}")
+        
+        elif isinstance(item, dict):
+            for subkey, subitem in item.items():
+                process_item(subitem, f"{path}.{subkey}")
+
+    #process all items in flight data
+    for key, item in get_flight_data()[1]["flight"].items():
+        process_item(item, f"flight.{key}")
+
+    #update previous unit in database settings
+    def process_prev_unit(item):
+        if isinstance(item, dict) and "class" in item:
+            category = item["class"]
+            if category in UNIT_MAP:
+                settings_key = UNIT_MAP[category]["settings_key"]
+                display_unit = get_flight_data()[1]["settings"][settings_key]
+                #store previous unit in database settings if not present
+                prev_unit_key = f"prev_{settings_key}"
+                update(f'settings.{prev_unit_key}', display_unit)
+
+        elif isinstance(item, dict):
+            for subkey, subitem in item.items():
+                process_prev_unit(subitem)
+        
+    for key, item in get_flight_data()[1]["flight"].items():
+        process_prev_unit(item)
+
+    #reset the flag to show units have been updated
+    update('settings.units_changed', "False")
+    
+
+#using custom units cus the default ones are weird
+CUSTOM_UNITS = {
+    'nmi' : "NM",
+    'kn' : "kts",
+    'kg' : "kg",
+    'lb' : "lbs",
+    'l' : "L",
+    'gal' : "Gal",
+    'feet' : "ft",
+    'meter' : "m",
+    'kilometer' : "km",
+    'smi' : "miles",
+}
+
+@main.route('/units-update')
+def update_unitsRUN():
+    if get_flight_data()[1]["settings"]["units_changed"] == "True":
+        update_units()
+        update('settings.units_changed', "False")
+        
+        return 'updated', 200
+    
+    else:
+        update_units()
+        return 'no change', 200
 
 
 #--------------------------------------------------API FUNCTIONS------------------------------------------------
@@ -656,35 +690,47 @@ def get_avCoords():
 def add_waypoint():
     waypoint = request.json.get("waypoint") #expecting a list [latitude, longitude]
     name = request.json.get("name") #expecting the name of the waypoint
-    add_index = session["flight_data"]["flight"]["add_index"]#current index to be appended from
+    add_index = get_flight_data()[1]["flight"]["add_index"]#current index to be appended from
     #waypoints are always added before the destination airport (so one before the end)
     
 
     #allow the inital addition of departure and destination airports
     if add_index <= 0:
-        session["flight_data"]["flight"]["route_names"].append(name)
-        session["flight_data"]["flight"]["route"].append(waypoint)
+        route_names = get_flight_data()[1]["flight"]["route_names"]
+        route = get_flight_data()[1]["flight"]["route"]
+        route_names.append(name)
+        route.append(waypoint)
+        update('flight.route_names', route_names)
+        update('flight.route', route)
 
     #for adding waypoints in between departure and destination
     else:
-        session["flight_data"]["flight"]["route_names"].insert(add_index, name)
-        session["flight_data"]["flight"]["route"].insert(add_index, waypoint)
+        route_names = get_flight_data()[1]["flight"]["route_names"]
+        route = get_flight_data()[1]["flight"]["route"]
+        route_names.insert(add_index, name)
+        route.insert(add_index, waypoint)
+        update('flight.route_names', route_names)
+        update('flight.route', route)
 
     
-    session["flight_data"]["flight"]["add_index"] += 1
-    session.modified = True
-    return jsonify(session["flight_data"]["flight"]["route"]), 200
+    add_index = get_flight_data()[1]["flight"]["add_index"] + 1
+    update('flight.add_index', add_index)
+    return jsonify(get_flight_data()[1]["flight"]["route"]), 200
 
 @main.route("/remove-waypoint", methods=["POST"])
 def remove_waypoint():
     remove_index = request.json.get("waypointIndex") #expecting the index of the waypoint to remove
     try:
         #remove the waypoint at the specified index
-        session["flight_data"]["flight"]["route_names"].pop(remove_index)
-        session["flight_data"]["flight"]["route"].pop(remove_index)
-        session["flight_data"]["flight"]["add_index"] -= 1
-        session.modified = True
-        return jsonify(session["flight_data"]["flight"]["route"]), 200
+        route_names = get_flight_data()[1]["flight"]["route_names"]
+        route = get_flight_data()[1]["flight"]["route"]
+        route_names.pop(remove_index)
+        route.pop(remove_index)
+        update('flight.route_names', route_names)
+        update('flight.route', route)
+        add_index = get_flight_data()[1]["flight"]["add_index"] - 1
+        update('flight.add_index', add_index)
+        return jsonify(get_flight_data()[1]["flight"]["route"]), 200
     except IndexError:
         return jsonify({"error": "Invalid waypoint index"}), 400
 
@@ -745,8 +791,8 @@ def prompt():
 
     #making the OpenAI client and making the request
     if type == "Route":
-        departure_coords = session["flight_data"]["flight"]["route"][0]
-        destination_coords = session["flight_data"]["flight"]["route"][-1]
+        departure_coords = get_flight_data()[1]["flight"]["route"][0]
+        destination_coords = get_flight_data()[1]["flight"]["route"][-1]
         try:
             client = OpenAI()
             response = client.responses.create(
@@ -838,7 +884,7 @@ def get_weather():
 @main.route('/distance')
 def getDistance():
     try:
-        text = session["flight_data"]["flight"]["distance"]["output"]
+        text = get_flight_data()[1]["flight"]["distance"]["output"]
     except KeyError:
         text = "0.0"
 
@@ -849,38 +895,43 @@ def getDistance():
 #------------Creating the navlog
 @main.route('/makeNavlog')
 def makeNavlog():
-    route_names = session["flight_data"]["flight"]["route_names"]
-    separate_distances = session["flight_data"]["flight"]["separate_distances"]
-    separate_bearings = session["flight_data"]["flight"]["separate_bearings"]
+    route_names = get_flight_data()[1]["flight"]["route_names"]
+    separate_distances = get_flight_data()[1]["flight"]["separate_distances"]
+    separate_bearings = get_flight_data()[1]["flight"]["separate_bearings"]
     len_route = len(route_names)
-    rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
+    rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
 
     #alternate airport details
-    alternate_track = session["flight_data"]["flight"]["alternate_track"]
-    alternate_distance = session["flight_data"]["flight"]["alternate_distance"]
-    alternateAirport_code = session["flight_data"]["flight"]["alternateAirport_code"]
-    arrivalAirport_code = session["flight_data"]["flight"]["destinationAirport_code"]
+    alternate_track = get_flight_data()[1]["flight"]["alternate_track"]
+    alternate_distance = get_flight_data()[1]["flight"]["alternate_distance"]
+    alternateAirport_code = get_flight_data()[1]["flight"]["alternateAirport_code"]
+    arrivalAirport_code = get_flight_data()[1]["flight"]["destinationAirport_code"]
 
-    if alternateAirport_code != "" and session["flight_data"]["flight"]["NAVLOG"]["rows"] != []:
+    if alternateAirport_code != "" and get_flight_data()[1]["flight"]["NAVLOG"]["rows"] != []:
         #if a row already exists for the alternate airport, store it and remove it from the navlog temporarily
-        if session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]["FROM/TO"]["value"] == route_names[-1] + " - " + alternateAirport_code:
-            existing_alt_row = session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]
-            session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(-1)
+        navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+        if navlog_rows[-1]["FROM/TO"]["value"] == route_names[-1] + " - " + alternateAirport_code:
+            existing_alt_row = navlog_rows[-1]
+            navlog_rows.pop(-1)
+            update('flight.NAVLOG.rows', navlog_rows)
 
         #if the last row contains a waypoint beggining with the arrival airfield, remove it as the alternate airport has changed
         #this prevents duplicate rows for the alternate airport, and only applies if above statement is false
-        elif f"{arrivalAirport_code} - " in session["flight_data"]["flight"]["NAVLOG"]["rows"][-1]["FROM/TO"]["value"]:
-            session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(-1)
+        elif f"{arrivalAirport_code} - " in navlog_rows[-1]["FROM/TO"]["value"]:
+            navlog_rows.pop(-1)
+            update('flight.NAVLOG.rows', navlog_rows)
             existing_alt_row = None
 
         else:
             existing_alt_row = None
 
-    elif session["flight_data"]["flight"]["NAVLOG"]["rows"] == []:
+    elif get_flight_data()[1]["flight"]["NAVLOG"]["rows"] == []:
         existing_alt_row = None
 
     else:
-        session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(-1)
+        navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+        navlog_rows.pop(-1)
+        update('flight.NAVLOG.rows', navlog_rows)
         existing_alt_row = None
 
     #only make the navlog if there are at least 3 points
@@ -889,8 +940,10 @@ def makeNavlog():
         for i in range(len_route - 1):
             #dealing with removed waypoints: if an a-b pair no longer exists, remove that row as its not present anymore
             try:
-                if session["flight_data"]["flight"]["NAVLOG"]["rows"][i]["FROM/TO"]["value"] != route_names[i] + " - " + route_names[i+1]:
-                    session["flight_data"]["flight"]["NAVLOG"]["rows"].pop(i)
+                if get_flight_data()[1]["flight"]["NAVLOG"]["rows"][i]["FROM/TO"]["value"] != route_names[i] + " - " + route_names[i+1]:
+                    navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+                    navlog_rows.pop(i)
+                    update('flight.NAVLOG.rows', navlog_rows)
             except IndexError: #if the index is out of range, a new row should be made anyway
                 pass
 
@@ -911,15 +964,21 @@ def makeNavlog():
             }
             #append the row to the navlog
             try:
-                session["flight_data"]["flight"]["NAVLOG"]["rows"][i] = row
+                row_test = get_flight_data()[1]["flight"]["NAVLOG"]["rows"][i] #to trigger the index error if the row doesnt exist
+                if row_test:
+                    update(f'flight.NAVLOG.rows.{i}', row)
             except IndexError:
-                session["flight_data"]["flight"]["NAVLOG"]["rows"].append(row)
+                navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+                navlog_rows.append(row)
+                update('flight.NAVLOG.rows', navlog_rows)
 
         #adding the alternate airport row if an alternate airport has been specified
         if alternateAirport_code != "":
             #if a row already exists for the alternate airport, append it back
             if existing_alt_row:
-                session["flight_data"]["flight"]["NAVLOG"]["rows"].append(existing_alt_row)
+                navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+                navlog_rows.append(existing_alt_row)
+                update('flight.NAVLOG.rows', navlog_rows)
 
             else: #if not make a fresh row
                 alt_row = {
@@ -936,29 +995,32 @@ def makeNavlog():
                         "DIST (NM)": {"value": round(alternate_distance, 1), "calculated": True},
                         "TIME (Min)": {"value": "", "calculated": True}
                     }
-                session["flight_data"]["flight"]["NAVLOG"]["rows"].append(alt_row)
+                
+                navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+                navlog_rows.append(alt_row)
+                update('flight.NAVLOG.rows', navlog_rows)
 
 
-    session.modified = True
-    return {"headers": session["flight_data"]["flight"]["NAVLOG"]["headers"],
-            "rows": session["flight_data"]["flight"]["NAVLOG"]["rows"]
+    
+    return {"headers": get_flight_data()[1]["flight"]["NAVLOG"]["headers"],
+            "rows": get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
         }, 200
 
 #------------Clearing the navlog
 @main.route('/clearNavlog')
 def clearNavlog():
     #clear existing rows
-    session["flight_data"]["flight"]["NAVLOG"]["rows"] = []
+    update('flight.NAVLOG.rows', [])
     
-    route_names = session["flight_data"]["flight"]["route_names"]
-    separate_distances = session["flight_data"]["flight"]["separate_distances"]
-    separate_bearings = session["flight_data"]["flight"]["separate_bearings"]
+    route_names = get_flight_data()[1]["flight"]["route_names"]
+    separate_distances = get_flight_data()[1]["flight"]["separate_distances"]
+    separate_bearings = get_flight_data()[1]["flight"]["separate_bearings"]
     len_route = len(route_names)
 
     #alternate airport details
-    alternate_track = session["flight_data"]["flight"]["alternate_track"]
-    alternate_distance = session["flight_data"]["flight"]["alternate_distance"]
-    alternateAirport_code = session["flight_data"]["flight"]["alternateAirport_code"]
+    alternate_track = get_flight_data()[1]["flight"]["alternate_track"]
+    alternate_distance = get_flight_data()[1]["flight"]["alternate_distance"]
+    alternateAirport_code = get_flight_data()[1]["flight"]["alternateAirport_code"]
 
     #only make the navlog if there are at least 3 points
     #(departure, destination and at least 1 waypoint)
@@ -980,7 +1042,9 @@ def clearNavlog():
                 "TIME (Min)": {"value": "", "calculated": True}
             }
             #append the row to the navlog
-            session["flight_data"]["flight"]["NAVLOG"]["rows"].append(row)
+            navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+            navlog_rows.append(row)
+            update('flight.NAVLOG.rows', navlog_rows)
 
         #adding the alternate airport row if an alternate airport has been specified
         if alternateAirport_code != "":
@@ -1000,11 +1064,13 @@ def clearNavlog():
                     "TIME (Min)": {"value": "", "calculated": True}
                 }
             
-            session["flight_data"]["flight"]["NAVLOG"]["rows"].append(alt_row)
+            navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+            navlog_rows.append(alt_row)
+            update('flight.NAVLOG.rows', navlog_rows)
 
-    session.modified = True
-    return {"headers": session["flight_data"]["flight"]["NAVLOG"]["headers"],
-            "rows": session["flight_data"]["flight"]["NAVLOG"]["rows"]
+    
+    return {"headers": get_flight_data()[1]["flight"]["NAVLOG"]["headers"],
+            "rows": get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
         }, 200
 
 #----------------------Updating data
@@ -1014,7 +1080,7 @@ def update_cell():
     column_name = request.json.get("column")
     new_value = request.json.get("value")
 
-    navlog_rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
+    navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
 
     #validate row index (shouldn't ever be triggered)
     if row_index < 0 or row_index >= len(navlog_rows):
@@ -1028,11 +1094,10 @@ def update_cell():
     navlog_rows[row_index][column_name]["value"] = new_value
     navlog_rows[row_index][column_name]["calculated"] = False #mark as user input
 
+    update('flight.NAVLOG.rows', navlog_rows)
+
     #calculate fields for that row
     values = calculate_row(row_index)
-
-    session.modified = True
-
     return values, 200
 
 
@@ -1067,8 +1132,13 @@ def calc_GS(tas, wind_dir, wind_spd, hdg):
 
 
 def calculate_row(row_index):
-    row = session["flight_data"]["flight"]["NAVLOG"]["rows"][row_index]
-    variation = float(session["flight_data"]["flight"]["variation"])
+    def update_row(row_index, row):
+        navlog_rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
+        navlog_rows[row_index] = row
+        update('flight.NAVLOG.rows', navlog_rows)
+
+    row = get_flight_data()[1]["flight"]["NAVLOG"]["rows"][row_index]
+    variation = float(get_flight_data()[1]["flight"]["variation"])
 
     #getting necessary values
     tas = float(row["TAS"]["value"]) if row["TAS"]["value"] != "" else ""
@@ -1079,31 +1149,31 @@ def calculate_row(row_index):
 
     #only calculate if tas, wind_dir and wind_spd are provided
     if all(value != "" for value in [tas, wind_dir, wind_spd, track]):
-
         #heading
         try:
             row["HDG (°T)"]["value"] = calc_HDG(tas, track, wind_dir, wind_spd)
             row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
         except ValueError: #return 'ERROR' for all fields if a calculation cannot be done
+            update_row(row_index, row)
             return jsonify({"hdgT": "ERROR", "hdgM": "ERROR", "gs": "ERROR", "time": "ERROR"})
 
         #ground speed
         row["GS (KT)"]["value"] = calc_GS(tas, wind_dir, wind_spd, float(row["HDG (°T)"]["value"]))
+        gs = row["GS (KT)"]["value"]
+        if gs not in [0, ""]:
+            row["TIME (Min)"]["value"] = round((distance / gs) * 60, 1) #time in minutes
+            update_row(row_index, row)
+        return jsonify({"hdgT": row["HDG (°T)"]["value"], "hdgM": row["HDG (°M)"]["value"], "gs": row["GS (KT)"]["value"], "time": row["TIME (Min)"]["value"]})
 
     else:
-        return jsonify ({ "data" : "none" })
-    
-    gs = row["GS (KT)"]["value"]
-    if gs not in [0, ""]:
-        row["TIME (Min)"]["value"] = round((distance / gs) * 60, 1) #time in minutes
-
-    return jsonify({"hdgT": row["HDG (°T)"]["value"], "hdgM": row["HDG (°M)"]["value"], "gs": row["GS (KT)"]["value"], "time": row["TIME (Min)"]["value"]})
+        update_row(row_index, row)
+        return jsonify ({ "data" : "none" })    
 
 #----recalculating magnetic heading for all rows (for when variation is changed)
 @main.route('/recalculate-magnetic-HDG')
 def recalculate_variation():
-    variation = float(session["flight_data"]["flight"]["variation"])
-    rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
+    variation = float(get_flight_data()[1]["flight"]["variation"])
+    rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
 
     for i in range(len(rows)):
         row = rows[i]
@@ -1111,7 +1181,7 @@ def recalculate_variation():
         if row["HDG (°T)"]["value"] != "":
             row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
 
-    session.modified = True
+    update('flight.NAVLOG.rows', rows)
     return jsonify({"status": "ok"}), 200
 
 #--------calculating total flight time
@@ -1119,7 +1189,7 @@ def recalculate_variation():
 @main.route('/calc_flight_time')
 def calculate_flight_time():
     totalMins = 0
-    rows = session["flight_data"]["flight"]["NAVLOG"]["rows"]
+    rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
     calc = True
 
     for i in range(len(rows)):
@@ -1127,7 +1197,7 @@ def calculate_flight_time():
         #only calculate total time if all time values are filled
         if row["TIME (Min)"]["value"] == "":
             calc = False
-            session['flight_data']['flight']['time'] = ''
+            update(f'flight.time', '')
             return jsonify ({"time" : 'none'})
 
     if calc:
@@ -1139,11 +1209,11 @@ def calculate_flight_time():
         hours = totalMins // 60
         mins = totalMins % 60
 
-        #update session
+        #update database
         totalTime = f'{round(hours)}hrs {round(mins)}mins'
-        session['flight_data']['flight']['time'] = totalTime
+        update(f'flight.time', totalTime)
 
-        session.modified = True
+        
         return jsonify({"time": totalTime}), 200
 
 #-------------------------------------------FUEL-------------------------------------
@@ -1151,16 +1221,14 @@ def calculate_flight_time():
 #---------calculating totals
 @main.route('/calculate-totals', methods=["POST"])
 def calculate_totals():
-    flight_data = session["flight_data"]["flight"]
-
     #---TOTAL FUEL---#
     #getting all fuel components
-    taxi = flight_data["fuel_taxi"]["value"]
-    trip = flight_data["fuel_trip"]["value"]
-    contingency = flight_data["fuel_contingency"]["value"]
-    alternate = flight_data["fuel_alternate"]["value"]
-    finalReserve = flight_data["fuel_finalReserve"]["value"]
-    additional = flight_data["fuel_additional"]["value"]
+    taxi = get_flight_data()[1]["flight"]["fuel_taxi"]["value"]
+    trip = get_flight_data()[1]["flight"]["fuel_trip"]["value"]
+    contingency = get_flight_data()[1]["flight"]["fuel_contingency"]["value"]
+    alternate = get_flight_data()[1]["flight"]["fuel_alternate"]["value"]
+    finalReserve = get_flight_data()[1]["flight"]["fuel_finalReserve"]["value"]
+    additional = get_flight_data()[1]["flight"]["fuel_additional"]["value"]
     extra = request.json.get("extra")
 
     #calculating total fuel
@@ -1175,49 +1243,49 @@ def calculate_totals():
     ])
     
 
-    #updating session
-    flight_data["fuel_total"]["value"] = round(total_fuel, 1)
+    #updating database
+    update(f'flight.fuel_total.value', round(total_fuel, 1))
 
     #---MASSES---#
-    specific_gravity = flight_data["specific_gravity"]["value"]
+    specific_gravity = get_flight_data()[1]["flight"]["specific_gravity"]["value"]
     if specific_gravity != "" and specific_gravity != 0:
         #mass = volume * density (specific gravity)
         fuel_mass = total_fuel * float(specific_gravity)
-        flight_data["fuel_mass"]["value"] = round(fuel_mass, 1)
+        update(f'flight.fuel_mass.value', round(fuel_mass, 1))
         #distributing fuel mass equally between 2 tanks for weight and balance
-        flight_data["weight_items"]["fuel_load1"]["weight"]["value"] = fuel_mass / 2
-        flight_data["weight_items"]["fuel_load2"]["weight"]["value"] = fuel_mass / 2
+        update(f'flight.weight_items.fuel_load1.weight.value', fuel_mass / 2)
+        update(f'flight.weight_items.fuel_load2.weight.value', fuel_mass / 2)
 
         #fuel burned on ground
-        flight_data["weight_items"]["fuel_ground_burned1"]["weight"]["value"] = (float(taxi) * float(specific_gravity)) / 2
-        flight_data["weight_items"]["fuel_ground_burned2"]["weight"]["value"] = (float(taxi) * float(specific_gravity)) / 2
+        update(f'flight.weight_items.fuel_ground_burned1.weight.value', (float(taxi) * float(specific_gravity)) / 2)
+        update(f'flight.weight_items.fuel_ground_burned2.weight.value', (float(taxi) * float(specific_gravity)) / 2)
 
         #fuel burned in flight
-        flight_data["weight_items"]["fuel_flight_burned1"]["weight"]["value"] = (float(trip) * float(specific_gravity)) / 2
-        flight_data["weight_items"]["fuel_flight_burned2"]["weight"]["value"] = (float(trip) * float(specific_gravity)) / 2
+        update(f'flight.weight_items.fuel_flight_burned1.weight.value', (float(trip) * float(specific_gravity)) / 2)
+        update(f'flight.weight_items.fuel_flight_burned2.weight.value', (float(trip) * float(specific_gravity)) / 2)
 
     else:
-        flight_data["fuel_mass"]["value"] = 0
-        flight_data["weight_items"]["fuel_load1"]["weight"]["value"] = 0
-        flight_data["weight_items"]["fuel_load2"]["weight"]["value"] = 0
-        flight_data["weight_items"]["fuel_ground_burned1"]["weight"]["value"] = 0
-        flight_data["weight_items"]["fuel_ground_burned2"]["weight"]["value"] = 0
-        flight_data["weight_items"]["fuel_flight_burned1"]["weight"]["value"] = 0
-        flight_data["weight_items"]["fuel_flight_burned2"]["weight"]["value"] = 0
+        update(f'flight.fuel_mass.value', 0)
+        update(f'flight.weight_items.fuel_load1.weight.value', 0)
+        update(f'flight.weight_items.fuel_load2.weight.value', 0)
+        update(f'flight.weight_items.fuel_ground_burned1.weight.value', 0)
+        update(f'flight.weight_items.fuel_ground_burned2.weight.value', 0)
+        update(f'flight.weight_items.fuel_flight_burned1.weight.value', 0)
+        update(f'flight.weight_items.fuel_flight_burned2.weight.value', 0)
 
     #---ENDURANCE--- to calculate how long the fuel will last based on burn rate
-    fuel_burn = flight_data["fuel_burn"]["value"] #in units of fuel per hour
+    fuel_burn = get_flight_data()[1]["flight"]["fuel_burn"]["value"] #in units of fuel per hour
     if fuel_burn != "" and fuel_burn != 0:
         endurance_hours = total_fuel / float(fuel_burn)
         hours = int(endurance_hours)
         minutes = int((endurance_hours - hours) * 60)
         endurance = f"{hours}hrs {minutes}mins"
-        flight_data["fuel_endurance"] = endurance
+        update(f'flight.fuel_endurance', endurance)
 
     update_unitsRUN() #reapply units after totals have been calculated
 
     #----STOPOVER CHECK-----#
-    max_tank_capacity = flight_data["max_tank_capacity"]["value"]
+    max_tank_capacity = get_flight_data()[1]["flight"]["max_tank_capacity"]["value"]
     if max_tank_capacity != "" and max_tank_capacity != 0:
         #check if total fuel exceeds max tank capacity
         if total_fuel > float(max_tank_capacity):
@@ -1227,10 +1295,9 @@ def calculate_totals():
     else:
         stopover_status = False #cannot determine
 
-    session.modified = True
-    return jsonify({"total_fuel": flight_data["fuel_total"]["output"],
-                     "fuel_mass": flight_data["fuel_mass"]["output"],
-                     "fuel_endurance": flight_data["fuel_endurance"],
+    return jsonify({"total_fuel": get_flight_data()[1]["flight"]["fuel_total"]["output"],
+                     "fuel_mass": get_flight_data()[1]["flight"]["fuel_mass"]["output"],
+                     "fuel_endurance": get_flight_data()[1]["flight"]["fuel_endurance"],
                      "stopover_status": stopover_status
                      }), 200
 
@@ -1241,9 +1308,9 @@ def calculate_totals():
 @main.route('/update-cg-table', methods=["POST"])
 def update_cg_table():
     table = request.json.get("table") #expecting the full cg table as a list of dicts
-    session["flight_data"]["flight"]["CG_calculations"] = table
+    update('flight.CG_calculations', table)
     update_unitsRUN() #reapply units after CG table update
-    session.modified = True
+    
     return jsonify({"status": "success"}), 200
 
 #---------------------------------------------DASHBOARD-------------------------------------
@@ -1252,8 +1319,11 @@ def update_cg_table():
 @main.route('/add-expense', methods=["POST"])
 def add_expense():
     expense = request.json.get("expense") #expecting an array [expense name, amount]
-    session["flight_data"]["flight"]["expenses"].append(expense)
-    session.modified = True
+    flight_expenses = get_flight_data()[1]["flight"]["expenses"]
+    flight_expenses.append(expense)
+    update('flight.expenses', flight_expenses)
+
+    
     return jsonify({"status": "success"}), 200
 
 #---------REMOVING AN EXPENSE
@@ -1262,11 +1332,13 @@ def remove_expense():
     name = request.json.get("name") #expecting the name of the expense to remove
     try:
         #find the expense index with the specific name, then remove it
-        for index, expense in enumerate(session["flight_data"]["flight"]["expenses"]):
+        for index, expense in enumerate(get_flight_data()[1]["flight"]["expenses"]):
             if expense[0] == name:
-                session["flight_data"]["flight"]["expenses"].pop(index)
+                flight_expenses = get_flight_data()[1]["flight"]["expenses"]
+                flight_expenses.pop(index)
+                update('flight.expenses', flight_expenses)
                 break
-        session.modified = True
+        
         return jsonify({"status": "success"}), 200
     except IndexError: #shouldn't be possible as a click is required on frontend
         return jsonify({"error": "Invalid expense index"}), 400

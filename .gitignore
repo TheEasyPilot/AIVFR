@@ -11,3 +11,6 @@ __pycache__/
 
 #changelog template
 changelog_template.md
+
+#database instances
+instance/

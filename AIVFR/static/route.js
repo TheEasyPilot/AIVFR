@@ -554,7 +554,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             reload_map();
             update_route_names();
             await updateDistances();
-            update("route_changed", "True");
+            await update("route_changed", "True");
             addWaypointContainer.classList.remove('loading')
             });
         
@@ -607,7 +607,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
             reload_map();
             update_route_names();
             await updateDistances();
-            update("route_changed", "True");
+            await update("route_changed", "True");
             addWaypointContainer.classList.remove('loading')
         });
     }
@@ -621,7 +621,7 @@ const output = document.getElementById('routeOutput');
 const routePrompt = document.getElementById('routePrompt');
 
 generate.addEventListener('click',  async () => {
-    generate.disabled = true; //preventing multiple clicks
+    generate.style.pointerEvents = "none"; //preventing multiple clicks
     generate.textContent = "Generating...";
 
     fetch('/get-flight')
@@ -685,12 +685,14 @@ generate.addEventListener('click',  async () => {
         await update('route_names', response.route_names);
         await update('route', response.route);
         await update('route_gen_justification', response.justification);
+        //updating the add index to return to the correct point after generation
+        await update('add_index', response.route.length - 1);
         reload_map();
         update_route_names();
         await updateDistances();
-        update("route_changed", "True");
+        await update("route_changed", "True");
 
-        generate.disabled = false; //allow clicking again
+        generate.style.pointerEvents = "auto"; //allow clicking again
         generate.textContent = "Generate";
 
     });

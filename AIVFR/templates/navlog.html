@@ -25,7 +25,6 @@
           Variation (+° <b>E</b>, -° <b>W</b>): <input type="number" id="variation" value="{{ flight.variation }}" step="1"/>
         </div>
 
-
       <!--Clear and download buttons-->
 
         <div>
@@ -38,7 +37,7 @@
         </div>
       </div>
 
-      <hr size="3.5" color="#cdcdcd" noshade>
+      <hr size="3.5" color="#cdcdcd" noshade style="margin-top: 15px;">
 
 <!--=============================BODY (TABLE)==========================-->
       <table id="navlogTable" class="{{ 'inactive' if flight.route|length < 3 else '' }}">

@@ -1,3 +1,7 @@
+* {
+    font-family: 'Manrope';
+}
+
 #title {
     font-size: 29.8px;
     font-weight: 300;
@@ -13,23 +17,6 @@
     justify-content: space-between;
     border: 1px none var(--text);
     height: 46px;
-}
-
-#save { /*save flight*/
-    width: 165px;
-    height: 45px;
-    font-family: 'Manrope';
-    font-size: 15px;
-    font-weight: 600;
-    padding: 8px 26px;
-    border: 1px solid var(--text);
-    border-radius: 5px;
-    background-color: var(--highlight);
-}
-
-#save:hover {
-    cursor: pointer;
-    background-color: var(--primary);
 }
 
 #save.savingOrSaved { /*user feedback when saving/saved */
@@ -121,13 +108,13 @@ input {
     min-height: 70px;
 }
 
-#refresh_WX, #refresh_brief, #download_plan {
+#refresh_WX, #refresh_brief {
     background-color: var(--bg);
     width: 40px;
     height: 38px;
 }
 
-#refresh_WX:hover, #refresh_brief:hover, #download_plan:hover {
+#refresh_WX:hover, #refresh_brief:hover {
     background-color: var(--onhover);
     cursor: pointer;
 }
@@ -187,8 +174,10 @@ input {
     background-color: var(--bg);
     padding: 20px;
     border-radius: 10px;
-    height: calc(100% - 48px);
-    overflow-y: auto;
+    min-height: calc(100% - 48px);
+    max-height: 500px;
+    overflow: auto;
+    white-space: pre-line;
 }
 
 /*refresh button feedback*/
@@ -257,4 +246,26 @@ input {
 #click_to_remove {
     transition: opacity 0.3s ease-in-out;
     opacity: 0;
+}
+
+#download_plan, #save {
+    border: 1px solid var(--text);
+    width: 50px;
+    height: 55px;
+    background-color: var(--highlight); 
+    transition: 0.3s;
+}
+
+#download_plan:hover, #save:hover {
+    background-color: var(--primary);
+    cursor: pointer;
+}
+
+#download_plan_icon {
+    width: 18px;
+    height: 18px;
+}
+
+.noBrief {
+    color : #737373;
 }
