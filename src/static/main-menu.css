@@ -226,19 +226,30 @@ hr {
     right: 50px;
 }
 
-footer {
+.footer {
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    font-size: 14px;
+    right: 15px;
+    bottom: 0px;
+}
+
+#version {
     position: absolute;
     text-align: center;
     padding: 10px;
     font-size: 14px;
-    right: 15px;
-    bottom: 10px;
+    left: -10px;
+    bottom: -24px;
+    opacity: 0.3;
 }
-footer a {
+
+.footer a, #version a {
     color:gray;
     text-decoration: none;
 }
-footer a:hover {
+.footer a:hover, #version a:hover {
     text-decoration: underline;
 }
 
