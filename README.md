@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/Version-v1.0.0--beta-green)
 [![License](https://img.shields.io/badge/License-CC--BY--NC_4.0-blue)](https://creativecommons.org/licenses/by-nc/4.0/)
-[![Documentation](https://img.shields.io/badge/Download_the_full_documentation-Currently_Unavailable-red)]()
+[![Documentation](https://img.shields.io/badge/v1.0.0--beta_documentation-Currently_Unavailable-red)]()
 
 ***An Experimental AI assisted Flight Planning Webtool***
 
