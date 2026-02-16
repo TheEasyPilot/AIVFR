@@ -15,6 +15,7 @@ main = Blueprint('app', __name__)
 #also allows setting default values
 
 data_template = {
+    "version" : "0.7.1-alpha",
     "settings" : {
         "theme": "light",
         "map_style": "normal",
@@ -262,7 +263,14 @@ data_template = {
 
 #-------------------------------SERVER-SIDE FUNCTIONS
 def get_flight_data():
-    flight = Flight.query.get(session["flight_id"])
+    flight = Flight.query.get(session.get("flight_id"))
+    if flight is None:
+        #create a new flight if it doesnt exist in the database
+        new_flight = Flight(data=json.dumps(data_template))
+        db.session.add(new_flight)
+        db.session.commit()
+        session["flight_id"] = new_flight.id
+        flight = new_flight
     data = json.loads(flight.data)
     return flight, data
 
@@ -290,14 +298,15 @@ def update(path, value):
 #main menu
 @main.route('/') #this will be the first to load up
 def index():
-    if "flight_id" not in session: #initialise the session if not created already
+    #check if flight id doesnt exist of the flight data isnt found, make a new flight
+    if "flight_id" not in session or Flight.query.get(session["flight_id"]) is None:
         new_flight = Flight(data=json.dumps(data_template))
         db.session.add(new_flight)
         db.session.commit()
         session["flight_id"] = new_flight.id
         update_units()
     
-    return render_template('menu.html', APP_VERSION="0.7.1-alpha", data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
+    return render_template('menu.html', APP_VERSION=get_flight_data()[1]['version'], data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
 
 #-------------DEBUGGING
 #debug route that allows me to see the flight data at any time
