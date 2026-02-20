@@ -4,7 +4,7 @@ AIVFR uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
-### [1.0.0-beta (unreleased)](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.0.0-beta)
+### [1.0.0-beta](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.0.0-beta) - 2026-02-20
 
 Initial development is complete! AIVFR is now in beta where it will probably stay for quite some time.
 
@@ -33,7 +33,7 @@ Initial development is complete! AIVFR is now in beta where it will probably sta
 
 - Added Open Graph formatting for social media and search engines
 - Users can use AI to generate a briefing for the entire flight
-- All flight data can be downloaded as pdf
+- All flight data can be downloaded as pdf *(quite buggy at the moment)*
 - Switched the flight data file away from a flask session cookie to an actual database (4KB is NOT enough space :sob:)
 
 ### Fixed
