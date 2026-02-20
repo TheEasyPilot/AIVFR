@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/Version-v1.0.0--beta-green)
 [![License](https://img.shields.io/badge/License-CC--BY--NC_4.0-blue)](https://creativecommons.org/licenses/by-nc/4.0/)
-[![Documentation](https://img.shields.io/badge/Download_the_full_documentation-Currently_Unavailable-red)]()
+[![Documentation](https://img.shields.io/badge/v1.0.0--beta_documentation-Currently_Unavailable-red)]()
 
 ***An Experimental AI assisted Flight Planning Webtool***
 
@@ -16,7 +16,7 @@ This webtool is not adapted for mobile users. For the best experience please use
 
 Use **`/debug`** to see all the currently stored data for your session.
 
-Please see the attatched full documentation to see the project development aswell as resources/credits.
+Please see the attatched full documentation to see the initial development of this project.
 
 ## Disclaimer
 This webtool is an experimental, non-certified project that uses AI-generated content. The information provided may be incomplete, outdated, inaccurate, or misleading.
