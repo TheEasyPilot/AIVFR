@@ -4,33 +4,46 @@ AIVFR uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
-### [0.8.0-alpha (unreleased)](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.8.0-alpha)
+### [1.0.0-beta](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.0.0-beta) - 2026-02-20
+
+Initial development is complete! AIVFR is now in beta where it will probably stay for quite some time.
 
 #### Added
 
-- **NEW TAB**: Dashboard. The Dasboard shows a summary of all currently entered flight details, listed below:
+- **NEW TAB**: Dashboard. The Dashboard shows a summary of all currently entered flight details, listed below:
 - Route information:
   - Departure → Arrival
   - Time and distance
   - Alternate aerodrome
     
-- Display aircraft weight and performance:
+- Aircraft weight and performance:
   - Persons on board
   - Cargo weight
   - Fuel
   - Total (ramp)
   - MTOW, MLW
   - TOD, LD
-  - Display route information:
-
-- Route
+  
+- Route details:
+  - Route
   - Cruise and groundspeed
   - Alternate details
   - Display weather reports
   - Allow the user to add expenses to their flight
 
+- Added Open Graph formatting for social media and search engines
 - Users can use AI to generate a briefing for the entire flight
-- All flight data can be downloaded as pdf
+- All flight data can be downloaded as pdf *(quite buggy at the moment)*
+- Switched the flight data file away from a flask session cookie to an actual database (4KB is NOT enough space :sob:)
+
+### Fixed
+
+- Weather reports now operative again after errors occurring due to new CheckWX version
+
+### Removed
+
+- Removed cloudbase data from weather reports as CheckWXAPI no longer supports it
+- Navlog will now clear completely if you edit your route. Removed ability for table data to be saved due to complications with row-order and making (will be fixed in future updates)
 
 
 ### [0.7.1-alpha](https://github.com/TheEasyPilot/AIVFR/releases/tag/v0.7.1-alpha) - 2026-02-02 [YANKED]
