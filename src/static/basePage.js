@@ -67,12 +67,9 @@ export async function update(key, value) { //async function allows code to work 
     });
 
     // Mark as unsaved
-    if (key !== "saved") {
-        await fetch("/update-flight", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({key: "saved", value: "False"})
-        });
+    if (key !== "saved_json" && key !== "saved_pdf") {
+        await update("saved_json", false);
+        await update("saved_pdf", false);
     }
 }
 

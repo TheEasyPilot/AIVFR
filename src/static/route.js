@@ -384,6 +384,7 @@ async function add_city(city) {
 
         } catch (error) {
             showAlert("Error fetching city details. Please make sure the city name is correct.");
+            addWaypointContainer.classList.remove('loading')
             return null;
             }
     }
@@ -421,11 +422,13 @@ async function add_av(avPoint) {
         var AvCoords = await fetchAvCoords(avPoint);
         } catch (error) {
         showAlert("Waypoint not found. Please check the name and location of your waypoint and try again.");
+        addWaypointContainer.classList.remove('loading')
         return null;
         }
-
+    if (AvCoords) {
     [AvCoords[0][0], AvCoords[0][1]] = [AvCoords[0][1], AvCoords[0][0]];
     await add_waypoint(AvCoords[0], AvCoords[1]);
+    }
 }
 
 //----------------------Updating map without reloading page

@@ -46,7 +46,7 @@ main {
     color: var(--primary);
 }
 
-#logoAI_nav {
+#logoAI_pdf {
     color: hsl(190 100% 42.5%);
 }
 
@@ -56,7 +56,7 @@ main {
     color: var(--text);
 }
 
-#logoVFR_nav {
+#logoVFR_pdf {
     position: relative;
     right: 3px;
     color: black;
@@ -67,7 +67,7 @@ main {
     font-weight: 700;
 }
 
-#logoAI_nav, #logoVFR_nav {
+#logoAI_pdf, #logoVFR_pdf {
     font-size: 50px;
     font-weight: 700;
 }
@@ -194,16 +194,104 @@ hr  {
     width: 800px;
 }
 
-#pdf_header {
+#BasePDF_template {
+    position: absolute;
+    left: -9999px;
+    width: 800px;
+}
+
+#navlog_pdf_header, #base_pdf_header {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #ccc;
     padding-bottom: 10px;
+    align-items: center;
 }
 
-#pdf_footer {
+#navlog_pdf_footer, #base_pdf_footer {
     text-align: center;
     font-size: 14px;
     margin-top: 50px;
     border-top: 1px solid #ccc;
+}
+
+/*--------Base pdf template-------*/
+
+.pdf_title {
+    font-size: 29.8px;
+    font-weight: 300;
+}
+
+/*route*/
+#pdf_route_content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+.pdf_content {
+    padding: 10px;
+}
+
+.container {
+    background-color: var(--bg);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+#plane_icon {
+    position: absolute;
+    width: 30px;
+    color: var(--primary);
+    opacity: 0.4;
+    transform: rotate(135deg);
+    left: 350px;
+    top: 206.5px;
+    scale: 3.5;
+    z-index: -1;
+}
+
+/*fuel*/
+
+/*Policy table*/
+table {
+    width: 99%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid var(--text);
+    padding: 8px;
+    text-align: center;
+    font-family: 'Manrope';
+    font-size: 14px;
+}
+
+#fuel_policy_table td:nth-child(2) {
+    width: 40%;
+}
+
+th {
+    background-color: var(--tableHeader);
+}
+
+/*weather reports formatting*/
+.report {
+    white-space: pre-line;
+}
+
+/*dealing with page breaks*/
+
+.page-break {
+    page-break-before: always;
+    break-before: page;
+}
+
+.no-split {
+    page-break-inside: avoid;
+    break-inside: avoid;
 }

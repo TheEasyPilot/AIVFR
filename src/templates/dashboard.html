@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='components.css') }}">
 <script type="module" src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 {% endblock %}
 
 {% block title %} {# edit whats in the title block #}
@@ -17,9 +18,9 @@
         <span id="alertBox"></span>
 
         <div style="display: flex; gap: 10px; align-items: center; margin-top: 20px;">
-          <p>Download Your Flight Plan:</p>
-          <button class="button" class="{{ 'savingOrSaved' if flight.saved == 'True' else '' }}" id="save"><div><svg id="download_plan_icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg><b>JSON</b></div></button>
-          <button class="button" id="download_plan"><div><svg id="download_plan_icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg><b>PDF</b></div></button>
+          <p>{{ 'Download Your Flight Plan:' if flight.destinationAirport_code != '' else 'Start a route to download your flight plan.' }}</p>
+          <button class="button {{ 'savingOrSaved' if flight.saved_json == 'True' else '' }}" id="save_json"><div><svg id="save_json_icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg><b>JSON</b></div></button>
+          <button class="button {{ 'savingOrSaved' if flight.saved_pdf == 'True' else '' }}" id="save_pdf"><div><svg id="save_pdf_icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg><b>PDF</b></div></button>
         </div>
       </div>
 <!--=============================BODY==========================-->

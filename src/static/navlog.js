@@ -219,8 +219,8 @@ await fetch('/get-flight')
     
     //getting the template
     const template_container = document.getElementById('navlogPDF_template');
-    const navlog_content = document.getElementById('pdf_content');
-    const dateAndTime = document.getElementById('pdf_dateAndTime');
+    const navlog_content = document.getElementById('navlog_pdf_content');
+    const dateAndTime = document.getElementById('navlog_pdf_dateAndTime');
 
     //inserting the data into the templete
     navlog_content.innerHTML = navlog.outerHTML;
@@ -228,7 +228,7 @@ await fetch('/get-flight')
     //using html2pdf to convert the html table into a image, then save to PDF
     const options = {
             margin: 0.2,
-            filename: `navlog ${departure_code}-${arrival_code}.pdf`,
+            filename: `Navlog ${departure_code}-${arrival_code}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true },
             logging: false,

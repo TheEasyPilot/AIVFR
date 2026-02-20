@@ -19,10 +19,11 @@
     height: 46px;
 }
 
-#save.savingOrSaved { /*user feedback when saving/saved */
+#save_json.savingOrSaved, #save_pdf.savingOrSaved { /*user feedback when saving/saved */
     background-color: var(--onhover);
     border: none;
     color: gray;
+    opacity: 0.6;
     cursor: not-allowed;
     pointer-events: none;
 }
@@ -248,7 +249,7 @@ input {
     opacity: 0;
 }
 
-#download_plan, #save {
+#save_json, #save_pdf {
     border: 1px solid var(--text);
     width: 50px;
     height: 55px;
@@ -256,12 +257,12 @@ input {
     transition: 0.3s;
 }
 
-#download_plan:hover, #save:hover {
+#save_json:hover, #save_pdf:hover {
     background-color: var(--primary);
     cursor: pointer;
 }
 
-#download_plan_icon {
+#save_json_icon, #save_pdf_icon {
     width: 18px;
     height: 18px;
 }

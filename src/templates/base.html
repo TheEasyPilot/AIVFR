@@ -80,22 +80,360 @@
         {% endblock %}
     </main>
   </body>
+
+  
   <!--Navlog PDF template-->
   <div id="navlogPDF_template">
-    <div id="pdf_header">
+    <div id="navlog_pdf_header">
       <!--Logo-->
       <div>
-        <span id="logoAI_nav">AI</span>
-        <span id="logoVFR_nav">VFR</span>
+          <span id="logoAI_pdf" style="font-size: 70px;">AI</span>
+          <span id="logoVFR_pdf" style="font-size: 70px;">VFR</span>
+          <p style="margin-top: -16px; font-size: 14px;"><b>AI ASSISTED FLIGHT PLANNING</b></p>
       </div>
       <h2 style="color: #000000;">Navigation Log</h2>
     </div>
 
-    <div id="pdf_content" class="light_mode" style="padding: 20px 0;"></div>
+    <div id="navlog_pdf_content" class="light_mode" style="padding: 20px 0;"></div>
 
-    <div id="pdf_footer" class="light_mode">
-      <p><em>FOR EDUCATIONAL PURPOSES ONLY. NOT TO BE USED IN REAL WORLD FLIGHT OPERATIONS</em></p>
-      <p><span id="pdf_dateAndTime"></span> | <b>www.aivfr.co.uk</b></p>
+    <div id="navlog_pdf_footer" class="light_mode">
+      <p><em>FOR EDUCATIONAL PURPOSES ONLY. MUST NOT BE USED IN REAL WORLD FLIGHT OPERATIONS</em></p>
+      <p><span id="navlog_pdf_dateAndTime"></span> | <b>www.aivfr.co.uk</b></p>
+    </div>
+  </div>
+
+  <!--Base PDF template-->
+  <div id="BasePDF_template">
+    <div id="base_pdf_header">
+      <!--Logo-->
+      <div>
+        <span id="logoAI_pdf" style="font-size: 70px;">AI</span>
+        <span id="logoVFR_pdf" style="font-size: 70px;">VFR</span>
+        <p style="margin-top: -16px; font-size: 12px;"><b>AI ASSISTED FLIGHT PLANNING</b></p>
+      </div>
+      <h2 style="color: #000000;">Flight Plan</h2>
+    </div>
+    
+    <!--Content-->
+    <div id="base_pdf_content" class="light_mode" style="padding: 20px 0;">
+<!-------------ROUTE-------------->
+      <div class="pdf_title">ROUTE</div>
+      <div id="pdf_route_content" class="pdf_content">
+        <div> <!--FROM-->
+          <b>FROM</b>
+          <div class="container"><b>{{ flight.departureAirport_code }}</b> {{ flight.departureAirport_name if flight.departureAirport_name else 'NONE' }}</div>
+        </div>
+
+        <!--TIME & DISTANCE-->
+        <p>{{ flight.distance.output }} <b>|</b> {{ flight.time }}</p>
+        <img  id="plane_icon" src="../static/FPWT_images/planeSillouette.png" alt="plane icon">
+
+        <div> <!--TO-->
+          <b>TO</b>
+          <div class="container"><b>{{ flight.destinationAirport_code }}</b> {{ flight.destinationAirport_name if flight.destinationAirport_name else 'NONE' }}</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; margin-top: 30px; text-align: center;">
+        <div>
+          <b>ALTERNATE</b>
+          <div class="container" style="background-color: var(--alternate);"><b>{{ flight.alternateAirport_code }}</b> {{ flight.alternateAirport_name if flight.alternateAirport_name else 'NONE' }}</div>
+        </div>
+      </div>
+    
+      <!---WAYPOINTS-->
+      <div style="display: flex; justify-content: center;">
+        <div class="container" style="margin-top: 30px; width: 75%; min-height: 120px;">
+          {{ ' ➔ '.join(flight.route_names) if flight.route_names else 'No Route Data' }}
+        </div>
+      </div>
+  <!--------AIRCRAFT DETAILS-------->
+      <div class="pdf_title" style="margin-top: 30px;">AIRCRAFT DETAILS</div>
+      <div id="pdf_aircraft_details" style="display: flex; justify-content: center; gap: 70px; margin-top: 20px;">
+        <div>
+          <p>Type: <b>{{ flight.aircraft }}</b></p>
+          <p>MTOW: <b>{{ flight.MTOW.output }}</b></p>
+          <p>MLW: <b>{{ flight.MLW.output }}</b></p>
+        </div>
+        <div>
+          <p>Max Tank Capacity: <b>{{ flight.max_tank_capacity.output }}</b></p>
+          <p>Fuel Burn: <b>{{ flight.fuel_burn.output }}</b></p>
+        </div>
+      </div>
+
+  <!-------------FUEL-------------->
+      <div class="no-split">
+        <div class="pdf_title" style="margin-top: 30px;">FUEL</div>
+        <!--FUEL POLICIES-->
+        <table id="fuel_policy_table">
+          <thead>
+            <tr>
+              <th>Element</th>
+              <th>Policy</th>
+              <th>Time Allowed (mins)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Trip</td>
+              <td><div>{{ flight.fuelPolicy_trip.policy }}</div></td>
+              <td><b>{{ flight.fuelPolicy_trip.time_allowed }}</b>
+            </tr>
+            <tr>
+              <td>Contingency</td>
+              <td><div>{{ flight.fuelPolicy_contingency.policy }}</div></td>
+              <td><b>{{ flight.fuelPolicy_contingency.time_allowed }}</b>
+            </tr>
+            <tr>
+              <td>Alternate</td>
+              <td><div>{{ flight.fuelPolicy_alternate.policy }}</div></td>
+              <td><b>{{ flight.fuelPolicy_alternate.time_allowed }}</b>
+            </tr>
+            <tr>
+              <td>Final Reserve</td>
+              <td><div>{{ flight.fuelPolicy_finalReserve.policy }}</div></td>
+              <td><b>{{ flight.fuelPolicy_finalReserve.time_allowed }}</b>
+            </tr>
+            <tr>
+              <td>Additional</td>
+              <td><div>{{ flight.fuelPolicy_additional.policy }}</div></td>
+              <td><b>{{ flight.fuelPolicy_additional.time_allowed }}</b>
+            </tr>
+          </tbody>
+        </table>
+
+          <div class="page-break"></div>
+
+          <!--FUEL REQUIRED-->
+          <h2 style="text-align: center; margin-top: 30px;">Fuel Required</h2>
+          <div id="pdf_fuel_required" style="display: flex; justify-content: center; gap: 70px;">
+            <div>
+              <p>Taxi: <b>{{ flight.fuel_taxi.output }}</b></p>
+              <p>Trip: <b>{{ flight.fuel_trip.output }}</b></p>
+              <p>Contingency: <b>{{ flight.fuel_contingency.output }}</b></p>
+            </div>
+            <div>
+              <p>Alternate: <b>{{ flight.fuel_alternate.output }}</b></p>
+              <p>Final Reserve: <b>{{ flight.fuel_finalReserve.output }}</b></p>
+              <p>Additional: <b>{{ flight.fuel_additional.output }}</b></p>
+              <p>Extra: <b>{{ flight.fuel_extra.output }}</b></p>
+            </div>
+          </div>
+          <!--Fuel totals-->
+          <div id="pdf_fuel_totals" style="display: flex; justify-content: center; gap: 70px; margin-top: 20px;">
+            <div class="container"><b>Total: {{ flight.fuel_total.output }}</b></div>
+            <div class="container"><b>Mass: {{ flight.fuel_mass.output }}</b></div>
+            <div class="container"><b>Endurance: {{ flight.fuel_endurance }}</b></div>
+          </div>
+      </div>
+    <!-------------MASS & BALANCE-------------->
+        <div class="no-split">
+          <div class="pdf_title" style="margin-top: 30px;">MASS & BALANCE</div>
+          <!--LOADING TABLE-->
+          <h2 style="text-align: center; margin-top: 30px;">Loading Table</h2>
+          <table id="loading_table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Weight</th>
+                <th>Arm (in)</th>
+                <th>Moment</th>
+              </tr>
+            </thead>
+            <tbody id="moments_table1" class="active">
+              <tr>
+                <td>Basic Empty</td>
+                <td><p>{{ flight.weight_items.basic_empty.weight.value|round(1) if flight.weight_items.basic_empty.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.basic_empty.arm if flight.weight_items.basic_empty.arm != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.basic_empty.moment if flight.weight_items.basic_empty.moment != 0 else '' }}</p></td>
+              </tr>
+              <tr>
+                <td>Oil</td>
+                <td><p>{{ flight.weight_items.oil.weight.value|round(1) if flight.weight_items.oil.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.oil.arm if flight.weight_items.oil.arm != 0 else '' }}</p></td>
+                <td id="moment_oil">{{ flight.weight_items.oil.moment if flight.weight_items.oil.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Pilot 1</td>
+                <td><p>{{ flight.weight_items.pilot1.weight.value|round(1) if flight.weight_items.pilot1.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.pilot1.arm if flight.weight_items.pilot1.arm != 0 else '' }}</p></td>
+                <td id="moment_pilot1">{{ flight.weight_items.pilot1.moment if flight.weight_items.pilot1.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Pilot 2</td>
+                <td><p>{{ flight.weight_items.pilot2.weight.value|round(1) if flight.weight_items.pilot2.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.pilot2.arm if flight.weight_items.pilot2.arm != 0 else '' }}</p></td>
+                <td id="moment_pilot2">{{ flight.weight_items.pilot2.moment if flight.weight_items.pilot2.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>PAX 1</td>
+                <td><p>{{ flight.weight_items.PAX1.weight.value|round(1) if flight.weight_items.PAX1.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.PAX1.arm if flight.weight_items.PAX1.arm != 0 else '' }}</p></td>
+                <td id="moment_PAX1">{{ flight.weight_items.PAX1.moment if flight.weight_items.PAX1.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>PAX 2</td>
+                <td><p>{{ flight.weight_items.PAX2.weight.value|round(1) if flight.weight_items.PAX2.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.PAX2.arm if flight.weight_items.PAX2.arm != 0 else '' }}</p></td>
+                <td id="moment_PAX2">{{ flight.weight_items.PAX2.moment if flight.weight_items.PAX2.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Baggage section 1</td>
+                <td><p>{{ flight.weight_items.baggage1.weight.value|round(1) if flight.weight_items.baggage1.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.baggage1.arm if flight.weight_items.baggage1.arm != 0 else '' }}</p></td>
+                <td id="moment_baggage1">{{ flight.weight_items.baggage1.moment if flight.weight_items.baggage1.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Baggage section 2</td>
+                <td><p>{{ flight.weight_items.baggage2.weight.value|round(1) if flight.weight_items.baggage2.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.baggage2.arm if flight.weight_items.baggage2.arm != 0 else '' }}</p></td>
+                <td id="moment_baggage2">{{ flight.weight_items.baggage2.moment if flight.weight_items.baggage2.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Fuel load: Tank 1</td>
+                <td><p>{{ flight.weight_items.fuel_load1.weight.value|round(1) if flight.weight_items.fuel_load1.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.fuel_load1.arm if flight.weight_items.fuel_load1.arm != 0 else '' }}</p></td>
+                <td id="moment_fuel_load1">{{ flight.weight_items.fuel_load1.moment if flight.weight_items.fuel_load1.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Fuel load: Tank 2</td>
+                <td><p>{{ flight.weight_items.fuel_load2.weight.value|round(1) if flight.weight_items.fuel_load2.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.fuel_load2.arm if flight.weight_items.fuel_load2.arm != 0 else '' }}</p></td>
+                <td id="moment_fuel_load2">{{ flight.weight_items.fuel_load2.moment if flight.weight_items.fuel_load2.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Fuel burned on ground: Tank 1</td>
+                <td><p>{{ flight.weight_items.fuel_ground_burned1.weight.value|round(1) if flight.weight_items.fuel_ground_burned1.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.fuel_ground_burned1.arm if flight.weight_items.fuel_ground_burned1.arm != 0 else '' }}</p></td>
+                <td id="moment_fuel_ground_burned1">{{ flight.weight_items.fuel_ground_burned1.moment if flight.weight_items.fuel_ground_burned1.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Fuel burned on ground: Tank 2</td>
+                <td><p>{{ flight.weight_items.fuel_ground_burned2.weight.value|round(1) if flight.weight_items.fuel_ground_burned2.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.fuel_ground_burned2.arm if flight.weight_items.fuel_ground_burned2.arm != 0 else '' }}</p></td>
+                <td id="moment_fuel_ground_burned2">{{ flight.weight_items.fuel_ground_burned2.moment if flight.weight_items.fuel_ground_burned2.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Fuel burned in flight: Tank 1</td>
+                <td><p>{{ flight.weight_items.fuel_flight_burned1.weight.value|round(1) if flight.weight_items.fuel_flight_burned1.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.fuel_flight_burned1.arm if flight.weight_items.fuel_flight_burned1.arm != 0 else '' }}</p></td>
+                <td id="moment_fuel_flight_burned1">{{ flight.weight_items.fuel_flight_burned1.moment if flight.weight_items.fuel_flight_burned1.moment != 0 else '' }}</td>
+              </tr>
+              <tr>
+                <td>Fuel burned in flight: Tank 2</td>
+                <td><p>{{ flight.weight_items.fuel_flight_burned2.weight.value|round(1) if flight.weight_items.fuel_flight_burned2.weight.value != 0 else '' }}</p></td>
+                <td><p>{{ flight.weight_items.fuel_flight_burned2.arm if flight.weight_items.fuel_flight_burned2.arm != 0 else '' }}</p></td>
+                <td id="moment_fuel_flight_burned2">{{ flight.weight_items.fuel_flight_burned2.moment if flight.weight_items.fuel_flight_burned2.moment != 0 else '' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="page-break"></div>
+        <!--CG TABLE-->
+        <div class="no-split">
+          <h2 style="text-align: center; margin-top: 30px;">Totals and CG</h2>
+          <table id="CG_table">
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>Weight</th>
+                <th>Moment</th>
+                <th>C/G</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Basic</td>
+                <td><span id="basic_weight">{{ flight.CG_calculations.basic_condition.weight.value if flight.CG_calculations.basic_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="basic_moment">{{ flight.CG_calculations.basic_condition.moment if flight.CG_calculations.basic_condition.moment != 0 else '' }}</span></td>
+                <td><span id="basic_CG">{{ flight.CG_calculations.basic_condition.CG|round(2) if flight.CG_calculations.basic_condition.CG != 0 else '' }}</span></td>
+              </tr>
+              <tr>
+                <td>Zero-Fuel</td>
+                <td><span id="zero_fuel_weight">{{ flight.CG_calculations.zero_fuel_condition.weight.value if flight.CG_calculations.zero_fuel_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="zero_fuel_moment">{{ flight.CG_calculations.zero_fuel_condition.moment if flight.CG_calculations.zero_fuel_condition.moment != 0 else '' }}</span></td>
+                <td><span id="zero_fuel_CG">{{ flight.CG_calculations.zero_fuel_condition.CG|round(2) if flight.CG_calculations.zero_fuel_condition.CG != 0 else '' }}</span></td>
+              </tr>
+              <tr>
+                <td>Ramp</td>
+                <td><span id="ramp_weight">{{ flight.CG_calculations.ramp_condition.weight.value if flight.CG_calculations.ramp_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="ramp_moment">{{ flight.CG_calculations.ramp_condition.moment if flight.CG_calculations.ramp_condition.moment != 0 else '' }}</span></td>
+                <td><span id="ramp_CG">{{ flight.CG_calculations.ramp_condition.CG|round(2) if flight.CG_calculations.ramp_condition.CG != 0 else '' }}</span></td>
+              </tr>
+              <tr>
+                <td>Takeoff</td>
+                <td><span id="takeoff_weight">{{ flight.CG_calculations.takeoff_condition.weight.value if flight.CG_calculations.takeoff_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="takeoff_moment">{{ flight.CG_calculations.takeoff_condition.moment if flight.CG_calculations.takeoff_condition.moment != 0 else '' }}</span></td>
+                <td><span id="takeoff_CG">{{ flight.CG_calculations.takeoff_condition.CG|round(2) if flight.CG_calculations.takeoff_condition.CG != 0 else '' }}</span></td>
+              </tr>
+              <tr>
+                <td>Landing</td>
+                <td><span id="landing_weight">{{ flight.CG_calculations.landing_condition.weight.value if flight.CG_calculations.landing_condition.weight.value != 0 else '' }}</span></td>
+                <td><span id="landing_moment">{{ flight.CG_calculations.landing_condition.moment if flight.CG_calculations.landing_condition.moment != 0 else '' }}</span></td>
+                <td><span id="landing_CG">{{ flight.CG_calculations.landing_condition.CG|round(2) if flight.CG_calculations.landing_condition.CG != 0 else '' }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  <!-------------PERFORMANCE-------------->
+        <div class="pdf_title" style="margin-top: 30px;">PERFORMANCE</div>
+          <div id="performance_content" style="display: flex; justify-content: center; gap: 70px; margin-top: 20px;">
+            <div class="container">
+              <p>Takeoff distance required: <b>{{ flight.TODR }}</b></p>
+              <p>Landing distance required: <b>{{ flight.LDR }}</b></p>
+            </div>
+            <div class="container">
+              <p>Takeoff distance available: <b>{{ flight.TODA }}</b></p>
+              <p>Landing distance available: <b>{{ flight.LDA }}</b></p>
+            </div>
+        </div>
+        <div class="page-break"></div>
+  <!-------------WEATHER-------------->
+        <div class="no-split">
+          <div class="pdf_title" style="margin-top: 30px;">WEATHER</div>
+          <div id="weather_content" style="margin-top: 20px;">
+  
+            <!--DEPARTURE WEATHER-->
+            <h2 style="text-align: center; margin-top: 20px;">{{ flight.departureAirport_name }}</h2>
+            <h3>METAR</h3> 
+            <p style="margin-top: 10px; margin-bottom: 10px;" class="container">{{ flight.METAR_departure }}</p>
+            <p class="report">{{ flight.METAR_departure_decoded|safe }}</p>
+  
+            <h3 style="margin-top: 20px;">TAF</h3>
+            <p style="margin-top: 10px; margin-bottom: 10px;" class="container">{{ flight.TAF_departure }}</p>
+            <p class="report">{{ flight.TAF_departure_decoded|safe }}</p>
+  
+            <!--ARRIVAL WEATHER-->
+            <h2 style="text-align: center; margin-top: 20px;">{{ flight.destinationAirport_name }}</h2>
+            <h3>METAR</h3>
+            <p style="margin-top: 10px; margin-bottom: 10px;" class="container">{{ flight.METAR_arrival }}</p>
+            <p class="report">{{ flight.METAR_arrival_decoded|safe }}</p>
+  
+            <h3 style="margin-top: 20px;">TAF</h3>
+            <p style="margin-top: 10px; margin-bottom: 10px;" class="container">{{ flight.TAF_arrival }}</p>
+            <p class="report">{{ flight.TAF_arrival_decoded|safe }}</p>
+          </div>
+        </div>
+        <div class="page-break"></div>
+    <!-------------EXPENSES-------------->
+        <div class="pdf_title" style="margin-top: 30px;">EXPENSES</div>
+        <div id="expenses_content" style="margin-top: 20px;">
+          <ul>
+            {% for expense in flight.expenses %}
+              <li><b>{{ expense[0]}}: </b> £{{ expense[1] }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="page-break"></div>
+    <!-------------BREIF-------------->
+        <div class="pdf_title" style="margin-top: 30px;">BRIEFING</div>
+        <div class="no-split" id="briefing_content" style="margin-top: 20px;">
+          <p class="report no-split">{{ flight.brief|safe }}</p>
+        </div>
+    </div>
+    <div id="base_pdf_footer" class="light_mode">
+      <p style="font-weight: 400;"><i>FOR EDUCATIONAL PURPOSES ONLY. MUST NOT BE USED IN REAL WORLD FLIGHT OPERATIONS</i></p>
+      <p><span style="font-weight: 400;" id="base_pdf_dateAndTime"></span> | <b>www.aivfr.co.uk</b></p>
     </div>
   </div>
 </html>

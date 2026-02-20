@@ -43,11 +43,11 @@ document.addEventListener("DOMContentLoaded", function() {
             }
     });
 
-    newFlight.addEventListener("click", function() {
+    newFlight.addEventListener("click", async()  => {
         displayDisclaimer();
-        NewFlight();
-        disclaimerContinue.onclick = function() {
-        clearSession();
+        await NewFlight();
+        disclaimerContinue.onclick = async function() {
+        await clearSession();
         window.open("dashboard", '_self')
         };
     });
@@ -93,10 +93,10 @@ document.addEventListener("DOMContentLoaded", function() {
         uploadStatus.textContent = "Uploading...";
         
         event.preventDefault(); //prevent the default form submission (so the URL doesn't change)
-        loadSession(); //call the function to load the session
+        load_database(); //call the function to load the datbase
     });
 
-    async function loadSession() {
+    async function load_database() {
         const input = document.getElementById('flightFile');
 
          //check if a file has been selected
@@ -124,13 +124,15 @@ document.addEventListener("DOMContentLoaded", function() {
         if (response.ok) { //check if the response is okay (it passed the server-side validation)
             uploadStatus.style.color = "green";
             uploadStatus.textContent = "Flight loaded successfully, redirecting to dashboard...";
+            
             setTimeout(() => {
                 window.open("dashboard", '_self'); //redirect to dashboard after a short delay
             }, 1000);
         }  else { //if the response is not okay, display the error message from the server
             const errorData = await response.json();
             uploadStatus.style.color = "red";
-            uploadStatus.textContent = errorData.error || "An error occurred while loading the flight."; //latter should always show
+            uploadStatus.textContent = "An error occurred while loading the flight.";
+            console.error(errorData.error);
         }
     }
 
