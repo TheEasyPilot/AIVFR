@@ -31,7 +31,7 @@ This application **must not** be used for:
 
 By using this tool, you acknowledge and agree that:
 
-- The webtool is in an Alpha stage of development and may contain bugs, errors, or incorrect data.
+- The webtool is in an Beta stage of development and may contain bugs, errors, or incorrect data.
 - No information provided by this system is authoritative, certified, or approved for aviation use.
 - The pilot in command remains solely responsible for all planning, decisions, and actions related to any flight.
 - The developer accepts no responsibility or liability for any decisions, actions, losses, or outcomes arising from the use of this tool.
