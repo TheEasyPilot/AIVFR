@@ -1,0 +1,67 @@
+:root { /*these colours will be used by default...*/
+--bg: hsl(0 0% 96.1%);
+--primary: hsl(190 100% 42.5%);
+--highlight: hsl(0 0% 100%);
+--text: hsl(0 0% 0%);
+--onhover: hsl(0 0% 80.4%);
+--popupbg: hsla(0, 0%, 0%, 0.33);
+--alternate: hsl(48.54, 83.18%, 79.02%);
+--tableHeader: #e8e6e4;
+--inputHighlight: hsla(190, 100%, 42.5%, 0.5);
+--alert: hsla(0 100% 50% / 0.6);
+}
+
+/*unless dark mode is toggled, then these become the root
+and are used instead*/
+.dark-mode {
+--bg: hsl(0 0% 12.5%);
+--primary: hsl(190 100% 27.6%);
+--highlight: hsl(0 0% 20.8%);
+--text: hsla(0, 0%, 100%, 0.795);
+--onhover: hsl(0 0% 32.9%);
+--popupbg: hsla(0, 0%, 0%, 0.33);
+--alternate: hsl(48.54, 83.18%, 29.02%);
+--tableHeader: hsl(0 0% 30.8%);
+--inputHighlight: hsla(190, 100%, 27.6%, 0.5);
+--alert: hsla(0 100% 50% / 0.6);
+}
+
+.light_mode {
+    --bg: hsl(0 0% 96.1%);
+    --primary: hsl(190 100% 42.5%);
+    --highlight: hsl(0 0% 100%);
+    --text: hsl(0 0% 0%);
+    --onhover: hsl(0 0% 80.4%);
+    --popupbg: hsla(0, 0%, 0%, 0.33);
+    --alternate: hsl(48.54, 83.18%, 79.02%);
+    --tableHeader: #e8e6e4;
+    --inputHighlight: hsla(190, 100%, 42.5%, 0.5);
+    --alert: hsla(0 100% 50% / 0.6);
+}
+
+
+body {
+    background-color: var(--bg);
+    font-family: 'Manrope';
+}
+
+.text {
+    font-family: 'Manrope';
+    color: var(--text);
+}
+
+/*remove spinners from number inputs*/
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input, textarea, select {
+    outline: none;
+    transition: box-shadow 0.1s ease-in-out;
+}
+
+input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 3px var(--inputHighlight);   
+}

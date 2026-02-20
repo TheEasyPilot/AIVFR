@@ -1,0 +1,272 @@
+* {
+    font-family: 'Manrope';
+}
+
+#title {
+    font-size: 29.8px;
+    font-weight: 300;
+}
+
+#dashboard {
+    background-color: var(--primary);
+    pointer-events: none;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    border: 1px none var(--text);
+    height: 46px;
+}
+
+#save_json.savingOrSaved, #save_pdf.savingOrSaved { /*user feedback when saving/saved */
+    background-color: var(--onhover);
+    border: none;
+    color: gray;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/*content*/
+
+#content {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.3fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#route_information {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 150px;
+}
+
+#weight_and_performance {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 200px;
+}
+
+#route_details {
+    grid-column: 1;
+    grid-row: 3;
+    min-height: 300px;
+}
+
+#weather_info {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
+#expenses {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+#brief {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+}
+
+.dashboard_content {
+    background-color: var(--highlight);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+input {
+    border: 1px solid var(--onhover);
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Manrope';
+    font-size: 13px;
+    background-color: var(--bg);
+}
+
+
+.WP_content {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/*content styling*/
+
+/*route information*/
+#route_names {
+    font-family: 'Manrope';
+    font-size: 14px;
+    background-color: var(--bg);
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 10px;
+    min-height: 70px;
+}
+
+#refresh_WX, #refresh_brief {
+    background-color: var(--bg);
+    width: 40px;
+    height: 38px;
+}
+
+#refresh_WX:hover, #refresh_brief:hover {
+    background-color: var(--onhover);
+    cursor: pointer;
+}
+
+/*weather info*/
+.WX_metar {
+    background-color: var(--bg);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/*expenses*/
+#add_expense {
+    background-color: var(--bg);
+    width: 40px;
+    height: 39px;
+    transition: 0.3s;
+}
+
+#add_expense:hover {
+    background-color: var(--onhover);
+    cursor: pointer;
+}
+
+#expenses_content {
+    position: relative;
+    left: 20px;
+    margin-bottom: 10px;
+    height: calc(100% - 100px);
+}
+
+.expense{
+    margin-bottom: 10px;
+}
+
+#total_expense {
+    position: relative;
+    visibility: visible;
+    opacity: 1;
+    background-color: var(--bg);
+    padding: 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+    z-index: 11;
+}
+
+#total_expense.hidden {
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 +20px;
+    transition: all 0.3s ease-in-out;
+}
+
+/*brief*/
+#AI_brief_output {
+    background-color: var(--bg);
+    padding: 20px;
+    border-radius: 10px;
+    min-height: calc(100% - 48px);
+    max-height: 500px;
+    overflow: auto;
+    white-space: pre-line;
+}
+
+/*refresh button feedback*/
+
+#refresh_WX.refreshing, #refresh_brief.refreshing {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+#add_expense.adding {
+    background-color: var(--alert);
+    transition: 0.3s ease-out;
+}
+
+#add_expense_icon {
+    transition: 0.3s ease-out;
+}
+
+#add_expense_icon.adding {
+    transform: rotate(45deg);
+    transition: 0.3s ease-out;
+}
+
+#create_expense {
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    background-color: var(--bg);
+    padding: 20px 5px 10px 5px;
+    border-radius: 10px;
+    bottom: 77px;
+    z-index: 10;
+}
+
+#create_expense.hidden {
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 -20px;
+    transition: all 0.3s ease-in-out;
+}
+
+#submit_expense {
+    background-color: var(--primary);
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: 'Manrope';
+    font-weight: 600;
+}
+
+#submit_expense:hover {
+    cursor: pointer;
+}
+
+.expense_item {
+    font-size: medium;
+    font-family: 'Manrope';
+    transition: box-shadow 0.1s ease-in-out
+}
+
+.expense_item:hover {
+    background-color: var(--highlight);
+    box-shadow: 0 0 0 3px var(--alert);
+    cursor: pointer;
+}
+
+#click_to_remove {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+#save_json, #save_pdf {
+    border: 1px solid var(--text);
+    width: 50px;
+    height: 55px;
+    background-color: var(--highlight); 
+    transition: 0.3s;
+}
+
+#save_json:hover, #save_pdf:hover {
+    background-color: var(--primary);
+    cursor: pointer;
+}
+
+#save_json_icon, #save_pdf_icon {
+    width: 18px;
+    height: 18px;
+}
+
+.noBrief {
+    color : #737373;
+}

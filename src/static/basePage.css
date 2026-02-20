@@ -1,0 +1,297 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--text);
+}
+
+/*header to contain the Logo, the time and the home button*/
+header {
+    background-color: var(--highlight);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 50px;
+    justify-content: space-between;
+    padding-left: 12px;
+    padding-right: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+main {
+    position: relative;
+    top: 50px;
+    margin-left: 60px;
+    border: 1px none black;
+    padding: 10px;
+    padding-left: 15px;
+}
+
+#homeButton {
+    width: 30px;
+    color: var(--text);
+    transition: transform 0.1s ease-out;
+}
+
+#homeButton:hover {
+    transform: scale(1.1);
+}
+
+/*AIVFR logo*/
+#logoAI{
+    color: var(--primary);
+}
+
+#logoAI_pdf {
+    color: hsl(190 100% 42.5%);
+}
+
+#logoVFR {
+    position: relative;
+    right: 3px;
+    color: var(--text);
+}
+
+#logoVFR_pdf {
+    position: relative;
+    right: 3px;
+    color: black;
+}
+
+#logoAI, #logoVFR {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+#logoAI_pdf, #logoVFR_pdf {
+    font-size: 50px;
+    font-weight: 700;
+}
+
+#navbar {
+  position: fixed;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px;
+  top: 50px;
+  width: 60px;
+  height: 100vh;
+  background-color: var(--highlight);
+}
+
+button {
+    margin-bottom: 10px;
+    background-color: var(--highlight);
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s, transform 0.2s ease-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.navButton {
+    margin-bottom: 25px;
+}
+
+.icon {
+    position: relative;
+    top: 2px;
+    color: var(--text);
+    width: 30px;
+}
+
+#settings {
+    position: relative;
+    margin-top: 15px;
+    width: 30px;
+    left: 5px;
+    transition: transform 0.3s ease-in-out;
+}
+
+#settings:hover {
+    transform: rotate(45deg);
+}
+
+hr, #dashboard {
+    margin-bottom: 9px;
+}
+
+hr  {
+    position: relative;
+    bottom: 3px;
+}
+
+/*gradient overlay*/
+#NAVoverlay {
+    position: fixed;
+    padding-left: 15px;
+    margin-left: 60px;
+    width: 350px;
+    height: 100vh;
+    padding-top: 8px;
+    background-image: linear-gradient(to right, rgba(0,0,0,50%), rgba(0,0,0,0%));
+    z-index: 50;
+    transition: opacity 0.5s, visibility 0.5s;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/*all labels*/
+.label {
+    position: absolute;
+    background-color: var(--highlight);
+    border-radius: 14px;
+    max-width: fit-content;
+    padding: 10px;
+    padding-left: 17px;
+    padding-right: 17px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    
+}
+
+/*adjusting the label's absolute positions*/
+#dashboardLABEL { top: 60px; left: 10px; }
+#routeLABEL     { top: 125px; left: 10px; }
+#weatherLABEL   { top: 192px; left: 10px; }
+#navLABEL       { top: 260px; left: 10px; }
+#fuelLABEL      { top: 327px; left: 10px; }
+#mass_and_balanceLABEL   { top: 395px; left: 10px; }
+#performanceLABEL        { top: 463px; left: 10px; }
+#settingsLABEL  { top: 550px; left: 10px; }
+
+/*alert box*/
+#alertBox {
+    visibility: hidden;
+    background-color: hsla(0 100% 50% / 0.6);
+    color: var(--highlight);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    position: fixed;
+    top: 55px;
+    left: 50%;
+    transform: translate(-50%, -50%); /*center the box*/
+    z-index: 200;
+    transition: visibility 0.5s, opacity 0.5s, transform 0.5s;
+    opacity: 0;
+}
+
+/*-----Navlog pdf template------*/
+
+#navlogPDF_template {
+    position: absolute;
+    left: -9999px;
+    width: 800px;
+}
+
+#BasePDF_template {
+    position: absolute;
+    left: -9999px;
+    width: 800px;
+}
+
+#navlog_pdf_header, #base_pdf_header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    align-items: center;
+}
+
+#navlog_pdf_footer, #base_pdf_footer {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 50px;
+    border-top: 1px solid #ccc;
+}
+
+/*--------Base pdf template-------*/
+
+.pdf_title {
+    font-size: 29.8px;
+    font-weight: 300;
+}
+
+/*route*/
+#pdf_route_content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+.pdf_content {
+    padding: 10px;
+}
+
+.container {
+    background-color: var(--bg);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+#plane_icon {
+    position: absolute;
+    width: 30px;
+    color: var(--primary);
+    opacity: 0.4;
+    transform: rotate(135deg);
+    left: 350px;
+    top: 206.5px;
+    scale: 3.5;
+    z-index: -1;
+}
+
+/*fuel*/
+
+/*Policy table*/
+table {
+    width: 99%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid var(--text);
+    padding: 8px;
+    text-align: center;
+    font-family: 'Manrope';
+    font-size: 14px;
+}
+
+#fuel_policy_table td:nth-child(2) {
+    width: 40%;
+}
+
+th {
+    background-color: var(--tableHeader);
+}
+
+/*weather reports formatting*/
+.report {
+    white-space: pre-line;
+}
+
+/*dealing with page breaks*/
+
+.page-break {
+    page-break-before: always;
+    break-before: page;
+}
+
+.no-split {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}

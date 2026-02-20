@@ -1,0 +1,62 @@
+{% extends "base.html" %} {# grab all the html from base.html, #}  
+
+{% block head %}  {{ super() }} {# inherit everything from the head but add this too #}
+<link rel="stylesheet" href="{{ url_for('static', filename='navlog.css') }}">
+<script type='module' src="{{ url_for('static', filename='navlog.js') }}" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+{% endblock %}
+
+{% block title %} {# edit whats in the title block #}
+    Navigation Log - AIVFR
+{% endblock %}
+
+{% block content %} {# edit what's in between the content block #}
+<!--=============================HEADER==========================-->
+      <div class="pageTitle" style="display: flex; align-items: center; gap: 10px;">
+        <div id="title">NAVIGATION LOG</div>
+        <span id="alertBox"></span>
+      </div>
+
+      <!--No data message when no route created--><h2 id="noData" class="{{ 'active' if flight.route|length < 3 else '' }}">NO ROUTE DATA</h2>
+
+      <div id="navlogHeader" class="{{ 'inactive' if flight.route|length < 3 else '' }}">
+      <!---Variation-->
+        <div id="variationContainer">
+          Variation (+° <b>E</b>, -° <b>W</b>): <input type="number" id="variation" value="{{ flight.variation }}" step="1"/>
+        </div>
+
+      <!--Clear and download buttons-->
+
+        <div>
+          <span id="clear">
+            <button id="clearNavlogButton" class="baseButton" title="Clear values"><svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6H20L18.4199 20.2209C18.3074 21.2337 17.4512 22 16.4321 22H7.56786C6.54876 22 5.69264 21.2337 5.5801 20.2209L4 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.34491 3.14716C7.67506 2.44685 8.37973 2 9.15396 2H14.846C15.6203 2 16.3249 2.44685 16.6551 3.14716L18 6H6L7.34491 3.14716Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 6H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+          <span id="download">
+            <button id="downloadNavlogButton" class="baseButton" title="Download PDF"><svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill="currentColor"/></svg></button>
+          </span>
+        </div>
+      </div>
+
+      <hr size="3.5" color="#cdcdcd" noshade style="margin-top: 15px;">
+
+<!--=============================BODY (TABLE)==========================-->
+      <table id="navlogTable" class="{{ 'inactive' if flight.route|length < 3 else '' }}">
+        <thead> <!--header row-->
+          <tr>
+            <th style="width:20%">FROM / TO</th>
+            <th>MSA</th>
+            <th>ALT PLAN (FT)</th>
+            <th>TAS</th>
+            <th>TRACK (°T)</th>
+            <th>Wind DIR (°)</th>
+            <th>Wind SPD (KT)</th>
+            <th>HDG (°T)</th>
+            <th>HDG (°M)</th>
+            <th>GS (KT)</th>
+            <th>DIST (NM)</th>
+            <th>TIME (Min)</th>
+          </tr>
+        </thead>
+        <tbody id="navlogTableBody"></tbody>
+      </table>
+{% endblock %}
