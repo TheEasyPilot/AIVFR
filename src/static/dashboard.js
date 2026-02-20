@@ -1,24 +1,27 @@
 import { update, updateSettings, showAlert, prompt } from "./basePage.js";
 
 await updateSettings("current_page", "/dashboard");
-//------SAVE BUTTON-------
 
-const saveButton = document.getElementById("save");
 
-saveButton.addEventListener("click", () => {
-    saveButton.classList.add("savingOrSaved");
-    saveButton.textContent = "SAVING...";
+//---------------------------SAVING THE FLIGHT PLAN------------------------
+
+//----downloading as JSON
+const save_json = document.getElementById("save_json");
+
+save_json.addEventListener("click", () => {
+    save_json.classList.add("savingOrSaved");
+    save_json.innerHTML = "...";
     
-    saveFlight();
-    update("saved", "True");
+    saveFlight_json();
+    update("saved_json", "True");
 
     setTimeout(() => {
-        saveButton.textContent = "SAVED";
+        save_json.innerHTML = `<div><svg id="save_json_icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg><b>JSON</b></div>`;
     }, 2000); //2 seconds to simulate saving time
 
 })
 
-async function saveFlight() {
+async function saveFlight_json() {
     //fetch session data.flight from flask
     const response = await fetch("/save-flight");
     const data = await response.json();
@@ -28,12 +31,59 @@ async function saveFlight() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
+
     //set the file name to departure and destination airports for uniqueness
-    a.download = `${data.flight.flight_data.flight.flight.departureAirport_code}-${data.flight.flight_data.flight.flight.destinationAirport_code}.json`;
+    a.download = `${data.flight.departureAirport_code}-${data.flight.destinationAirport_code}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+//-------downloading as PDF
+
+const save_pdf = document.getElementById("save_pdf");
+
+save_pdf.addEventListener("click", () => {
+    save_pdf.classList.add("savingOrSaved"); //button feedback for saving
+    save_pdf.innerHTML = "...";
+
+    saveFlight_pdf();
+    update("saved_pdf", "True");
+
+
+    //simulate saving time
+    setTimeout(() => {
+        save_pdf.innerHTML = `<div><svg id="save_pdf_icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg><b>PDF</b></div>`;
+    }, 2000); //2 seconds to simulate saving time
+});
+
+async function saveFlight_pdf() {
+    await fetch('/get-flight')
+    .then(response => response.json())
+    .then(async FlightData => {
+        //get the departure and arrival names to put in the file name
+        const departure_code = FlightData.departureAirport_code
+        const arrival_code = FlightData.destinationAirport_code
+        
+        //getting the template
+        const template_container = document.getElementById('BasePDF_template');
+        const dateAndTime = document.getElementById('base_pdf_dateAndTime');
+
+        dateAndTime.innerHTML = `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`
+        //using html2pdf to convert the html table into a image, then save to PDF
+        const options = {
+                margin: 10,
+                filename: `${departure_code}-${arrival_code}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {scale: 2, useCORS: true, scrollX: 0, scrollY: 0},
+                logging: false,
+                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait'},
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } //to prevent unwanted page breaks in the PDF
+            };
+
+        html2pdf().set(options).from(template_container.innerHTML).save();
+        })
 }
 
 
@@ -195,6 +245,11 @@ async function displayWeather() {
     await initializeGradingColors();
     //feedback for refresh button
     refreshWX.classList.remove("refreshing");
+
+    //update the weather in the database in case it is used elsewhere (e.g. AI briefing)
+    await update("METAR_departure", departureWeather ? departureWeather.metar.raw_text : null);
+    await update("METAR_arrival", arrivalWeather ? arrivalWeather.metar.raw_text : null);
+    await update("METAR_alternate", alternateWeather ? alternateWeather.metar.raw_text : null);
 }
 
 //refreshing the weather data
@@ -451,11 +506,16 @@ refresh_brief.addEventListener("click", async () => {
 
 //--on page load:
 
-//user cannot generate a brief if their route is not yet initialized
+//user cannot generate a brief, nor save their flight if their route is not yet initialized
 if (!data.flight.destinationAirport_code) {
     refresh_brief.style.opacity = "0.4";
     refresh_brief.style.pointerEvents = "none";
+
+    save_json.style.opacity = "0.4";
+    save_json.style.pointerEvents = "none";
+
+    save_pdf.style.opacity = "0.4";
+    save_pdf.style.pointerEvents = "none";
 }
 await displayWeather();
 await displayExpenses();
-

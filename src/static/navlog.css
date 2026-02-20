@@ -64,16 +64,17 @@
     background-color: var(--highlight);
 }
 
-thead {
+#navlogTable thead {
     background-color: black;
 }
 
-th {
+#navlogTable th {
+    background-color: black;
     color: white;
     width: 120px;
 }
 
-#navlogTable, td, th {
+#navlogTable td, #navlogTable th {
     text-align: center;
     padding: 5px;
     font-family: 'Manrope';

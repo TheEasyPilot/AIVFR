@@ -261,6 +261,10 @@ const reports = document.getElementById('content')
 
 
 update_wx.addEventListener('click', async () => {
+    await updateWeather();
+});
+
+async function updateWeather() {
     //'updating...' feedback
     reports.style.opacity = '0.4'
     update_wx.style.pointerEvents = 'none'; //disable button while updating
@@ -344,7 +348,7 @@ update_wx.addEventListener('click', async () => {
     update_wx.innerHTML = `<svg id='update_icon' fill='currentColor' xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><style type="text/css">.st0{opacity:0.2;fill:currentColor;stroke-width:0.05;stroke-miterlimit:10;}</style><g id="grid_system"/><g id="_icons"><g><path d="M12,21c4.9624,0,9-4.0376,9-9c0-0.3784-0.0239-0.7598-0.0708-1.1338c-0.0688-0.5479-0.5698-0.9346-1.1172-0.8672    c-0.5479,0.0688-0.936,0.5688-0.8672,1.1172C18.981,11.4053,19,11.7007,19,12c0,3.8599-3.1401,7-7,7s-7-3.1401-7-7s3.1401-7,7-7    c1.8568,0,3.6179,0.7455,4.9119,2.0166c0.062,0.0613,0.1177,0.1297,0.1776,0.1935c0.0279,0.0295,0.0533,0.0613,0.0806,0.0914    L15.3794,7.624c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616c0.0874,0.4839,0.5088,0.8228,0.9834,0.8228    c0.0586,0,0.1182-0.0049,0.1782-0.0156l4.1753-0.7524c0.5435-0.0981,0.9048-0.6182,0.8071-1.1616l-0.7524-4.1758    c-0.0986-0.5439-0.6167-0.9058-1.1616-0.8071c-0.5435,0.0981-0.9048,0.6182-0.8071,1.1616l0.3109,1.7251    C16.6447,3.9421,14.4072,3,12,3c-4.9624,0-9,4.0376-9,9S7.0376,21,12,21z"/></g></g></svg>
           <p>UPDATE</p>
     `
-});
+};
 
 async function parseMETAR(metar, gradingHTML) {
     //fetching current units
@@ -394,8 +398,8 @@ async function parseMETAR(metar, gradingHTML) {
     const temperature = metar.temperature.celsius;
     const dewpoint = metar.dewpoint.celsius;
     const pressure = metar.pressure.mb;
-    const clouds_code = metar.clouds[0].code;
-    const clouds_text = metar.clouds[0].text;
+    const clouds_code = metar.clouds ? metar.clouds[0].code : "N/A";
+    const clouds_text = metar.clouds ? metar.clouds[0].text : "N/A";
     const flight_category = metar.flight_category;
     const humidity = metar.humidity;
     const conditions_fetch = metar.conditions?.map(cond => cond.text)
@@ -433,8 +437,13 @@ async function parseMETAR(metar, gradingHTML) {
     <b>Conditions:</b> ${conditions}`;
     }
 
+    if (remarks != "No remarks") {
     decoded_METAR += `
     <b>Remarks:</b> ${remarks.join(', ')}`;
+    } else {
+    decoded_METAR += `
+    <b>Remarks:</b> ${remarks}`;
+    }
 
     } catch (error) {
         console.error(error);
@@ -497,3 +506,5 @@ function parseTAF(taf) {
     return decoded_TAF;
 }
 
+//on page load:
+updateWeather();

@@ -15,7 +15,6 @@ main = Blueprint('app', __name__)
 #also allows setting default values
 
 data_template = {
-    "version" : "0.7.1-alpha",
     "settings" : {
         "theme": "light",
         "map_style": "normal",
@@ -39,7 +38,8 @@ data_template = {
         "expenses" : [],
         "brief" : "",
         #-----------------------ROUTE
-        "saved" : "False",
+        "saved_json" : "False",
+        "saved_pdf" : "False",
         "departureAirport_code" : "",
         "departureAirport_name" : "",
         "destinationAirport_code" : "",
@@ -306,7 +306,7 @@ def index():
         session["flight_id"] = new_flight.id
         update_units()
     
-    return render_template('menu.html', APP_VERSION=get_flight_data()[1]['version'], data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
+    return render_template('menu.html', APP_VERSION='1.0.0-beta', data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
 
 #-------------DEBUGGING
 #debug route that allows me to see the flight data at any time
@@ -405,11 +405,8 @@ def load_flight():
             #raise an error if the data is not a dictionary
             raise ValueError("Invalid data format")
         
-        #replace the current session data with the new data
-        flight, data = get_flight_data()
-        data = {} #clear the current data
-        data = New_data #update with the new data
-        save(flight, data) 
+        #replace the current flight data with the new data
+        update('flight', New_data)
         update_units() #update units in case the loaded data has different units
         
 
