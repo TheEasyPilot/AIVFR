@@ -229,7 +229,7 @@ hr {
 .footer {
     position: absolute;
     text-align: center;
-    padding: 2px;
+    padding: 0px;
     font-size: 14px;
     right: 15px;
     bottom: 0px;
@@ -238,10 +238,10 @@ hr {
 #version {
     position: absolute;
     text-align: center;
-    padding: 10px;
+    padding: 0px;
     font-size: 14px;
-    left: -10px;
-    bottom: -24px;
+    left: 0px;
+    bottom: -14px;
     opacity: 0.3;
 }
 
