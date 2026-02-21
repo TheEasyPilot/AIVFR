@@ -4,7 +4,7 @@ AIVFR uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
-### [1.0.0-beta](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.0.0-beta) - 2026-02-20
+### [1.0.0-beta](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.0.0-beta) - 2026-02-21
 
 Initial development is complete! AIVFR is now in beta where it will probably stay for quite some time.
 
