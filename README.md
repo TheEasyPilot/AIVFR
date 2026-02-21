@@ -16,7 +16,7 @@ This webtool is not adapted for mobile users. For the best experience please use
 
 Use **`/debug`** to see all the currently stored data for your session.
 
-Please see the attatched full documentation to see the initial development of this project.
+If you'd like to see the full documentation of the initial development of this webapp, or just want an exemplar to follow for your own NEA, you can find it attatched at the top of this readme.
 
 ## Disclaimer
 This webtool is an experimental, non-certified project that uses AI-generated content. The information provided may be incomplete, outdated, inaccurate, or misleading.
