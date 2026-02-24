@@ -1,7 +1,7 @@
 # <img width="1920" height="1080" alt="AI VFR Webtool UI Design (1)" src="https://github.com/user-attachments/assets/a5cd6a27-54eb-4a14-973c-2734a586292d" />
 
 ![Version](https://img.shields.io/badge/Version-v1.0.0--beta-green)
-[![License](https://img.shields.io/badge/License-CC--BY--NC_4.0-blue)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![License](https://img.shields.io/badge/License-PolyForm_Noncommercial_License_1.0.0-blue)]([https://polyformproject.org/licenses/noncommercial/1.0.0/])
 [![Documentation](https://img.shields.io/badge/v1.0.0--beta_documentation-Currently_Unavailable-red)]()
 
 > [!CAUTION]
