@@ -9,12 +9,6 @@ let map = null;
     await load_map();
 })();
 
-const response = await fetch('/time-distance');
-if (response.ok) {
-    const text = await response.text();
-    document.getElementById('timeDistance').textContent = text;
-}
-
 await updateDistances();
 
 //-------------------------------------ROUTE SETUP---------------------------------
@@ -782,7 +776,6 @@ async function updateDistances() {
         .then(async FlightData => {
             const route_coords = FlightData.route;
             const alternate_coords = FlightData.alternateAirport_coords;
-            const time = FlightData.time
 
         //only update the distance when a waypoint exits
         if (route_coords.length >= 3) {
