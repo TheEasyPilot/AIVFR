@@ -393,7 +393,7 @@ async function parseMETAR(metar, gradingHTML) {
     //other non-unit related values
     const time = metar.observed;
     const visibility = metar.visibility? metar.visibility.meters : "N/A";
-    const visibility_text = metar.visibility? metar.visibility.meters_text : "N/A";
+    const visibility_text = metar.visibility? metar.visibility.text : "N/A";
     const wind_direction = metar.wind.degrees;
     const temperature = metar.temperature.celsius;
     const dewpoint = metar.dewpoint.celsius;
