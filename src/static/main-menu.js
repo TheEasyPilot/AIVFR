@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
         await fetch('/get-flight')
         .then(response => response.json())
         .then(data => {
-        if (data.saved == "False") { //checks if current flight data is saved
+        if (data.saved_json == "False") { //checks if current flight data is saved
             alert("Your Flight Plan has changes that have not yet been saved onto your device. By pressing 'Continue' on the disclaimer, The current flight data will be erased, which is irreversable!")
             }
         })

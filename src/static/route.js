@@ -671,7 +671,7 @@ generate.addEventListener('click',  async () => {
             output.textContent = response.justification; //displaying the result in the box 
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
             showAlert("An error occured whilst generating the route. Please try again.");
             generate.disabled = false; //allow clicking again
             generate.textContent = "Generate";
