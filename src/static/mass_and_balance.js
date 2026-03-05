@@ -1,7 +1,7 @@
 import { update, updateSettings, showAlert, prompt } from "./basePage.js";
 await updateSettings("current_page", "/mass-and-balance");
 
-//-------symmetric arm checkbox handling
+//========symmetric arm checkbox handling
 const symmetricArmCheckbox = document.getElementById('symmetricArmCheckbox');
 
 //Event listener for checkbox changes
@@ -22,7 +22,7 @@ function roundifDecimal(num) {
     }
 }
 
-//-----------------------TABLE NAVIGATION----------------------//
+//======================TABLE NAVIGATION======================
 
 const table_left = document.getElementById('table_left');
 const table_right = document.getElementById('table_right');
@@ -53,7 +53,7 @@ table_left.addEventListener('click', () => {
     }
 });
 
-//-----------------------INPUT HANDLING----------------------//
+//======================INPUT HANDLING======================
 
 //-----------BASIC INPUTS
 const MTOW = document.getElementById('MTOW'); //Maximum Takeoff Weight
@@ -66,6 +66,10 @@ const va_takeoff = document.getElementById('va_takeoff'); //Manouvering Speed at
 const va_landing = document.getElementById('va_landing'); //Manouvering Speed at Landing Weight
 
 //Event listeners for basic inputs
+//For each, when an input is made the database is immediately updated with that value
+//then the relevant calculations are made for that item accounting for that change
+
+//Weight limits
 MTOW.addEventListener('input', async () => {
     await update('MTOW.value', Number(MTOW.value));
     await checkWeights();
@@ -79,10 +83,11 @@ MLW.addEventListener('input', async () => {
 MGW.addEventListener('input', async () => {
     await update('MGW.value', Number(MGW.value));
     await checkWeights();
-    await calculateVa_takeoffAndLanding();
+    await calculateVa_takeoffAndLanding(); //both algorithms run here as MGW is used in both
     
 });
 
+//Manouvering speeds
 va_MGW.addEventListener('input', async () => {
     await update('va_MGW.value', Number(va_MGW.value));
     await calculateVa_takeoffAndLanding();
@@ -108,6 +113,10 @@ const arm_basic_empty = document.getElementById('arm_basic_empty');
 const moment_basic_empty = document.getElementById('moment_basic_empty');
 
 //Event listeners for basic empty
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//then the CG is calculated accounting for that change
 weight_basic_empty.addEventListener('input', async () => {
     await update('weight_items.basic_empty.weight.value', Number(weight_basic_empty.value));
     await calculateMoment('basic_empty');
@@ -123,7 +132,6 @@ arm_basic_empty.addEventListener('input', async () => {
 moment_basic_empty.addEventListener('input', async () => {
     await update('weight_items.basic_empty.moment', Number(moment_basic_empty.value));
     await calculateCG();
-    await calculateCG();
 });
 
 //OIL
@@ -132,6 +140,10 @@ const arm_oil = document.getElementById('arm_oil');
 const moment_oil = document.getElementById('moment_oil');
 
 //Event listeners for oil
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//then the CG is calculated accounting for that change
 weight_oil.addEventListener('input', async () => {
     await update('weight_items.oil.weight.value', Number(weight_oil.value));
     await calculateMoment('oil');
@@ -151,6 +163,12 @@ const arm_pilot1 = document.getElementById('arm_pilot1');
 const moment_pilot1 = document.getElementById('moment_pilot1');
 
 //Event listeners for pilot 1
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
+
 weight_pilot1.addEventListener('input', async () => {
     await update('weight_items.pilot1.weight.value', Number(weight_pilot1.value));
     await calculateMoment('pilot1');
@@ -164,7 +182,7 @@ arm_pilot1.addEventListener('input', async () => {
         //if symmetric arms is checked, update pilot2 arm as well
         arm_pilot2.value = arm_pilot1.value;
         await update('weight_items.pilot2.arm', Number(arm_pilot2.value));
-        await calculateMoment('pilot2');
+        await calculateMoment('pilot2'); //to update pilot2 moment accounting for new arm value
         await calculateMoment('pilot1');
     } else {
         await calculateMoment('pilot1');
@@ -178,6 +196,12 @@ const arm_pilot2 = document.getElementById('arm_pilot2');
 const moment_pilot2 = document.getElementById('moment_pilot2');
 
 //Event listeners for pilot 2
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
+
 weight_pilot2.addEventListener('input', async () => {
     await update('weight_items.pilot2.weight.value', Number(weight_pilot2.value));
     await calculateMoment('pilot2');
@@ -192,7 +216,7 @@ arm_pilot2.addEventListener('input', async () => {
         arm_pilot1.value = arm_pilot2.value;
         await update('weight_items.pilot1.arm', Number(arm_pilot1.value));
         await calculateMoment('pilot1');
-        await calculateMoment('pilot2');
+        await calculateMoment('pilot2'); //to update pilot2 moment accounting for new arm value
     } else {
         await calculateMoment('pilot2');
     }
@@ -205,6 +229,11 @@ const arm_PAX1 = document.getElementById('arm_PAX1');
 const moment_PAX1 = document.getElementById('moment_PAX1');
 
 //Event listeners for pax 1
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
 weight_PAX1.addEventListener('input', async () => {
     await update('weight_items.PAX1.weight.value', Number(weight_PAX1.value));
     await calculateMoment('PAX1');
@@ -232,6 +261,11 @@ const arm_PAX2 = document.getElementById('arm_PAX2');
 const moment_PAX2 = document.getElementById('moment_PAX2');
 
 //Event listeners for pax 2
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
 weight_PAX2.addEventListener('input', async () => {
     await update('weight_items.PAX2.weight.value', Number(weight_PAX2.value));
     await calculateMoment('PAX2');
@@ -259,6 +293,10 @@ const arm_baggage1 = document.getElementById('arm_baggage1');
 const moment_baggage1 = document.getElementById('moment_baggage1');
 
 //Event listeners for baggage 1
+
+//Event listeners for basic inputs
+//For each, when an input is made the database is immediately updated with that value
+//then the relevant calculations are made for that item accounting for that change
 weight_baggage1.addEventListener('input', async () => {
     await update('weight_items.baggage1.weight.value', Number(weight_baggage1.value));
     await calculateCargo();
@@ -278,6 +316,10 @@ const arm_baggage2 = document.getElementById('arm_baggage2');
 const moment_baggage2 = document.getElementById('moment_baggage2');
 
 //Event listeners for baggage 2
+
+//Event listeners for basic inputs
+//For each, when an input is made the database is immediately updated with that value
+//then the relevant calculations are made for that item accounting for that change
 weight_baggage2.addEventListener('input', async () => {
     await update('weight_items.baggage2.weight.value', Number(weight_baggage2.value));
     await calculateCargo();
@@ -291,13 +333,12 @@ arm_baggage2.addEventListener('input', async () => {
     await calculateCG();
 });
 
-// Utility function to create a delay
-
+//utility function to create a delay
 var abort = false;
 
 //setting all fuel arms to same value (for symmetric arms)
 async function setFuelArms(arm_value) {
-    abort = false;
+    abort = false; //to prevent synchronous updates when changing one fuel arm leading to changes in all fuel arms which then loop back to change the first fuel arm again and so on
     let fuel_items = ['fuel_load1', 'fuel_load2', 'fuel_ground_burned1', 'fuel_ground_burned2', 'fuel_flight_burned1', 'fuel_flight_burned2'];
     
     //immediately display the changes on screen
@@ -307,14 +348,14 @@ async function setFuelArms(arm_value) {
         await calculateMoment(item);
     });
 
-    //then update the session values
+    //then loop through each fuel item to update the session values with the new arm value
     for (const item of fuel_items) {
-        if (abort) {
+        if (abort) { //if at anypoint abort is true, stop the loop to prevent synchronous updates
             abort = false;
             return;
         }
-        await calculateMoment(item);
-        await update(`weight_items.${item}.arm`, Number(arm_value));
+        await calculateMoment(item); //to update the moment for that item accounting for the new arm value
+        await update(`weight_items.${item}.arm`, Number(arm_value)); //updating the database with the new arm value for that item
     }
     await update('weight_items.fuel_load1.arm', Number(arm_value)); //discrepancy fix
 }
@@ -325,6 +366,11 @@ const arm_fuel_load1 = document.getElementById('arm_fuel_load1');
 const moment_fuel_load1 = document.getElementById('moment_fuel_load1');
 
 //Event listeners for fuel load 1
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
 weight_fuel_load1.addEventListener('input', async () => {
     await update('weight_items.fuel_load1.weight.value', Number(weight_fuel_load1.value));
     await calculateMoment('fuel_load1');
@@ -373,6 +419,11 @@ const arm_fuel_ground_burned1 = document.getElementById('arm_fuel_ground_burned1
 const moment_fuel_ground_burned1 = document.getElementById('moment_fuel_ground_burned1');
 
 //Event listeners for fuel burned on ground1
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
 weight_fuel_ground_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned1.weight.value', Number(weight_fuel_ground_burned1.value));
     await calculateMoment('fuel_ground_burned1');
@@ -397,6 +448,11 @@ const arm_fuel_ground_burned2 = document.getElementById('arm_fuel_ground_burned2
 const moment_fuel_ground_burned2 = document.getElementById('moment_fuel_ground_burned2');
 
 //Event listeners for fuel burned on ground2
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
 weight_fuel_ground_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_ground_burned2.weight.value', Number(weight_fuel_ground_burned2.value));
     await calculateMoment('fuel_ground_burned2');
@@ -421,6 +477,11 @@ const arm_fuel_flight_burned1 = document.getElementById('arm_fuel_flight_burned1
 const moment_fuel_flight_burned1 = document.getElementById('moment_fuel_flight_burned1');
 
 //Event listeners for fuel burned in flight1
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
 weight_fuel_flight_burned1.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned1.weight.value', Number(weight_fuel_flight_burned1.value));
     await calculateMoment('fuel_flight_burned1');
@@ -445,6 +506,11 @@ const arm_fuel_flight_burned2 = document.getElementById('arm_fuel_flight_burned2
 const moment_fuel_flight_burned2 = document.getElementById('moment_fuel_flight_burned2');
 
 //Event listeners for fuel burned in flight2
+
+//for each, when an input is made the database is immediately updated with that value
+//then the moment for that row is calculated accounting for that change
+//arm values that are symmetric are updated together should symmetric arms be checked
+//then the CG is calculated accounting for that change
 weight_fuel_flight_burned2.addEventListener('input', async () => {
     await update('weight_items.fuel_flight_burned2.weight.value', Number(weight_fuel_flight_burned2.value));
     await calculateMoment('fuel_flight_burned2');
@@ -490,7 +556,7 @@ const landing_weight = document.getElementById('landing_weight');
 const landing_moment = document.getElementById('landing_moment');
 const landing_CG = document.getElementById('landing_CG');
 
-//------------------------------CALCULATING MOMENTS--------------------------
+//======================CALCULATING MOMENTS======================
 
 async function calculateMoment(target='none') {
 
@@ -527,7 +593,7 @@ async function calculateMoment(target='none') {
     await update(`weight_items.${target}.moment`, calculated_moment);
 }
 
-//-------------------------------CALCULATING CG-----------------------
+//======================CALCULATING CG======================
 
 async function calculateCG() {
     CG_table.style.opacity = 0.4; //loading feedback
@@ -583,7 +649,7 @@ async function calculateCG() {
         const moment_output = document.getElementById(`${conditions_output[items.indexOf(condition)]}moment`);
         const CG_output = document.getElementById(`${conditions_output[items.indexOf(condition)]}CG`);
 
-        //updating the output fields
+        //updating the output fields with the new weight and moment values accounting for the change just made in the inputs
         weight_output.textContent = roundifDecimal(total_weight) !== 0 ? roundifDecimal(total_weight) : '';
         moment_output.textContent = roundifDecimal(total_moment) !== 0 ? roundifDecimal(total_moment) : '';
         
@@ -633,11 +699,11 @@ async function calculateCG() {
     });
     const data = await response.json();
 
-    if (data.status !== 'success') {
+    if (data.status !== 'success') { //if an error occurs during the update of the database with the new CG table values, alert the user
         showAlert('An error occurred whilst saving the calculated data.');
     }
-    await calculateVa_takeoffAndLanding()
-    await checkWeights();
+    await calculateVa_takeoffAndLanding() //re-calculate manouovering speeds to account for changed data
+    await checkWeights(); //check weights against limits to account for changed data
 }
 
 //---------On page load:
@@ -651,7 +717,7 @@ if (await checkSymmetricArms()) {
 }
 CG_table.style.opacity = 1;
 
-//-----------------------MANOEUVRING SPEEDS----------------//
+//======================MANOEUVRING SPEEDS======================//
 
 //manoeuvering speeds for takeoff and landing
 async function calculateVa_takeoffAndLanding() {
@@ -692,9 +758,11 @@ async function calculateVa_any() {
 
 //-------Checking weights limits
 async function checkWeights() {
-    //basic, zero-fuel and ramp weights should not exceed MGW
-    const ground_weights = [basic_weight, zero_fuel_weight, ramp_weight];
 
+    //ACTIVE means the weight exceeds the limit and so it highlighted in RED
+
+    //basic, zero-fuel and ramp weights should not exceed MGW
+    const ground_weights = [basic_weight, zero_fuel_weight, ramp_weight]; //using an array to loop through the similar conditions together
     ground_weights.forEach((weight) => {
         if (weight.textContent !== '' && MGW.value !== '') {
             if (Number(weight.textContent) > Number(MGW.value)) {
@@ -734,7 +802,8 @@ async function checkWeights() {
 async function calculateCargo() {
     //determining and updating cargo weight for dashboard
     let cargoWeight = 0;
-
+    
+    //adds up the total weight in entered into the baggage fields to get the cargo weight, if any
     if (Number(weight_baggage1.value) != 0) {
         cargoWeight += Number(weight_baggage1.value);
     } if (Number(weight_baggage2.value) != 0) {
@@ -743,7 +812,7 @@ async function calculateCargo() {
     await update("cargo.value", cargoWeight);
 }
 
-//-----------------------------SUGGESTING A CHANGE----------------------------------//
+//=============================SUGGESTING A CHANGE==================================//
 
 //-------popup handling
 const suggestionModal = document.getElementById('suggestion');
@@ -764,8 +833,9 @@ suggestChangeButton.addEventListener('click', async () => {
 
 //-------AI suggestion
 
-const output = document.getElementById("output");
+const output = document.getElementById("output");//AI output box
 
+//function to suggest a change to the user based on their current flight data
 async function suggestChange() {
     output.style.color = "#737373";
     output.textContent = "Generating suggestion...";
@@ -818,11 +888,11 @@ async function suggestChange() {
     const aiResponse = await prompt("Mass_and_Balance", promptText);  
     try {
         const resp = JSON.parse(aiResponse); //parsing the response to JSON
-        output.style.color = "#000000";
+        output.style.color = "#000000"; //changing output color for legibility
         output.textContent = resp.suggestion
 
-    } catch (error) {
-        console.error(error);
+    } catch (error) { //if an error occurs then log it and alert the user in red that a suggestion could not be generated.
+        console.error(error); 
         output.style.color = "#FF0000";
         output.textContent = "An error occurred while generating the suggestion. Please ensure your route is complete and try again.";
     }

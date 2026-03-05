@@ -4,9 +4,7 @@
   box-sizing: border-box;
 }
 
-
-
-/*header to contain the title and the back button*/
+/*==============HEADER STYLING==============*/
 header {
     background-color: var(--highlight);
     display: flex;
@@ -31,6 +29,7 @@ header {
     margin-left: 42vw; /*not centered definitely but is estimate- should fix*/
 }
 
+/*==============CONTENT STYLING==============*/
 /*All buttons default styling*/
 button {
     margin-bottom: 20px;
@@ -165,6 +164,7 @@ h3 {
     margin-top: 20px;
 }
 
+/*dropdown styling*/
 #customDropdown {
     position: relative;
     right: 4px;

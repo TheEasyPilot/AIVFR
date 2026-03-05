@@ -1,3 +1,5 @@
+/*---This page is for styling components that are used across multiple pages, such as tables and buttons---*/
+
 /* applying normal button hover effects*/
 button:hover {
     background-color: var(--onhover); 

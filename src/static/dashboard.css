@@ -2,6 +2,8 @@
     font-family: 'Manrope';
 }
 
+/*===================HEADER STYLING===================*/
+
 #title {
     font-size: 29.8px;
     font-weight: 300;
@@ -19,7 +21,8 @@
     height: 46px;
 }
 
-#save_json.savingOrSaved, #save_pdf.savingOrSaved { /*user feedback when saving/saved */
+/*user feedback when saving/saved */
+#save_json.savingOrSaved, #save_pdf.savingOrSaved { 
     background-color: var(--onhover);
     border: none;
     color: gray;
@@ -28,8 +31,9 @@
     pointer-events: none;
 }
 
-/*content*/
+/*===================CONTENT STYLING===================*/
 
+/*grid layout for all boxes in the dashboard*/
 #content {
     display: grid;
     grid-template-columns: 1fr 1.2fr 1.3fr;
@@ -70,6 +74,7 @@
     grid-row: 1 / span 3;
 }
 
+/*styling for the boxes in the dashboard*/
 .dashboard_content {
     background-color: var(--highlight);
     border-radius: 10px;
@@ -89,14 +94,14 @@ input {
     background-color: var(--bg);
 }
 
-
+/*weight and performance content styling*/
 .WP_content {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
 }
 
-/*content styling*/
+/*===================EACH SECTION STYLING===================*/
 
 /*route information*/
 #route_names {
@@ -181,7 +186,7 @@ input {
     white-space: pre-line;
 }
 
-/*refresh button feedback*/
+/*refresh button feedback */
 
 #refresh_WX.refreshing, #refresh_brief.refreshing {
     opacity: 0.6;
@@ -249,6 +254,8 @@ input {
     opacity: 0;
 }
 
+
+/*pdf and json save buttons*/
 #save_json, #save_pdf {
     border: 1px solid var(--text);
     width: 50px;

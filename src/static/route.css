@@ -1,3 +1,5 @@
+/*=========================HEADER STYLING=========================*/
+
 #title {
     font-size: 29.8px;
     font-weight: 300;
@@ -9,6 +11,7 @@
     pointer-events: none;
 }
 
+/*=========================CONTENT STYLING=========================*/
 /*Main content*/
 #content {
     grid-template-columns: 5fr 5fr;
@@ -209,6 +212,7 @@ a {
     min-height: 80px;
 }
 
+/*buttons for adding/removing waypoints and selecting the type of waypoint*/
 .waypoint_choice, #addWaypoint, #removeWaypoint {
     font-family: 'Manrope';
     height: auto;
@@ -224,6 +228,7 @@ a {
     padding-right: 11px;
 }
 
+/*positioning of add/remove waypoint buttons*/
 #addOrRemoveWaypoints {
     display: flex;
     gap: 5px;
@@ -251,6 +256,7 @@ a {
     pointer-events: none;
 }
 
+/*search waypoint input*/
 #searchWaypoint {
     width: 100%;
     margin-bottom: 10px;
@@ -287,7 +293,7 @@ a {
     vertical-align: middle;
 }
 
-/*tooltip popup*/
+/*------------tooltip popup-------------*/
 
 .tooltipContent {
   position: relative;

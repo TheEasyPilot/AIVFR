@@ -1,6 +1,7 @@
 import { update, updateSettings } from "./basePage.js";
 await updateSettings("current_page", "/performance");
 
+//getting the elements from the DOM
 const todr = document.getElementById('TODR')
 const ldr = document.getElementById('LDR')
 const toda = document.getElementById('TODA')

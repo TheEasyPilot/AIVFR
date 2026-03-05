@@ -6,26 +6,32 @@ const grading = document.getElementsByClassName('grading');
 
 //------------------initializing grading colours and styling
 function initializeGradingColors() {
+    //iterates through all elements with the class 'grading' and sets the text color based on the flight category
     for (let i = 0; i < grading.length; i++) {
-        if (grading[i].textContent == "VFR") {
+        if (grading[i].textContent == "VFR") { //if the text content of the element is VFR, it is colored green
             grading[i].style.color = "#40d400";
-        } else if (grading[i].textContent == "MVFR") {
+        } else if (grading[i].textContent == "MVFR") { //if the text content of the element is MVFR, it is colored blue
             grading[i].style.color = "#0091ff";
-        } else if (grading[i].textContent == "IFR") {
+        } else if (grading[i].textContent == "IFR") { //if the text content of the element is IFR, it is colored red
             grading[i].style.color = "red";
-        } else if (grading[i].textContent == "LIFR") {
+        } else if (grading[i].textContent == "LIFR") { //if the text content of the element is LIFR, it is colored purple
             grading[i].style.color = "#800080";
         }
     }
 
 }
+
+//on load:
 initializeGradingColors();
+
+//==========================DECLARATIONS==========================
 
 //styling for item titles
 //this takes temporary decoded weather data from the backend (if it exists) and inserts it into the correct divs
 //along with proper HTML formatting
 const resp = await fetch("/get-flight")
 const weather = await resp.json();
+//these variables are needed to avoid issues with the original weather data being undefined when the page first loads
 var TEMPtaf_searched_decoded = weather.TAF_searched_decoded;
 var TEMPmetar_searched_decoded = weather.METAR_searched_decoded;
 var TEMPtaf_departure_decoded = weather.TAF_departure_decoded;
@@ -39,46 +45,52 @@ const arrival_aerodrome = weather.destinationAirport_code;
 
 //searched aerodrome weather
 if (TEMPtaf_searched_decoded && TEMPmetar_searched_decoded) {
+    //getting the correct divs to insert the decoded weather data into
     var metar_searched_decodedTEMP = document.getElementById('METAR_searched_decoded');
     var taf_searched_decodedTEMP = document.getElementById('TAF_searched_decoded');
+    //inserting the decoded weather data into the correct divs
     taf_searched_decodedTEMP.innerHTML = TEMPtaf_searched_decoded
     metar_searched_decodedTEMP.innerHTML = TEMPmetar_searched_decoded
 }
 
 //departure weather
 if (TEMPtaf_departure_decoded && TEMPmetar_departure_decoded) {
+    //getting the correct divs to insert the decoded weather data into
     var metar_departure_decodedTEMP = document.getElementById('METAR_departure_decoded');
     var taf_departure_decodedTEMP = document.getElementById('TAF_departure_decoded');
+    //inserting the decoded weather data into the correct divs
     taf_departure_decodedTEMP.innerHTML = TEMPtaf_departure_decoded
     metar_departure_decodedTEMP.innerHTML = TEMPmetar_departure_decoded
 }
 
 //arrival weather
 if (TEMPtaf_arrival_decoded && TEMPmetar_arrival_decoded) {
+    //getting the correct divs to insert the decoded weather data into
     var metar_arrival_decodedTEMP = document.getElementById('METAR_arrival_decoded');
     var taf_arrival_decodedTEMP = document.getElementById('TAF_arrival_decoded');
+    //inserting the decoded weather data into the correct divs
     taf_arrival_decodedTEMP.innerHTML = TEMPtaf_arrival_decoded
     metar_arrival_decodedTEMP.innerHTML = TEMPmetar_arrival_decoded
 }
 
-//-------Verifying ICAO code--------------
+//==========================Verifying ICAO code==========================
 
 function verifyICAO(code) {
-    if (code.length == 4) {
+    if (code.length == 4) { //an ICAO code is always 4 characters long
         for (let letter of code) {
-            if (!isNaN(letter)) {
+            if (!isNaN(letter)) { //each character must be a letter
                 return false;
             }
         }
     } else {
-        return false;
+        return false; //not verified
     }
-    return true;
+    return true; //verified
 }
 
-//-------Fetching Airport Details from API------------
+//==========================Fetching Airport Details from API==========================
 
-async function fetchAirportDetails(code) {
+async function fetchAirportDetails(code) { //fetches airport details from the backend using the provided ICAO code
     try {code = code.toUpperCase();} catch (error) {
         showAlert("Invalid ICAO code");
         return null;
@@ -100,46 +112,47 @@ async function fetchAirportDetails(code) {
         const data = await response.json();
         return data; //returns the airport details
 
-    } catch (error) {
+    } catch (error) { //if the fetch fails, alert the user
         showAlert("Airport not found. Please make sure the ICAO code is correct.");
         return null;
     }
 }
 
-//-------Airport search------------
+//==========================Airport search==========================
 const Airport_code = document.getElementById("airport_code");
 const Airport_name = document.getElementById("airport_name");
 
+//when the user types in the airport code and presses enter, the airport details are fetched and displayed
 Airport_code.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
         Airport_name.style.display = "inline";
         Airport_name.textContent = "...";
 
         //validating data
-        if (verifyICAO(Airport_code.value)) {
+        if (verifyICAO(Airport_code.value)) { //verifying the entered code is valid
             const airportDetails = await fetchAirportDetails(Airport_code.value);
             if (airportDetails.country == "GB") {
-                await update("WX_airportCode", Airport_code.value.toUpperCase());
-                await update("WX_airportName", airportDetails.name);
+                await update("WX_airportCode", Airport_code.value.toUpperCase()); //updating database with the new airport code
+                await update("WX_airportName", airportDetails.name); //updating database with the new airport name
                 Airport_code.style.textTransform = "uppercase";
                 Airport_name.textContent = airportDetails.name;
 
-            } else if (airportDetails.country != "GB") {
+            } else if (airportDetails.country != "GB") { //restrict to UK aerodromes only
                 showAlert("Only UK aerodromes are supported");
                 Airport_name.style.display = "none";
             }
-        } else {
+        } else { //if the code is invalid, alert the user and hide the airport name
             showAlert("Invalid ICAO code");
             Airport_name.style.display = "none";
         }
     }
 });
 
-//-------Update weather report------------
+//==========================Update weather report==========================
 const update_wx = document.getElementById('update');
 const code_searched = document.getElementById('airport_code');
 
-
+//gets the weather data for a given ICAO code from the backend and returns it
 async function getWeather(code) {
     if (code === "") {
         return undefined;
@@ -161,13 +174,13 @@ async function getWeather(code) {
         const data = await response.json();
         return data; //returns the weather data
 
-        } catch (error) {
+        } catch (error) { ///if the fetch fails, alert the user
             showAlert("Error fetching weather data");
             return null;
         }
 };
 
-//--------------------Departure and arrival weather switches--------------------
+//==========================Departure and arrival weather switches==========================
 const WX_departure_METAR_switch = document.getElementById('WX_departure_METAR_switch');
 const WX_departure_TAF_switch = document.getElementById('WX_departure_TAF_switch');
 const WX_arrival_METAR_switch = document.getElementById('WX_arrival_METAR_switch');
@@ -182,6 +195,7 @@ const METARArrival = document.getElementById('METARArrival');
 const response = await fetch("/get-flight")
 const flight = await response.json();
 
+//when the page loads, the visibility of the METAR and TAF for departure and arrival is set based on the current settings stored in the database
 if (flight.WX_switch_dep == "METAR") {
     METARDeparture.style.display = "block";
     TAFDeparture.style.display = "none";
@@ -199,6 +213,10 @@ if (flight.WX_switch_arr == "METAR") {
     METARArrival.style.display = "none";
     TAFArrival.style.display = "block";
 }
+
+//for each:
+//when the user clicks on one of the switches, the relevant report is shown and the other is hidden
+//the setting is also updated in the database
 
 WX_departure_METAR_switch.addEventListener('click', async () => {
     WX_departure_METAR_switch.classList.add('active');
@@ -232,7 +250,7 @@ WX_arrival_TAF_switch.addEventListener('click', async () => {
     update("WX_switch_arr", "TAF");
 });
 
-//----------------------------------UPDATING WEATHER FUNCTION----------------------------------
+//==========================UPDATING WEATHER FUNCTION==========================
 
 //--declarations for the individual METAR/TAF reports and decoded text--
 const metar_searched = document.getElementById('METAR_searched');
@@ -259,7 +277,7 @@ const WX_arrival = document.getElementById('WX_arrival');
 const reports = document.getElementById('content')
 
 
-
+//when the user cicks the weather button the update weather function (below) runs
 update_wx.addEventListener('click', async () => {
     await updateWeather();
 });
@@ -272,6 +290,7 @@ async function updateWeather() {
     update_wx.style.backgroundColor = 'var(--onhover)'
     update_wx.style.border = 'none';
     update_wx.style.alignItems = 'center';
+    //whole html required here for proper alignment of the loading icon and text
     update_wx.innerHTML = `<svg id='working_icon' data-name="Layer 1" id="Layer_1" fill='currentColor' viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title/><path d="M19,6.76V2H6V6.76A4,4,0,0,0,7.17,9.59L9.59,12,7.17,14.41A4.06,4.06,0,0,0,6,17.24V22H19V17.24a4.06,4.06,0,0,0-1.17-2.83L15.41,12l2.42-2.41A4,4,0,0,0,19,6.76Zm-2,0a2,2,0,0,1-.59,1.41l-2.76,2.77a1.5,1.5,0,0,0,0,2.12l2.76,2.77A2,2,0,0,1,17,17.24V20H8V17.24a2,2,0,0,1,.59-1.41l2.76-2.77a1.5,1.5,0,0,0,0-2.12L8.59,8.17A2,2,0,0,1,8,6.76V4h9Z"/></svg>
     <p style="font-size: 14px;">WORKING...</p>
     `
@@ -282,12 +301,17 @@ async function updateWeather() {
 
     try {
 
-    if (wx_searched) {
+    if (wx_searched) { //if weather data for the searched aerodrome is successfully fetched...
+    //...the relevant sections are made visible and updated with the new data
         metar_searched.classList.add('active')
         taf_searched.classList.add('active')
 
-        //update the session as well as the actual decoded text for each report
+        //update the database as well as the actual decoded text for each report
+
         //------------SEARCHED WX-----------
+        //for each:
+        //the raw METAR and TAF are updated in the database and on the page
+
         await update("METAR_searched", wx_searched.metar.raw_text);
         metar_searched.textContent = wx_searched.metar.raw_text;
 
@@ -300,11 +324,14 @@ async function updateWeather() {
         await update("TAF_searched_decoded", await parseTAF(wx_searched.taf));
         taf_searched_decoded.innerHTML = await parseTAF(wx_searched.taf);
 
+
+        //------------DEPARTURE WX-----------
+        //the same process is repeated for departure and arrival weather
     } if (wx_departure) {
         WX_departure.classList.remove('inop');
         metar_departure.classList.add('active');
         taf_departure.classList.add('active');
-        //------------DEPARTURE WX-----------
+
         await update("METAR_departure", wx_departure.metar.raw_text);
         metar_departure.textContent = wx_departure.metar.raw_text;
 
@@ -316,12 +343,13 @@ async function updateWeather() {
         await update("TAF_departure_decoded", await parseTAF(wx_departure.taf));
         taf_departure_decoded.innerHTML = await parseTAF(wx_departure.taf);
 
+        //------------ARRIVAL WX-----------
     } if (wx_arrival) {
         WX_arrival.classList.remove('inop');
         metar_arrival.classList.add('active');
         taf_arrival.classList.add('active');
 
-        //------------ARRIVAL WX-----------
+        
         await update("METAR_arrival", wx_arrival.metar.raw_text);
         metar_arrival.textContent = wx_arrival.metar.raw_text;
 
@@ -361,8 +389,10 @@ async function parseMETAR(metar, gradingHTML) {
     //airspeed
     if (metar.wind  !== "undefined") {
         if (wind_unit == "knot") {
+            //if the wind gusts value is undefined, it is set to "N/A" (this avoids the output being 'undefined knots')
             var windspeed = `${metar.wind.speed.kts} knots`;
             var windgusts = `${metar.wind.gust ? metar.wind.gust.kts : "N/A"} knots`;
+            //the same process is repeated for each unit type...
         } else if (wind_unit == "kilometer_per_hour") {
             var windspeed = `${metar.wind.speed.kph} km/h`;
             var windgusts = `${metar.wind.gust ? metar.wind.gust.kph : "N/A"} km/h`;
@@ -375,6 +405,7 @@ async function parseMETAR(metar, gradingHTML) {
     //altitude
     if (altitude_unit == "feet") {
         try {
+            //if the ceiling value is undefined, it is set to "N/A" (this avoids the output being 'undefined feet')
           var ceiling = `${metar.ceiling? metar.ceiling.feet : "N/A"} feet`;  
         }
         catch (TypeError) {
@@ -383,6 +414,7 @@ async function parseMETAR(metar, gradingHTML) {
 
     } else if (altitude_unit == "meter") {
         try {
+            //if the ceiling value is undefined, it is set to "N/A" (this avoids the output being 'undefined meters')
           var ceiling = `${metar.ceiling? metar.ceiling.meters : "N/A"} meters`;  
         }
         catch (TypeError) {
@@ -390,7 +422,12 @@ async function parseMETAR(metar, gradingHTML) {
         }
     }
 
-    //other non-unit related values
+    //----other non-unit related values
+
+    //for ALL:
+    //if a value is undefined, it is set to "N/A" to avoid the output being 'undefined' or similar
+    //the path used in according to the structure of the METAR data returned by the backend, sourced from the CheckWX API
+
     const time = metar.observed;
     const visibility = metar.visibility? metar.visibility.meters : "N/A";
     const visibility_text = metar.visibility? metar.visibility.text : "N/A";
@@ -406,7 +443,12 @@ async function parseMETAR(metar, gradingHTML) {
     const conditions = conditions_fetch?.join(', ')
     const remarks = metar.remarks? metar.remarks : "No remarks";
 
+    //---
+
     //constructing decoded METAR string
+    //constructed as a HTML string with proper formatting for display on the page
+    //the variables declared above are then inserted into the string in the appropriate places
+
     let decoded_METAR = `<b>Time of observation:</b> ${time}
     <b>Wind:</b> ${wind_direction}° at ${windspeed}
     <b>Visibility:</b> ${visibility} meters (${visibility_text})
@@ -416,27 +458,30 @@ async function parseMETAR(metar, gradingHTML) {
     <b>Humidity:</b> ${humidity}%
     <b>Clouds:</b> ${clouds_code} (${clouds_text})`;
 
-    //adding items that may be undefined
+    //adding items that may be undefined so that they appear in the decoded METAR only if they exist
     try {
-    
+    //wind gust
     if (metar.wind.gust) {
         decoded_METAR += `
     <b>Wind Gusts:</b> ${windgusts}`;
     }
 
-    if (ceiling != 'undefined feet' && ceiling != 'undefined meters') {
+    //ceiling
+    if (ceiling != 'N/A feet' && ceiling != 'N/A meters') {
         decoded_METAR += `
     <b>Ceiling:</b> ${ceiling}`;
-    } else if (ceiling != 'undefined meters' && ceiling != 'undefined feet') {
+    } else if (ceiling != 'N/A meters' && ceiling != 'N/A feet') {
         decoded_METAR += `
     <b>Ceiling:</b> ${ceiling}`;
     }
 
+    //conditions
     if (conditions) {
         decoded_METAR += `
     <b>Conditions:</b> ${conditions}`;
     }
 
+    //remarks
     if (remarks != "No remarks") {
     decoded_METAR += `
     <b>Remarks:</b> ${remarks.join(', ')}`;
@@ -445,14 +490,16 @@ async function parseMETAR(metar, gradingHTML) {
     <b>Remarks:</b> ${remarks}`;
     }
 
+    //if parsing any of the data fails, log the error but don't show the user (and don't return)
     } catch (error) {
         console.error(error);
     }
 
     //grading
-    await update(`${gradingHTML.id}`, flight_category);
+    await update(`${gradingHTML.id}`, flight_category); //the flight category is inserted into the relevant grading element
+    //both on the page and in the database
     gradingHTML.textContent = flight_category;
-    initializeGradingColors();
+    initializeGradingColors(); //initializing grading colours again to update the colour based on the new flight category
 
     //returning decoded METAR
     return decoded_METAR;
@@ -460,42 +507,51 @@ async function parseMETAR(metar, gradingHTML) {
 
 function parseTAF(taf) {
     //parsing taf data depending on available fields
+
+    //the TAF data is structured as an array of forecast periods, each with its own set of weather conditions and other relevant data
     const parsed_TAF = taf.forecast.map(f => ({
-    start: f.change.period.from,
-    end: f.change.period.to,
-    wind: f.wind ?? null,
-    visibility: f.visibility ?? null,
-    clouds: (f.clouds ?? []).map(cloud => ({
-        type: cloud.text
-    })),
-    conditions: (f.conditions ?? []).map(cond => cond.text),
-    change: f.change?.text ?? null,
-    probability: f.change?.probability ?? null
+    /*START TIME*/  start: f.change.period.from,
+    /*END TIME*/    end: f.change.period.to,
+    /*WIND*/        wind: f.wind ?? null,
+    /*VISIBILITY*/  visibility: f.visibility ?? null,
+    /*CLOUDS*/      clouds: (f.clouds ?? []).map(cloud => ({
+                    type: cloud.text
+                 })),
+    /*CONDITIONS*/  conditions: (f.conditions ?? []).map(cond => cond.text),
+    /*CHANGE*/      change: f.change?.text ?? null,
+    /*PROBABILITY*/ probability: f.change?.probability ?? null
     }));
 
+    //structuring the decoded TAF string with proper formatting for display on the page
     let decoded_TAF = `
 <b>TAF Issued at</b> ${taf.issued}
     `;
 
     //constructing decoded TAF string
     parsed_TAF.forEach(period => { //iterate through each forecast period
+        //if an item is undefined, it will be skipped and will not be seen in the forecast
         decoded_TAF += `\n<b>From:</b> ${period.start} <b>To:</b> ${period.end}\n`;
-        if (period.change) { //if an item is undefined, it will be skipped
+        //change
+        if (period.change) {
             decoded_TAF += `  <b>Change Type:</b> ${period.change}\n`;
         }
+        //probability
         if (period.probability) {
             decoded_TAF += `  <b>Probability:</b> ${period.probability}%\n`;
         }
+        //conditions
         if (period.conditions.length > 0) {
             decoded_TAF += `  <b>Conditions:</b> ${period.conditions.join(', ')}\n`;
         }
-
+        //wind
         if (period.wind) {
             decoded_TAF += `  <b>Wind:</b> ${period.wind.degrees}° at ${period.wind.speed.kts} knots\n`;
         }
+        //visibility
         if (period.visibility) {
             decoded_TAF += `  <b>Visibility:</b> ${period.visibility.text}\n`;
         }
+        //clouds
         if (period.clouds.length > 0) {
             period.clouds.forEach(cloud => {
                 decoded_TAF += `  <b>Clouds:</b> ${cloud.type}\n`;

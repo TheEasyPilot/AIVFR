@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     updateSettings("current_page", "/");
 
+    //===========================FUNCTIONS===========================
     //display the disclaimer
     function displayDisclaimer() { 
     disclaimer.style.display = "block";
@@ -30,11 +31,13 @@ document.addEventListener("DOMContentLoaded", function() {
     uploadFlight.style.display = "block";
     }
 
+    //when the user clicks continue on the main menu, display the disclaimer and run the continue function (opens dashboard)
     Continue.addEventListener("click", function() {
         displayDisclaimer();
         ContinueFlight(); //determines what happens if the user presses continue on disclaimer
     });
 
+    //when the user clicks load flight on the main menu, display the disclaimer and run the function to display the upload flight modal
     loadFlight.addEventListener("click", function() {
         displayDisclaimer();
         disclaimerContinue.onclick = function() {
@@ -43,9 +46,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
     });
 
+    //when the user clicks new flight on the main menu, display the disclaimer and run the function to clear the session and open the dashboard
     newFlight.addEventListener("click", async()  => {
         displayDisclaimer();
-        await NewFlight();
+        await NewFlight(); //to alert the user of any unsaved changes
         disclaimerContinue.onclick = async function() {
         await clearSession();
         window.open("dashboard", '_self')
@@ -62,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
     uploadFlight.style.display = "none";
     }
 
-    //---------------------------CONTINUE FLIGHT
+    //===========================CONTINUE FLIGHT===========================
     
     function ContinueFlight() {
         disclaimerContinue.onclick = function() {
@@ -71,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    //---------------------------NEW FLIGHT
+    //===========================NEW FLIGHT===========================
     async function NewFlight() {
         await fetch('/get-flight')
         .then(response => response.json())
@@ -86,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
         await fetch('/new-flight')
     }
 
-    //---------------------------LOAD FLIGHT
+    //===========================LOAD FLIGHT===========================
 
     uploadFlightForm.addEventListener('submit', function(event) {
         uploadStatus.textContent = ""; 

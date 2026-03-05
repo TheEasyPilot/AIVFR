@@ -2,7 +2,7 @@
     color: var(--text)
 }
 
-
+/*===================TITLE===================*/
 #logoAI, #logoVFR {
     position: relative;
     bottom: 20px;
@@ -43,6 +43,7 @@
     border-spacing: 10px;
 }
 
+
 /*'AI ASSISTED FLIGHT PLANNING'*/
 #subtitle {
     position: relative;
@@ -50,13 +51,14 @@
     bottom: 45px;
     font-weight: 700
 }
+/*===================CONTENT STYLING===================*/
 
 body {
     padding-left: 30px;
     padding-top: 10px;
 }
 
-/*'settings icon'*/
+/*settings icon*/
 #settings {
     color: var(--text);
     position: absolute;
@@ -76,7 +78,7 @@ body {
     rotate: 45deg;
 }
 
-
+/*buttons on the main menu*/
 .mainMenuButton {
     margin-bottom: 20px;
     width: 200px;
@@ -160,7 +162,7 @@ body {
   background-color: var(--popupbg);
 }
 
-/* Upload Flight Modal Content/Box */
+/*Upload Flight Modal Content/Box*/
 .uploadFlightContent {
   position: relative;
   background-color: var(--highlight);

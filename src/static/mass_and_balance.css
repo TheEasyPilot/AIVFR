@@ -7,9 +7,10 @@
     background-color: var(--primary);
     pointer-events: none;
 }
+/*===================CONTENT STYLING===================*/
+/*grid layout for all boxes in the mass and balance page*/
 
-/*boxes styling*/
-
+/*styling for the boxes in the mass and balance page*/
 .highlight {
     background-color: var(--highlight);
     padding: 20px;
@@ -41,6 +42,7 @@
     border: 1px solid var(--onhover);
  }
 
+/*styling for the input boxes in the mass and balance page*/
 input {
     border: 1px solid var(--text);
     border-radius: 5px;
@@ -54,6 +56,7 @@ input {
     background-color: var(--bg);
 }
 
+/*suggest change button*/
 #suggestChange {
     background-color: var(--highlight);
     border: none;
@@ -78,7 +81,7 @@ h3 {
     margin-bottom: 15px;
 }
 
-/*table styling*/
+/*------table styling-------*/
 
 table {
     width: 100%;
@@ -107,13 +110,14 @@ td {
     height: 35px;
     pointer-events: none;
     opacity: 0.3;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease; /*for the hover effect*/
 }
 
 #table_right {
-    transform: rotate(180deg);
+    transform: rotate(180deg); /*flip the right arrow*/
 }
 
+/*----moments table styling----*/
 #moments_table th, #moments_table td {
     border: 1px solid var(--text);
     text-align: center;
@@ -157,7 +161,7 @@ td {
     transition: 0.5s ease;
 }
 
-/*slider for symmetric arm toggle*/
+/*-------slider for symmetric arm toggle-------*/
 .switch {
   position: relative;
   display: inline-block;
@@ -221,7 +225,7 @@ input:checked + .slider:before {
     display: none;
 }
 
-/*suggestion modal*/
+/*-------suggestion modal-----*/
 .modal{  /*makes it hidden by default */
   position: fixed; 
   z-index: 3; /*this makes it appear ontop*/
@@ -233,7 +237,7 @@ input:checked + .slider:before {
   z-index:1000;
 }
 
-/*modal content*/
+/*-------modal content-------*/
 .suggestionContent {
   position: relative;
   background-color: var(--highlight);
@@ -245,6 +249,7 @@ input:checked + .slider:before {
   bottom: 50px;
 }
 
+/*AI suggestion output box*/
 #output {
     font-family: 'Manrope';
     font-size: 16px;
