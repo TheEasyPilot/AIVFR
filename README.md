@@ -1,8 +1,8 @@
 # <img width="1920" height="1080" alt="AI VFR Webtool UI Design (1)" src="https://github.com/user-attachments/assets/a5cd6a27-54eb-4a14-973c-2734a586292d" />
 
-![Version](https://img.shields.io/badge/Version-v1.0.0--beta-green)
-[![License](https://img.shields.io/badge/License-PolyForm_Noncommercial_License_1.0.0-blue)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
-[![Documentation](https://img.shields.io/badge/v1.0.0--beta_documentation-Currently_Unavailable-red)]()
+![Version](https://img.shields.io/badge/Version-v1.0.0--beta-green?style=for-the-badge)
+[![Documentation](https://img.shields.io/badge/v1.0.0--beta_documentation-Currently_Unavailable-red?style=for-the-badge)]()
+[![NOTION](https://img.shields.io/badge/NOTION_PAGE-blue?style=for-the-badge&logo=notion)](https://surf-cylinder-4a6.notion.site/AIVFR-2ee164c8ef408083bb03ce3303d690e2?source=copy_link)
 
 > [!CAUTION]
 > ***THIS TOOL MUST NOT BE USED IN REAL-WORLD FLIGHT OPERATIONS UNDER ANY CIRCUMSTANCES.***
