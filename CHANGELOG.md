@@ -37,6 +37,7 @@ Initial development is complete! AIVFR is now in beta where it will probably sta
 - Users can use AI to generate a briefing for the entire flight
 - All flight data can be downloaded as pdf *(quite buggy at the moment)*
 - Switched the flight data file away from a flask session cookie to an actual database (4KB is NOT enough space :sob:)
+- Added github and notion links in main menu
 
 ### Fixed
 
