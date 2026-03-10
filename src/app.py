@@ -15,6 +15,7 @@ main = Blueprint('app', __name__)
 #also allows setting default values
 
 data_template = {
+    "version" : "v1.0.0-beta",
     "settings" : {
         "theme": "light",
         "map_style": "normal",
@@ -306,7 +307,7 @@ def index():
         session["flight_id"] = new_flight.id
         update_units()
     
-    return render_template('menu.html', APP_VERSION='1.0.0-beta', data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
+    return render_template('menu.html', version=get_flight_data()[1]["version"], data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
 
 #-------------DEBUGGING
 #debug route that allows me to see the flight data at any time

@@ -1,3 +1,5 @@
+/*=========================HEADER STYLING=========================*/
+
 #title {
     font-size: 29.8px;
     font-weight: 300;
@@ -7,6 +9,8 @@
     background-color: var(--primary);
     pointer-events: none;
 }
+
+/*=========================CONTENT STYLING=========================*/
 
 /*entire div*/
 #perf_inputs {

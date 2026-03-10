@@ -3,46 +3,42 @@ import LatLon from 'https://cdn.jsdelivr.net/npm/geodesy@2.4.0/latlon-spherical.
 
 await updateSettings("current_page", "/route");
 
-let map = null;
-
+//on load:
+//load the map
+let map = null; //to eliminate the map already existing error when reloading
 (async () => {
-    await load_map();
+    await load_map(); //loading the map 
 })();
 
-const response = await fetch('/time-distance');
-if (response.ok) {
-    const text = await response.text();
-    document.getElementById('timeDistance').textContent = text;
-}
+await updateDistances(); //updating the distances for the route when there already a route in the database
 
-await updateDistances();
-
-//-------------------------------------ROUTE SETUP---------------------------------
-//-------Verifying ICAO code--------------
-
+//=============================ROUTE SETUP=============================
+//-------Verifying ICAO code
 function verifyICAO(code) {
-    if (code.length == 4) {
+    if (code.length == 4) { //an ICAO code is always 4 characters long
         for (let letter of code) {
-            if (!isNaN(letter)) {
+            if (!isNaN(letter)) { //each character must be a letter
                 return false;
             }
         }
     } else {
-        return false;
+        return false; //not verified
     }
-    return true;
+    return true; //verified
 }
 
-//-------Fetching Airport Details from API------------
+//-------Fetching Airport Details from API
 
 async function fetchAirportDetails(code) {
-    try {code = code.toUpperCase();} catch (error) {
+    try {
+        code = code.toUpperCase(); //try setting the code to uppercase...
+    } catch (error) {//...but if the code is not a string, catch the error and alert the user
         showAlert("Invalid ICAO code");
         return null;
     }
 
     try {
-        const response = await fetch("/fetch-airport-details", {
+        const response = await fetch("/fetch-airport-details", { //fetching the airport details from the backend
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -51,13 +47,13 @@ async function fetchAirportDetails(code) {
         });
 
         if (!response.ok) {
-            throw new Error("Network response was not ok"); //for non-200 errors
+            throw new Error("Network response was not ok"); //for non-200 errors (eg API errors)
         }
 
         const data = await response.json();
         return data; //returns the airport details
 
-    } catch (error) {
+    } catch (error) { //if the fetch fails, alert the user
         showAlert("Airport not found. Please make sure the ICAO code is correct.");
         return null;
     }
@@ -67,25 +63,25 @@ async function fetchAirportDetails(code) {
 const departureAirport_code = document.getElementById("departure_code");
 const departureAirport_name = document.getElementById("departure_name");
 
-departureAirport_code.addEventListener("keydown", async (event) => {
-    if (event.key === "Enter") {
+departureAirport_code.addEventListener("keydown", async (event) => { 
+    if (event.key === "Enter") {//wait for the user to press enter
         departureAirport_name.style.display = "inline"; //make the name div visible
         departureAirport_name.textContent = "..."; //simulate loading
 
         //validating data
-        if (verifyICAO(departureAirport_code.value)) {
-            const airportDetails = await fetchAirportDetails(departureAirport_code.value);
+        if (verifyICAO(departureAirport_code.value)) { //check the code is valid
+            const airportDetails = await fetchAirportDetails(departureAirport_code.value); //collect the airport details from the API
             if (airportDetails.country == "GB") { //restrict to UK airports only
-                await update("departureAirport_code", departureAirport_code.value.toUpperCase());
-                await update("departureAirport_name", airportDetails.name);
-                departureAirport_code.style.textTransform = "uppercase";
-                departureAirport_name.textContent = airportDetails.name;
+                await update("departureAirport_code", departureAirport_code.value.toUpperCase()); //update flight data with the new departure airport code
+                await update("departureAirport_name", airportDetails.name); //update flight data with the new departure airport name    
+                departureAirport_code.style.textTransform = "uppercase"; //set the input to uppercase (for standardisation)
+                departureAirport_name.textContent = airportDetails.name; //update the name div with the airport name
 
-            } else  if (airportDetails.country != "GB") {
+            } else  if (airportDetails.country != "GB") { //restrict to UK airports only
                 showAlert("Only UK aerodromes are supported");
                 departureAirport_name.style.display = "none";
             } 
-        } else {
+        } else { //if the code is not valid, alert the user and hide the name div
             showAlert("Invalid ICAO code");
             departureAirport_name.style.display = "none";
         }
@@ -94,48 +90,51 @@ departureAirport_code.addEventListener("keydown", async (event) => {
 
 //-------Arrival Airport (ICAO)------------
 
+//the arrival airport code input and name div
 const arrivalAirport_code = document.getElementById("arrival_code");
 const arrivalAirport_name = document.getElementById("arrival_name");
 const content = document.getElementById('content');
 
 arrivalAirport_code.addEventListener("keydown", async (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter") { //wait for the user to press enter
         arrivalAirport_name.style.display = "inline";
         arrivalAirport_name.textContent = "...";
 
         //validating data
-        if (verifyICAO(arrivalAirport_code.value)) {
-            const airportDetails = await fetchAirportDetails(arrivalAirport_code.value);
-            if (airportDetails.country == "GB") {
-                await update("destinationAirport_code", arrivalAirport_code.value.toUpperCase());
-                await update("destinationAirport_name", airportDetails.name);
-                arrivalAirport_code.style.textTransform = "uppercase";
-                arrivalAirport_name.textContent = airportDetails.name;
+        if (verifyICAO(arrivalAirport_code.value)) { //check the code is valid
+            const airportDetails = await fetchAirportDetails(arrivalAirport_code.value); //collect the airport details from the API
+            if (airportDetails.country == "GB") { //restrict to UK airports only
+                await update("destinationAirport_code", arrivalAirport_code.value.toUpperCase()); //update flight data with the new arrival airport code
+                await update("destinationAirport_name", airportDetails.name); //update flight data with the new arrival airport name
+                arrivalAirport_code.style.textTransform = "uppercase"; //set the input to uppercase (for standardisation)
+                arrivalAirport_name.textContent = airportDetails.name; //update the name div with the airport name
 
                 /*when arrival aerodrome is entered, fetch the coords for departure and
                  arrival for intial route drawing*/
 
                 /*checking if both departure and arrival aerodromes are set already*/
-                content.classList.add('loading')
-                fetch('/get-flight')
+                content.classList.add('loading') //this sets the syling of the whole page to a lower opacity to show a loading state
+                fetch('/get-flight') //fetching the current route data to check if there are already waypoints (other than departure and arrival) in the route
                     .then(response => response.json())
                     .then(async data => {
                         const route = data.route;
                         if (route.length <= 1) { //if there are no waypoints yet
-                            const departureCoords = await fetchAvCoords(departureAirport_code.value);
+                            const departureCoords = await fetchAvCoords(departureAirport_code.value); //fetching the coordinates for the departure and arrival
                             const arrivalCoords = await fetchAvCoords(arrivalAirport_code.value);
 
                             //swap the coordinates to give lat-long instead of long-lat (like why tho, OpenAIP ._.)
                             [departureCoords[0][0], departureCoords[0][1]] = [departureCoords[0][1], departureCoords[0][0]]; 
                             [arrivalCoords[0][0], arrivalCoords[0][1]] = [arrivalCoords[0][1], arrivalCoords[0][0]];
 
+
+                            //updating the route with the departure and arrival coordinates as the first and last points of the route
                             await add_waypoint(departureCoords[0], departureCoords[1]);
                             await add_waypoint(arrivalCoords[0], arrivalCoords[1]);
 
-                            reload_map();
-                            update_route_names();
+                            reload_map(); //reload the map to show the route between the departure and arrival aerodromes
+                            update_route_names(); //update the route names to show the departure and arrival aerodrome names
                             content.classList.remove('loading');
-                        } else {
+                        } else { //if there are already waypoints in the route, prevent updating the departure and arrival aerodromes to avoid complications with the route data
                             showAlert("Both aerodromes are set already. Clear the route to reset them.");
                             content.classList.remove('loading');
                         }
@@ -144,11 +143,11 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
                 /*BIG LIMITATION - departure/arrival cant be updated instantly
                  if both aerodromes are already set, user has to clear the route first*/
 
-            } else if (airportDetails.country != "GB") {
+            } else if (airportDetails.country != "GB") { //restrict to UK airports only
                 showAlert("Only UK aerodromes are supported");
                 arrivalAirport_name.style.display = "none";
             }
-        } else {
+        } else { //if the code is not valid, alert the user and hide the name div
             showAlert("Invalid ICAO code");
             arrivalAirport_name.style.display = "none";
         }
@@ -156,11 +155,12 @@ arrivalAirport_code.addEventListener("keydown", async (event) => {
 });
 
 //-------Alternate Airport (ICAO)------------
+//the alternate airport code input and name div
 const alternateAirport_code = document.getElementById("alternate_code");
 const alternateAirport_name = document.getElementById("alternate_name");
 
 alternateAirport_code.addEventListener("keydown", async (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter") { //wait for the user to press enter
         alternateAirport_name.style.display = "inline";
         alternateAirport_name.textContent = "...";
 
@@ -178,7 +178,7 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
             }
 
             //validating data
-            if (verifyICAO(alternateAirport_code.value)) {
+            if (verifyICAO(alternateAirport_code.value)) { //check the code is valid
                 const airportDetails = await fetchAirportDetails(alternateAirport_code.value);
                 if (airportDetails.country == "GB") {
                     //swapping cords to lat-long
@@ -191,31 +191,33 @@ alternateAirport_code.addEventListener("keydown", async (event) => {
                     await update("alternateAirport_coords", alternateCoords);
                     await update("route_changed", "True"); //to trigger navlog reload
 
-                    alternateAirport_code.style.textTransform = "uppercase";
-                    alternateAirport_name.textContent = airportDetails.name;
+                    alternateAirport_code.style.textTransform = "uppercase"; //set the input to uppercase (for standardisation)
+                    alternateAirport_name.textContent = airportDetails.name; //update the name div with the airport name
                     updateDistances();
                     await reload_map(); //reload the map to show the alternate route
 
-                } else if (airportDetails.country != "GB") {
+                } else if (airportDetails.country != "GB") { //restrict to UK airports only
                     showAlert("Only UK aerodromes are supported");
                     alternateAirport_name.style.display = "none";
                 }
-            } else {
+            } else { //if the code is not valid, alert the user and hide the name div
                 showAlert("Invalid ICAO code");
                 alternateAirport_name.style.display = "none";
             }
-        } else {
+        } else { //if departure or arrival aerodrome is not set, prevent adding an alternate airport as that would cause complications with the route data
             showAlert("Please make sure both departure and arrival aerodromes are set before adding an alternate airport.");
             alternateAirport_name.style.display = "none";
         }
     }
 });
 
-//------------------------------ROUTE MAP------------------------------
+//=============================ROUTE MAP=============================
+ //maptiler logo to display when satellite map is selected
 const mapTilerLogo = document.getElementById("mapTilerLogo");
 
 async function load_map() {
-    return new Promise((resolve) => {
+    //removing the map if it already exists to prevent the "map container already exists" error when reloading the map
+    return new Promise((resolve) => { //using a promise to ensure the map is fully loaded before executing any further code
         if (map) {
             map.remove();
             map = null;
@@ -223,7 +225,7 @@ async function load_map() {
         //getting API keys from backend
         fetch('/get-api-keys')
         .then(response => response.json())
-        .then(data => {
+        .then(data => { //fetching the (public) API keys for the map layers from the backend
             const apiKey = data.openaip;
             const apiKeyMaptiler = data.maptiler;
             const apiKeyJawg = data.jawg;
@@ -253,7 +255,7 @@ async function load_map() {
             });
 
             //finding the Basemap style from settings, and the route data from route
-            fetch('/get-all')
+            fetch('/get-all') //fetch both flight and settings data
             .then(response => response.json())
             .then(FlightData => {
                 const mapStyle = FlightData.settings.map_style;
@@ -261,26 +263,28 @@ async function load_map() {
                 const route = FlightData.flight.route
                 const alternate_coords = FlightData.flight.alternateAirport_coords;
 
-                if (mapStyle == 'normal' && theme == 'light') {
+                if (mapStyle == 'normal' && theme == 'light') { //if the map style is normal and the theme is light, use the basemap layer and hide the maptiler logo
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
                     center: route.length > 0 ? [route[route.length - 2][0], route[route.length - 2][1]] : [51.505, -0.09], //Initial center coords (set to first route point or London)
                     zoom: 10.3,
-                    layers: [Basemap, OpenAIP]
+                    layers: [Basemap, OpenAIP] //setting the basemap and OpenAIP layers to show by default
                 }); 
+                //adding the route to the map with measurements shown using leaflet measure path
                 const line = L.polyline(route, { color: '#f0F' , weight: 5, measurementOptions : { imperial:true }})
                 .addTo(map)
                 .showMeasurements();
                 
                 //adding alternate
                 if (alternate_coords.length == 2) {
+                //using a dashed line to differentiate the alternate route from the main route
                 const alt_line = L.polyline([route[route.length - 1], alternate_coords], { color: '#ffa500' , weight: 7, measurementOptions : { imperial:true }, dashArray: '5, 10' })
                 .addTo(map)
                 .showMeasurements();
                 }
 
-                } else if (mapStyle == 'normal' && theme == 'dark') {
+                } else if (mapStyle == 'normal' && theme == 'dark') { //if the map style is normal and the theme is dark, use the dark mode layer and hide the maptiler logo
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
@@ -288,6 +292,8 @@ async function load_map() {
                     zoom: 10.3,
                     layers: [Darkmode, OpenAIP]
                 }); 
+
+                //adding the route to the map with measurements shown using leaflet measure path
                 const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
                 .addTo(map)
                 .showMeasurements();
@@ -299,7 +305,7 @@ async function load_map() {
                 .showMeasurements();
                 }
 
-                } else if (mapStyle == 'satellite') {
+                } else if (mapStyle == 'satellite') { //if the map style is satellite, use the satellite layer and show the maptiler logo
                     mapTilerLogo.style.display = "inline";
                     //crafting the map
                     map = L.map('routeMAP', { 
@@ -308,6 +314,7 @@ async function load_map() {
                     layers: [Satellite, OpenAIP]
                     //crafting the map
                 });
+                //adding the route to the map with measurements shown using leaflet measure path
                 const line = L.polyline(route, { color: '#f0F' , measurementOptions : { imperial:true }})
                 .addTo(map)
                 .showMeasurements(); //show the distances between each point on the map
@@ -326,18 +333,19 @@ async function load_map() {
                     .addTo(map)
                 })
 
-                resolve();
+                resolve(); //resolving the promise to allow the map to load before executing any further code
             })
 
-            .catch(error => {
+            .catch(error => { //if there is an error fetching the API keys, log the error and alert the user
                 console.error('MapCreationError', error);
+                showAlert("An error occurred while loading the map. Please reload the page.");
                 resolve();
             });
         });
     });
 
 }
-//-------------------------------------------ROUTE PLAN-----------------------------------------------------
+//=============================ROUTE PLAN=============================
 
 //------------------------adding a waypoint
 
@@ -355,7 +363,7 @@ async function add_waypoint(waypoint, name) {
         throw new Error("Network response was not ok"); //for non-200 errors
     }
 
-    } catch (error) {
+    } catch (error) { //if the fetch fails, alert the user
         showAlert("An error occured whilst adding the waypoint. Please try again.");
         return null;
     }
@@ -382,17 +390,17 @@ async function add_city(city) {
         //then, add the city to the route
         await add_waypoint(data.coordinates, data.name.toUpperCase());
 
-        } catch (error) {
+        } catch (error) { //if the fetch fails, alert the user
             showAlert("Error fetching city details. Please make sure the city name is correct.");
             addWaypointContainer.classList.remove('loading')
             return null;
             }
     }
 
-//-------------Fetching the coords for airport related features-----------
+//-------------Fetching the coords for airport related features
 
 async function fetchAvCoords(point) {
-    point = point.toUpperCase()
+    point = point.toUpperCase() //setting to uppercase as OpenAIP uses uppercase for all aviation features
     try {
     const response = await fetch("/get-avCoords", {
         method: "POST",
@@ -418,14 +426,16 @@ async function fetchAvCoords(point) {
 //----------------Adding an aviation feature as a waypoint
 
 async function add_av(avPoint) {
-    try {
+    try { //first, fetch the coordinates for the aviation feature from the backend (which gets it from OpenAIP)
         var AvCoords = await fetchAvCoords(avPoint);
-        } catch (error) {
+        } catch (error) { //if the fetch fails, alert the user
         showAlert("Waypoint not found. Please check the name and location of your waypoint and try again.");
+        //resetting the loading feedback
         addWaypointContainer.classList.remove('loading')
         return null;
         }
     if (AvCoords) {
+    //then, add the aviation feature to the route if the coordinates were successfully fetched
     [AvCoords[0][0], AvCoords[0][1]] = [AvCoords[0][1], AvCoords[0][0]];
     await add_waypoint(AvCoords[0], AvCoords[1]);
     }
@@ -448,10 +458,11 @@ function reload_map() {
     return load_map();
 } 
 
-//-------------------------Picking a waypoint------------------------
+//=============================WAYPOINT MANAGEMENT=============================
 
 //switching between city/town or an aviation feature:
 
+//update settings function from base
 function updateSettings(key, value) {
         fetch("/update-settings", {
         method: "POST",
@@ -460,10 +471,11 @@ function updateSettings(key, value) {
     });
     }
 
-const CityOrTown = document.getElementById('CityOrTown')
-const avFeature = document.getElementById('avFeature')
-const searchWaypoint = document.getElementById('searchWaypoint')
+const CityOrTown = document.getElementById('CityOrTown') //the button to select adding a city or town as a waypoint
+const avFeature = document.getElementById('avFeature') //the button to select adding an aviation feature (VRP, navaid or airport) as a waypoint
+const searchWaypoint = document.getElementById('searchWaypoint') //the input where the user types the name of the waypoint they want to add
 
+//when the user clicks on the city/town button, it becomes active and the placeholder text changes to prompt the user to enter a city or town name.
 CityOrTown.addEventListener('click', () => {
     CityOrTown.classList.add('active')
     avFeature.classList.remove('active')
@@ -471,6 +483,7 @@ CityOrTown.addEventListener('click', () => {
     updateSettings("waypoint_addType", "City/Town")
 })
 
+//when the user clicks on the aviation feature button, it becomes active and the placeholder text changes to prompt the user to enter a VRP, navaid or airport name.
 avFeature.addEventListener('click', () => {
     CityOrTown.classList.remove('active')
     avFeature.classList.add('active')
@@ -486,15 +499,15 @@ const route_names = document.getElementById('route_names')
 function update_route_names() {
     fetch('/get-flight')
         .then(response => response.json())
-        .then(FlightData => {
+        .then(FlightData => { //fetching the route
             const route = FlightData.route_names;
-            route_names.value = route.join(' ➔ ');
+            route_names.value = route.join(' ➔ '); //joining the list up with arrows to create a legible route to the user
         });
 
     
 }
 
-//-------------------ADDING AND REMOVING WAYPOINTS MANUALLY----------------
+//-------------------ADDING AND REMOVING WAYPOINTS MANUALLY
 //adding event listener to the waypoint form
 const waypoint = document.getElementById('searchWaypoint')
 
@@ -547,16 +560,16 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
                 throw new Error("Network response was not ok"); //for non-200 errors
             }
 
-            } catch (error) {
+            } catch (error) { //if the fetch fails, alert the user
                 showAlert("An error occured whilst removing the waypoint. Please try again.");
                 addWaypointContainer.classList.remove('loading')
                 return null;
             }
             
             waypoint.value = '';
-            reload_map();
+            reload_map(); //refresh the map to show the updated route
             update_route_names();
-            await updateDistances();
+            await updateDistances(); //update the distances as they would have changed when a waypoint is removed
             await update("route_changed", "True");
             addWaypointContainer.classList.remove('loading')
             });
@@ -570,7 +583,7 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
         //(to know whether to add a city or an aviation feature)
         fetch('/get-all')
         .then(response => response.json())
-        .then(async data => {
+        .then(async data => { //fetching both settings and flight data to get the current route and the type of waypoint to add
             const addType = data.settings.waypoint_addType;
             const departureAirport = data.flight.departureAirport_code;
             const destinationAirport = data.flight.destinationAirport_code;
@@ -600,16 +613,16 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
 
             //if all is valid a waypoint can be added
             if (addType == 'City/Town') {
-                await add_city(waypoint.value);
+                await add_city(waypoint.value); //use add city function to add the city as a waypoint
                 waypoint.value = '';
 
             } else if (addType == 'VRP/NAVAID/Airport') {
-                await add_av(waypoint.value);
+                await add_av(waypoint.value); //use add aviation feature to add the av feature as a waypoint (different APIs)
                 waypoint.value = ''; 
             }
-            reload_map();
+            reload_map(); //refreshing the map to show the updated route
             update_route_names();
-            await updateDistances();
+            await updateDistances(); //update the distances as they would have changed when a waypoint is added
             await update("route_changed", "True");
             addWaypointContainer.classList.remove('loading')
         });
@@ -617,19 +630,19 @@ document.getElementById('addWaypointForm').onsubmit = async function(event) {
 
 };
 
-//---------------------------------------------ROUTE GENERATOR----------------------------------------
+//=============================ROUTE GENERATOR=============================
 
 const generate = document.getElementById('generateRoute');
 const output = document.getElementById('routeOutput');
 const routePrompt = document.getElementById('routePrompt');
 
-generate.addEventListener('click',  async () => {
+generate.addEventListener('click',  async () => { //wait for a button click
     generate.style.pointerEvents = "none"; //preventing multiple clicks
-    generate.textContent = "Generating...";
+    generate.textContent = "Generating..."; //user feedback
 
     fetch('/get-flight')
     .then(response => response.json())
-    .then(async FlightData => {
+    .then(async FlightData => { //fetching required flight data to send to propmt
         const departureAirport = FlightData.departureAirport_code;
         const destinationAirport = FlightData.destinationAirport_code;
         const route_names = FlightData.route_names;
@@ -652,7 +665,7 @@ generate.addEventListener('click',  async () => {
                     Please ensure you do not change the coordinates of the departure or arrival aerodromes.`
                     
 
-        //if there is no prompt, generate a route based on the current *route setup* so, no departure and arrival only
+        //if there is no prompt, generate a route based on the current route setup so, no departure and arrival only
         } else if (!routePrompt.value && departureAirport && destinationAirport) {
             var text = `Generate a sensible, safe, airspace-aware VFR route between the provided departure and arrival aerodromes.
                     You must strictly follow all rules from your global instructions.
@@ -665,6 +678,7 @@ generate.addEventListener('click',  async () => {
                     You have full flexibility to use Navaids, VRPs or cities/towns when generating a route.
                     Please ensure you do not change the coordinates of the departure or arrival aerodromes.`
         } else {
+            //if departure or arrival aerodrome is not set, prevent generating a route
             showAlert("Please make sure both departure and arrival aerodromes are set before generating a route.");
             generate.disabled = false; //allow clicking again
             generate.textContent = "Generate";
@@ -676,22 +690,22 @@ generate.addEventListener('click',  async () => {
             response = JSON.parse(response); //parsing the response to JSON
             output.textContent = response.justification; //displaying the result in the box 
 
-        } catch (error) {
-            console.log(error);
+        } catch (error) { //if the response is not valid JSON, log the error and alert the user
+            console.error(error);
             showAlert("An error occured whilst generating the route. Please try again.");
             generate.disabled = false; //allow clicking again
             generate.textContent = "Generate";
             return;
         }
         
-        //adding the waypoints to the route
+        //adding the waypoints to the flight data
         await update('route_names', response.route_names);
         await update('route', response.route);
         await update('route_gen_justification', response.justification);
         //updating the add index to return to the correct point after generation
         await update('add_index', response.route.length - 1);
-        reload_map();
-        update_route_names();
+        reload_map(); //reload the map to show the new route
+        update_route_names(); //update the route names to show the new route
         await updateDistances();
         await update("route_changed", "True");
 
@@ -702,8 +716,7 @@ generate.addEventListener('click',  async () => {
     }
 );
 
-
-//--------------------------TOOLTIP--------------------------
+//=============================TOOLTIP=============================
 const tooltip = document.getElementById("tooltip");
 const closeTooltip = document.getElementById("closeTooltip");
 const showTooltip = document.getElementById("routeSetupTooltip")
@@ -718,29 +731,31 @@ closeTooltip.addEventListener("click", function() {
     tooltip.style.display = "none"
 })
 
-//------------------------DISTANCE FINDING and BEARINGS----------------------
+//=============================DISTANCE FINDING and BEARINGS=============================
 
 async function getDistance(coord_arr, alternate_coords) {
-    var len = coord_arr.length;
+    var len = coord_arr.length; //finding the length of the route coordinate array to know how many legs there are in the route
     let total = 0
-    var separate_distances = []
-    var separate_bearings = []
-    let operative = false
+    var separate_distances = [] //distance for each leg of the route
+    var separate_bearings = [] //bearing for each leg of the route
+    let operative = false //variable to check if the map is loaded correctly or not
 
     //finding correct units
     const response = await fetch( "/get-settings");
     const settings = await response.json();
     const distance_unit = settings.units_distance;
 
-    if (distance_unit === "nautical_mile") {var divideBy = 1852}
-    else if (distance_unit === "kilometer") {var divideBy = 1000}
-    else if (distance_unit === "us_statute_mile") {var divideBy = 1609.344}
+    if (distance_unit === "nautical_mile") {var divideBy = 1852} //convert from meters to NM
+    else if (distance_unit === "kilometer") {var divideBy = 1000} //convert from meters to km
+    else if (distance_unit === "us_statute_mile") {var divideBy = 1609.344} //convert from meters to US statute miles
 
     //iterate through the route coordinates
     //and find the distance between each point and the next
     do {
         try {
             for (let i = 0; i < len - 1; i++) {
+                //using the distance method from leaflet to find the distance between each point and the next
+                //then dividing by the appropriate value to convert from meters to the correct unit
                 var distance = map.distance(coord_arr[i], coord_arr[i+1]) / divideBy;
                 total = total + distance
                 var bearing = getBearing(coord_arr[i], coord_arr[i+1]);
@@ -751,12 +766,13 @@ async function getDistance(coord_arr, alternate_coords) {
                     var alt_bearing = getBearing(coord_arr[i+1], alternate_coords);
                 }
 
+                //pushing the distance and bearing for each leg to an array to be stored in the flight data
                 separate_bearings.push(bearing)
                 separate_distances.push(distance)
                 operative = true
             }
 
-            if (update_alternate) {
+            if (update_alternate) { //if the alternate distance and bearing were calculated, update those in the flight data as well
             await update("alternate_distance", alt_distance);
             await update("alternate_track", alt_bearing);
             }
@@ -765,7 +781,7 @@ async function getDistance(coord_arr, alternate_coords) {
             operative = false
             await reload_map();
         }
-    } while (!operative);
+    } while (!operative); //if the map isnt loaded, reload the map and try again until it is loaded and the distance can be calculated
 
     //updating the session to include distance values
     await update("separate_distances", separate_distances)
@@ -779,10 +795,9 @@ async function getDistance(coord_arr, alternate_coords) {
 async function updateDistances() {
         fetch('/get-flight')
         .then(response => response.json())
-        .then(async FlightData => {
+        .then(async FlightData => { //fetching the route and coords from database
             const route_coords = FlightData.route;
             const alternate_coords = FlightData.alternateAirport_coords;
-            const time = FlightData.time
 
         //only update the distance when a waypoint exits
         if (route_coords.length >= 3) {
@@ -804,12 +819,12 @@ async function updateDistances() {
 }
    
 
-//------------------------BEARINGS-----------------
+//------------------------bearings
 function getBearing(start, end) {
-
+    //using the geodesy library to calculate the bearing between two points
     const p1 = new LatLon(start[0], start[1]);
     const p2 = new LatLon(end[0], end[1]);
 
-    const bearing = p1.initialBearingTo(p2);
+    const bearing = p1.initialBearingTo(p2); //calculating the initial bearing from the start point to the end point
     return bearing;
 }

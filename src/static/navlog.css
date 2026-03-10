@@ -1,3 +1,5 @@
+/*===================HEADER STYLING===================*/
+
 #title {
     font-size: 29.8px;
     font-weight: 300;
@@ -15,6 +17,9 @@
     align-items: top;
 }
 
+/*===================CONTENT STYLING===================*/
+
+/*variation container styling*/
 #variationContainer {
     background-color: var(--highlight);
     padding: 10px;
@@ -37,6 +42,7 @@
     border: 1px solid var(--onhover);
 }
 
+/*buttons on the far right of the header*/
 #clearNavlogButton {
     width: 50px;
     margin-right: 10px;
@@ -53,10 +59,7 @@
     
 }
 
-#AI_icon {
-    margin-right: 5px;
-}
-
+/*----navlog table styling----*/
 #navlogTable {
     margin-top: 15px;
     width: 100%;
@@ -93,6 +96,7 @@ tr:not(.alternate) td:nth-child(9) {
     background-color: var(--primary);
 }
 
+/*styling for each cell*/
 .tableInput, .tableCalculated {
     width: 100%;
     height: 50px;
@@ -121,6 +125,7 @@ tr:not(.alternate) td:nth-child(9) {
     pointer-events: none;
 }
 
+/*syling when there is no flight data available*/
 #noData {
     position: absolute;
     top: 40%;

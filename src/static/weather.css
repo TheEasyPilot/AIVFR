@@ -1,3 +1,5 @@
+/*====================HEADER STYLING====================*/
+
 #title {
     font-size: 29.8px;
     font-weight: 300;
@@ -37,6 +39,7 @@
     margin-right: 10px;
 }
 
+/*====================CONTENT STYLING====================*/
 /*Main content*/
 #content {
     grid-template-columns: 5fr 5fr;

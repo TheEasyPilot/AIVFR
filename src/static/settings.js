@@ -1,24 +1,26 @@
-//-------Alert Box--------------
+//==============Alert Box==============
 const alertBox = document.getElementById("alertBox");
 
 export function showAlert(message) {
-    alertBox.textContent = message;
-    alertBox.style.display = "inline";
-    setTimeout(() => {
+    alertBox.textContent = message; //sets the text content of the alert box to the message passed as an argument
+    alertBox.style.display = "inline"; //displays the alert box
+    setTimeout(() => { //after 3 seconds the alert box is hidden and the text content is
+    //cleared so it doesn't show up again when the box is displayed next time
         alertBox.style.display = "none";
         alertBox.textContent = "";
     }, 3000);
 }
 
-//-----------LIGHT/DARK TOGGLE----------------
-const root = document.body
-const lightMode = document.getElementById("lightToggle")
-const darkMode = document.getElementById("darkToggle")
+//==============LIGHT/DARK TOGGLE==============
 
-const response = await fetch('/get-settings');
+const root = document.body //to apply dark mode to the whole page we add the class to the body element
+const lightMode = document.getElementById("lightToggle") //light toggle button
+const darkMode = document.getElementById("darkToggle") //dark toggle button
+
+const response = await fetch('/get-settings'); //fetching the settings
 const settings = await response.json();
 
-function updateSettings(key, value) {
+function updateSettings(key, value) { //to update the settings in the session
         return fetch("/update-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -26,6 +28,9 @@ function updateSettings(key, value) {
     });
 }
 
+//for eaach:
+//if clicking the button will change the root class to dark colours
+//setting is then saved in local storage and the database
 
 //--DARK MODE---
 darkMode.addEventListener("click", () => {
@@ -41,9 +46,13 @@ lightMode.addEventListener("click", () => {
     updateSettings("theme", "light"); }
 );
 
-//-----------MAP STYLE TOGGLE----------------
+//==============MAP STYLE TOGGLE==============
 const normalMap = document.getElementById("Normal")
 const satelliteMap = document.getElementById("Satellite")
+
+//for each:
+//if clicking the button will change the map style to either satellite or normal
+//setting is then saved in local storage and the database
 
 //--SATELLITE---
 satelliteMap.addEventListener("click", () => {
@@ -59,23 +68,29 @@ normalMap.addEventListener("click", () => {
     updateSettings("map_style", "normal");
 });
 
-//-----------CHOOSING UNITS----------------------------------
+//==============CHOOSING UNITS==============
+
+//airspeed
 const airspeed = document.getElementById("airspeed")
 const airspeed_options = document.getElementById("airspeed_options")
 
+//altitude
 const altitude = document.getElementById("altitude")
 const altitude_options = document.getElementById("altitude_options")
 
+//mass
 const mass = document.getElementById("mass")
 const mass_options = document.getElementById("mass_options")
 
+//fuel
 const fuel = document.getElementById("fuel")
 const fuel_options = document.getElementById("fuel_options")
 
+//distance
 const distance = document.getElementById("distance")
 const distance_options = document.getElementById("distance_options")
 
-//-----------------BASE UNITS TOGGLE-----------------
+//==============BASE UNITS TOGGLE==============
 const imperial = document.getElementById("imperial")
 const metric = document.getElementById("metric")
 const customDropdown = document.getElementById("customDropdown");
@@ -87,7 +102,7 @@ customDropdown.addEventListener("click", () => {
         updateSettings("base_units", "custom"); //for identification in fuel tab
         imperial.classList.remove('active');
         metric.classList.remove('active');
-        unitsSection.style.display = "flex";
+        unitsSection.style.display = "flex"; //shows the custom unit options
         customDropdown.style.transform = "rotate(180deg)"; //dropdown arrow points up
     } else {
         unitsSection.style.display = "none";
@@ -95,7 +110,8 @@ customDropdown.addEventListener("click", () => {
     }
 });
 
-//imperial units
+//settings imperial units
+//when imperial is selected the base units are set to imperial and all the individual unit options are updated to imperial units
 async function setImperial() {
     imperial.classList.add('active');
     metric.classList.remove('active');
@@ -103,12 +119,13 @@ async function setImperial() {
     await massToPounds();
     await fuelToGallons();
     await altitudeToFeet();
-    await airspeedToKnots();
-    await distanceToNauticalMiles();
+    await airspeedToKnots(); //airspeed remains the same due to standard units
+    await distanceToNauticalMiles(); //distance remains the same due to standard units
     await specificGravityToGalPerlb();
 };
 
 //metric units
+//when metric is selected the base units are set to metric and all the individual unit options are updated to metric units
 async function setMetric() {
     metric.classList.add('active');
     imperial.classList.remove('active');
@@ -117,7 +134,7 @@ async function setMetric() {
     await fuelToLitres();
     await altitudeToMetres();
     await airspeedToKnots(); //airspeed remains the same due to standard units
-    await distanceToNauticalMiles(); //distance remains the same due to standad units
+    await distanceToNauticalMiles(); //distance remains the same due to standard units
     await specificGravityToLPerKg();
 };
 
@@ -129,7 +146,7 @@ metric.addEventListener("click", () => {
     setMetric();
 });
 
-//-----------------DROPDOWN BUTTON BEHAVIOUR-----------------
+//==============DROPDOWN BUTTON BEHAVIOUR==============
 
 //changing the color of the button to primary unless another button is clicked
 const dropdown = document.querySelectorAll(".dropdown") //all elements in this class stored in array
@@ -144,6 +161,9 @@ dropdown.forEach((btn, index) => { //iterates through the array and gives each b
         }
     });
 });
+
+//for each:
+//when the button is clicked all the other options are hidden and the relevant options are shown
 
 //airspeed
 airspeed.addEventListener("click", () => {
@@ -190,23 +210,30 @@ distance.addEventListener("click", () => {
     distance_options.style.display = distance_options.style.display === "none" ? "block" : "none"; //toggles between the styles none and block
 });
 
-//---------------------UNIT SELECTION-----------------------------
+//=================UNIT SELECTION==================
+
+//ACTIVE: button color is set to primary
+
 async function selected (button, key, value) { //to update session value and color
     await updateSettings(key, value);
-    button.classList.add('active'); //when it is active its color changes to primary
+    button.classList.add('active');
 };
 
-//---------------AIRSPEED------------
+//---------------AIRSPEED
 const knots = document.getElementById('knots');
 const mph = document.getElementById('mph');
 const kmph = document.getElementById('kmph');
+
+//for ALL BELOW:
+//when one of the options is selected the other options in that category are deselected,
+//and the setting is updated in the database and session
 
 //Knots
 async function airspeedToKnots() {
     mph.classList.remove('active')
     kmph.classList.remove('active') //active removed so returns to normal color
     await selected(knots, "units_airspeed", "knot")
-};
+}; 
 knots.addEventListener("click", () => {
     airspeedToKnots();
 });
@@ -231,7 +258,7 @@ kmph.addEventListener("click", () => {
     airspeedToKmph();
 });
 
-//-------------------ALTITUDE--------------
+//-------------------ALTITUDE
 const feet = document.getElementById('feet')
 const metres = document.getElementById('metres')
 
@@ -253,7 +280,7 @@ metres.addEventListener("click", () => {
     altitudeToMetres();
 });
 
-//---------------MASS-----------------------
+//---------------MASS
 const kilograms = document.getElementById('kg')
 const pounds = document.getElementById('pounds')
 
@@ -276,7 +303,7 @@ pounds.addEventListener("click", () => {
     massToPounds();
 });
 
-//----------------FUEL-----------------------------
+//----------------FUEL
 const litres = document.getElementById('litres')
 const gallons = document.getElementById('gallons')
 
@@ -298,7 +325,7 @@ gallons.addEventListener("click", () => {
     fuelToGallons();
 });
 
-//----------------DISTANCE-------------------------
+//----------------DISTANCE
 const NM = document.getElementById('nautical_miles')
 const kilometres = document.getElementById('kilometres')
 const statute_miles = document.getElementById('statute_miles')
@@ -333,7 +360,7 @@ statute_miles.addEventListener("click", () => {
     distanceToStatuteMiles();
 });
 
-//------------------SPECIFIC GRAVITY-------------------------
+//------------------SPECIFIC GRAVITY
 async function specificGravityToLPerKg() {
     await updateSettings("units_specific_gravity", "kg/L");
 }
