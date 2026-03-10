@@ -7,11 +7,16 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #
 
-### 1.0.1-beta - [UNRELEASED]
+### 1.1.0-beta - [UNRELEASED]
 
-This update fixes a few major bugs.
+This update fixes a few major bugs with some new features.
 
 **AI features are now operative** and can be used in the webtool.
+
+#### Added
+
+- You can now use the ‘/development’ route to see the development page for AIVFR straight from the webtool **([DEV#17](https://www.notion.so/Move-this-notion-page-into-separate-route-31d164c8ef4080088a12c3e0df4b0d21?pvs=21))**
+- The theme of the webapp is intially set to the user’s choice for thier browser **([DEV#16](https://www.notion.so/Theme-set-based-on-browser-settings-31d164c8ef408022adc2d226c9c37185?pvs=21))**
 
 #### Fixed
 
