@@ -7,6 +7,18 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #
 
+## [Unreleased]
+
+**AI features are now operative** and can be used in the webtool.
+
+- The theme of the webapp is intially set to the user’s choice for thier browser **([DEV#16](https://www.notion.so/Theme-set-based-on-browser-settings-31d164c8ef408022adc2d226c9c37185?pvs=21))**
+
+### Fixed
+
+- Fixed variation calculation error where the inputs give reversed outputs (V East → M ~~Best~~ least) **([DEV#9](https://www.notion.so/variation-bug-fix-316164c8ef408093bf49df949f359a83?pvs=21))**
+- Fixed bug where the expenses and brief never appeared on initial download of flight plan **([DEV#12](https://www.notion.so/initial-plan-pdf-error-fix-316164c8ef4080148a0bcfe4f4aac739?pvs=21))**
+- Fixed bug where the AI could not generate a route if the departure and arrival aerodromes were the same **([DEV#11](https://www.notion.so/fix-same-departure-arrival-bug-316164c8ef4080918c3fdbe08b667377?pvs=21))**
+
 ## [1.1.0-beta](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.1.0-beta) - 2026-03-11
 
 Small update: most of it just refactoring the way releasing works for better management long term
