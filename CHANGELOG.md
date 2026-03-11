@@ -7,7 +7,7 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #
 
-## [Unreleased]
+## [1.1.0-beta] - 2026-03-11
 
 Small update: most of it just refactoring the way releasing works for better management long term
 
