@@ -1,0 +1,17 @@
+{
+    "npm": false,
+    "plugins": {
+        "@release-it/keep-a-changelog": {
+            "head": "HEAD",
+            "filename": "CHANGELOG.md",
+            "strict": false
+            }
+    },
+    "git": {
+        "tagName": "v${version}",
+        "commitMessage": "chore: release v${version}"
+    },
+    "github": {
+        "release": true
+    }
+}
