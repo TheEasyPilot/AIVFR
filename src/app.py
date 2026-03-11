@@ -319,6 +319,10 @@ def show_database():
 def changelog():
     return send_from_directory('..', 'CHANGELOG.md')
 
+@main.route('/development')
+def development():
+    return render_template('dev_page.html')
+
 #settings menu
 @main.route('/settings')
 def settingsMenu():

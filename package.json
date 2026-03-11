@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "release": "release-it",
+    "release:beta:patch": "release-it --preRelease=beta --increment=patch",
+    "release:beta:minor": "release-it --preRelease=beta --increment=minor",
+    "release:beta:major": "release-it --preRelease=beta --increment=major",
+    "release:beta:continue": "release-it --preRelease=beta --preReleaseBase=1 --increment=prerelease",
+    "release:stable": "release-it --increment=patch"
+  },
+  "devDependencies": {
+    "@release-it/keep-a-changelog": "^7.0.1",
+    "release-it": "^19.2.4"
+  }
+}

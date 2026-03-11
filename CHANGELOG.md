@@ -7,7 +7,7 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #
 
-### 1.1.0-beta - [UNRELEASED]
+## [Unreleased]
 
 This update fixes a few major bugs with some new features.
 
