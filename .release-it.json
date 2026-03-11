@@ -1,5 +1,6 @@
 {
     "npm": false,
+    "preReleaseBase": false,
     "plugins": {
         "@release-it/keep-a-changelog": {
             "head": "HEAD",
