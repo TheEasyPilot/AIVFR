@@ -26,7 +26,7 @@ Small update: most of it just refactoring the way releasing works for better man
 ### Added
 
 - You can now use the ‘/development’ route to see the development page for AIVFR straight from the webtool **(#dev)([DEV#17](https://www.notion.so/Move-this-notion-page-into-separate-route-31d164c8ef4080088a12c3e0df4b0d21?pvs=21))**
-- Added release-it functionality for better release management ([#5](https://github.com/TheEasyPilot/AIVFR/pull/5))
+- Added release-it functionality for better release management **([#5](https://github.com/TheEasyPilot/AIVFR/pull/5))**
 
 ## [1.0.0-beta](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.0.0-beta) - 2026-03-05
 
