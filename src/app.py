@@ -15,7 +15,7 @@ main = Blueprint('app', __name__)
 #also allows setting default values
 
 data_template = {
-    "version" : "v1.0.0-beta",
+    "version" : "v1.1.0-beta",
     "settings" : {
         "theme": "light",
         "map_style": "normal",
