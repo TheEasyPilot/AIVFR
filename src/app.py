@@ -1182,7 +1182,7 @@ def calculate_row(row_index):
 
 #----recalculating magnetic heading for all rows (for when variation is changed)
 @main.route('/recalculate-magnetic-HDG')
-def recalculate_variation():
+def recalculate_magnetic_hdg():
     variation = float(get_flight_data()[1]["flight"]["variation"])
     rows = get_flight_data()[1]["flight"]["NAVLOG"]["rows"]
 
@@ -1190,7 +1190,14 @@ def recalculate_variation():
         row = rows[i]
         #only recalculate if HDG (°T) is calculated
         if row["HDG (°T)"]["value"] != "":
-            row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + variation)
+
+            #variation east (+), magnetic least
+            if variation > 0:
+                row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] - abs(variation))
+
+            #variation west (-), magnetic best
+            elif variation < 0:
+                row["HDG (°M)"]["value"] = (row["HDG (°T)"]["value"] + abs(variation))
 
     update('flight.NAVLOG.rows', rows)
     return jsonify({"status": "ok"}), 200
