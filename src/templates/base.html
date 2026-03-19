@@ -28,7 +28,7 @@
     {% endblock %}
   </head>
   
-  <body class="{{ 'dark-mode' if settings.theme == 'dark' else '' }}">
+  <body class="{{ 'dark-mode' if settings.theme == 'dark' else '' }}" data-theme="{{ settings.theme }}">
     <header>
          <div>
           <!--Logo-->

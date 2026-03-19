@@ -1,5 +1,8 @@
+import { applyTheme } from "./components.js";
+
 //ensuring the HTML has loaded properly before runing the script
 document.addEventListener("DOMContentLoaded", function() {
+    applyTheme(); //applies the theme from the user's settings when they load the page
     //linking the buttons and disclaimer to the script
     const uploadFlight = document.getElementById("uploadFlight");
     const disclaimer = document.getElementById("disclaimer");
