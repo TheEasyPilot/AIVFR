@@ -14,9 +14,8 @@
     <link rel="stylesheet" href="../static/settings.css">
     <link rel="icon" type="image/png" href="../static/FPWT_images/planeSillouette.png">
     <script type='module' src="../static/settings.js"></script>
-    <script src="../static/base.js" defer></script>
   </head>
-  <body class="{{ 'dark-mode' if settings.theme == 'dark' else '' }}"> <!--check and set correct theme-->
+  <body class="{{ 'dark-mode' if settings.theme == 'dark' else '' }}" data-theme="{{ settings.theme }}"> <!--check and set correct theme-->
 <!--=============================HEADER==========================-->
     <header>
       <!--Go back arrow icon--> 
@@ -42,8 +41,9 @@
     <div id="options">
       <!--Light/dark toggle-->
       <h2>THEME</h2>
-      <button id="lightToggle">Light</button>
-      <span><button id="darkToggle">Dark</button></span>
+      <button id="lightToggle" class="{{ 'active' if settings.theme == 'light' else '' }}">Light</button> <!--light-->
+      <span><button id="darkToggle" class="{{ 'active' if settings.theme == 'dark' else '' }}">Dark</button></span> <!--dark-->
+      <span><button id="autoToggle" class="{{ 'active' if settings.theme == 'auto' else '' }}">Auto</button></span> <!--auto (system)-->
 
       <!--Map style toggle-->
       <h2>MAP STYLE</h2>

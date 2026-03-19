@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../static/base.css"/>
     <link rel="stylesheet" href="../static/components.css"/>
     <link rel="icon" type="image/png" href="../static/FPWT_images/planeSillouette.png">
-    <script src="../static/main-menu.js" defer></script>
+    <script type='module' src="../static/main-menu.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <!--OG formatting for social media and search engines-->
@@ -27,7 +27,7 @@
     <meta property="og:site_name" content="AIVFR">
   </head>
 
-  <body class="{{ 'dark-mode' if settings.theme == 'dark' else '' }}">
+  <body class="{{ 'dark-mode' if settings.theme == 'dark' else '' }}" data-theme="{{ settings.theme }}">
     <!--logo-->
     <span id="logoAI">AI</span> <!--having these separated allows me to style them differently-->
     <span id="logoVFR">VFR</span>

@@ -17,7 +17,7 @@ main = Blueprint('app', __name__)
 data_template = {
     "version" : "v1.1.0-beta",
     "settings" : {
-        "theme": "light",
+        "theme": "auto",
         "map_style": "normal",
         "units_changed": "False",
         "base_units" : "metric",

@@ -1,3 +1,7 @@
+import { applyTheme } from "./components.js";
+
+await applyTheme(); //applies the theme from the user's settings when they load the page
+
 //==============Alert Box==============
 const alertBox = document.getElementById("alertBox");
 
@@ -16,6 +20,7 @@ export function showAlert(message) {
 const root = document.body //to apply dark mode to the whole page we add the class to the body element
 const lightMode = document.getElementById("lightToggle") //light toggle button
 const darkMode = document.getElementById("darkToggle") //dark toggle button
+const autoMode = document.getElementById("autoToggle") //auto toggle button
 
 const response = await fetch('/get-settings'); //fetching the settings
 const settings = await response.json();
@@ -34,17 +39,38 @@ function updateSettings(key, value) { //to update the settings in the session
 
 //--DARK MODE---
 darkMode.addEventListener("click", () => {
+    darkMode.classList.add('active');
+    lightMode.classList.remove('active');
+    autoMode.classList.remove('active');
+
     root.classList.add("dark-mode");
+    root.setAttribute("data-theme", "dark");
     localStorage.setItem("theme", "dark");
     updateSettings("theme", "dark");
 });
 
 //--LIGHT MODE---
 lightMode.addEventListener("click", () => {
+    lightMode.classList.add('active');
+    darkMode.classList.remove('active');
+    autoMode.classList.remove('active');
+
     root.classList.remove("dark-mode");
+    root.setAttribute("data-theme", "light");
     localStorage.setItem("theme", "light");
     updateSettings("theme", "light"); }
 );
+
+//--AUTO MODE---
+autoMode.addEventListener("click", async () => {
+    autoMode.classList.add('active');
+    darkMode.classList.remove('active');
+    lightMode.classList.remove('active');
+
+    await updateSettings("theme", "auto");
+    root.setAttribute("data-theme", "auto");
+    await applyTheme();
+});
 
 //==============MAP STYLE TOGGLE==============
 const normalMap = document.getElementById("Normal")
