@@ -22,3 +22,6 @@ Deployed with [Railway](https://railway.com)
 - [Html2pdf](https://www.npmjs.com/package/html2pdf.js)
 - [Marked.js](https://github.com/markedjs/marked)
 - [Keep a Changelog](https://github.com/olivierlacan/keep-a-changelog)
+
+## ❤️ Special Shoutouts
+- [Young Sky Pioneers](https://linktr.ee/young.sky.pioneers)
