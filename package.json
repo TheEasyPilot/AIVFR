@@ -8,7 +8,10 @@
     "release:stable": "release-it --increment=patch"
   },
   "devDependencies": {
-    "@release-it/keep-a-changelog": "^7.0.1",
-    "release-it": "^19.2.4"
+    "@release-it/keep-a-changelog": "^5.0.0",
+    "release-it": "^17.11.0"
+  },
+  "dependencies": {
+    "puppeteer": "^24.40.0"
   }
 }
