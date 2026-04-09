@@ -755,8 +755,8 @@ def get_waypoints(coords):
 
     minx = min(coords[0][1], coords[1][1]) - 0.5367  #approx 20 NM corridor
     maxx = max(coords[0][1], coords[1][1]) + 0.5367
-    miny = min(coords[0][0], coords[1][0])
-    maxy = max(coords[0][0], coords[1][0])
+    miny = min(coords[0][0], coords[1][0]) - 0.5367  #approx 20 NM corridor
+    maxy = max(coords[0][0], coords[1][0]) + 0.5367
 
     #"bbox" defines a rectangular area of interest for the query
     params_vrp = {
@@ -802,8 +802,16 @@ def prompt():
 
     #making the OpenAI client and making the request
     if type == "Route":
-        departure_coords = get_flight_data()[1]["flight"]["route"][0]
-        destination_coords = get_flight_data()[1]["flight"]["route"][-1]
+        try:
+            departure_coords = get_flight_data()[1]["flight"]["route"][0]
+            destination_coords = get_flight_data()[1]["flight"]["route"][-1]
+
+        except IndexError:
+            if get_flight_data()[1]["flight"]["departureAirport_code"] == get_flight_data()[1]["flight"]["destinationAirport_code"]:
+                departure_coords = get_flight_data()[1]["flight"]["route"][0]
+                destination_coords = get_flight_data()[1]["flight"]["route"][0]
+            else:
+                return jsonify({"error": "Please enter both departure and destination airports"}), 400
         try:
             client = OpenAI()
             response = client.responses.create(
