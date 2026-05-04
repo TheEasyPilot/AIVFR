@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/Version-v1.1.0--beta_(OPEN_BETA)-green?style=for-the-badge)
 [![Documentation](https://img.shields.io/badge/v1.0.0--beta_documentation-purple?style=for-the-badge&logo=google-drive)](https://drive.google.com/file/d/18-YZnYtjpRsJhMTNNbw9D_Hvr1SXoUU7/view?usp=drive_link)
-[![NOTION](https://img.shields.io/badge/development_page-blue?style=for-the-badge&logo=notion)](https://surf-cylinder-4a6.notion.site/AIVFR-2ee164c8ef408083bb03ce3303d690e2)
+[![NOTION](https://img.shields.io/badge/development_page-blue?style=for-the-badge&logo=notion)](https://www.aivfr.co.uk/development)
 [![WEBSITE STATUS](https://img.shields.io/badge/website_status-TEMPORARILY_OFFLINE-darkred?style=for-the-badge&logo=railway)](https://www.aivfr.co.uk)
 > [!CAUTION]
 > ***THIS TOOL MUST NOT BE USED IN REAL-WORLD FLIGHT OPERATIONS UNDER ANY CIRCUMSTANCES.***
