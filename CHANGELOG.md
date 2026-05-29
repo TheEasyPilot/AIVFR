@@ -15,6 +15,7 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - The theme of the webapp is intially set to the user’s choice for thier browser **([DEV#16](https://www.notion.so/Theme-set-based-on-browser-settings-31d164c8ef408022adc2d226c9c37185?pvs=21))**
 - New flight plan PDF Generating system using pupeteer **([DEV#10](https://surf-cylinder-4a6.notion.site/pupeteer-for-pdf-316164c8ef40803d97d3dfd4ea661672))**
+- Added debug options in the settings menu. Users can reset settings, view raw data or see the current state of PDFs before generation
 
 ### Fixed
 
