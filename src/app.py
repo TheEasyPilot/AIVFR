@@ -29,6 +29,7 @@ data_template = {
         "units_distance" : "nautical_mile",
         "waypoint_addType" : "City/Town",
         "current_page" : "",
+        "viewing_pdf" : "False",
         "fill_symmetric_arms" : True,
                   },
     "flight" : {
@@ -309,7 +310,7 @@ def index():
     
     return render_template('menu.html', version=get_flight_data()[1]["version"], data=get_flight_data()[1], settings=get_flight_data()[1]["settings"])
 
-#-------------DEBUGGING
+#-------------DEBUGGING PAGES
 #debug route that allows me to see the flight data at any time
 @main.route('/debug')
 def show_database():
@@ -318,6 +319,13 @@ def show_database():
 @main.route('/changelog')
 def changelog():
     return send_from_directory('..', 'CHANGELOG.md')
+
+@main.route('/pdf-template')
+def pdf_template():
+    update('settings.viewing_pdf', "True")
+    return render_template('pdf.html', settings=get_flight_data()[1]["settings"], flight=get_flight_data()[1]["flight"])
+
+#------------NORMAL PAGES
 
 @main.route('/development')
 def development():
