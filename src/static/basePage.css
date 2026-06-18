@@ -42,7 +42,7 @@ main {
     transform: scale(1.1);
 }
 
-/*AIVFR logo (different styling for pdf versions)*/
+/*AIVFR logo*/
 #logoAI{
     color: var(--primary);
 }

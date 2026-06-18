@@ -298,7 +298,7 @@ def update(path, value):
     return data, 200
 
 #main menu
-@main.route('/') #this will be the first to load up
+@main.route('/home')
 def index():
     #check if flight id doesnt exist of the flight data isnt found, make a new flight
     if "flight_id" not in session or Flight.query.get(session["flight_id"]) is None:
@@ -327,6 +327,12 @@ def pdf_template():
 
 #------------NORMAL PAGES
 
+#landing page
+@main.route('/')
+def landing():
+    return render_template('landing.html')
+
+#development page
 @main.route('/development')
 def development():
     return render_template('dev_page.html')
