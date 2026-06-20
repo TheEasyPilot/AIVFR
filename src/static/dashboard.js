@@ -46,48 +46,49 @@ async function saveFlight_json() {
 const save_pdf = document.getElementById("save_pdf");
 
 save_pdf.addEventListener("click", () => {
-    save_pdf.classList.add("savingOrSaved"); //button feedback for saving
-    save_pdf.innerHTML = "...";
-
     saveFlight_pdf(); //call the function to save the flight as PDF
     update("saved_pdf", "True");
-
-
-    //simulate saving time with a timeout, then change the button text to show it has been saved (real time may be too short)
-    setTimeout(() => {
-        save_pdf.innerHTML = `<div><svg id="save_pdf_icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22,16 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,16 L4,16 L4,20 L20,20 L20,16 L22,16 Z M13,12.5857864 L16.2928932,9.29289322 L17.7071068,10.7071068 L12,16.4142136 L6.29289322,10.7071068 L7.70710678,9.29289322 L11,12.5857864 L11,2 L13,2 L13,12.5857864 Z" fill-rule="evenodd"/></svg><b>PDF</b></div>`;
-    }, 2000);
 });
 
 async function saveFlight_pdf() {
-    await fetch('/get-flight') //fetching the flight data from the backend to use in the PDF file name and content
-    .then(response => response.json())
-    .then(async FlightData => {
-        //get the departure and arrival names to put in the file name
-        const departure_code = FlightData.departureAirport_code /*departure airport code*/;
-        const arrival_code = FlightData.destinationAirport_code /*arrival airport code*/;
-        
-        //getting the template from base.html to convert into pdf
-        const template_container = document.getElementById('BasePDF_template');
-        //getting the date and time element within the template 
-        const dateAndTime = document.getElementById('base_pdf_dateAndTime');
+    const downloadButton = document.getElementById('save_pdf');
 
-        //updating the date and time to when the PDF is generated
-        dateAndTime.innerHTML = `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`
-        //using html2pdf to convert the html table into a image, then save to PDF
-        const options = { //options for html2pdf
-                margin: 10,
-                filename: `${departure_code}-${arrival_code}.pdf`, //file name set to 'departure-arrival.pdf' for uniqueness
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: {scale: 2, useCORS: true, scrollX: 0, scrollY: 0},
-                logging: false,
-                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait'},
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } //to prevent unwanted page breaks in the PDF
-            };
+    downloadButton.style.pointerEvents = 'none'; //disabling button to prevent multiple clicks while generating
+    downloadButton.style.opacity = 0.4;
 
-        //triggering the download of the PDF
-        html2pdf().set(options).from(template_container.innerHTML).save();
-        })
+    try {
+        //fetching the flight data just to build a sensible filename for the fallback case
+        const FlightData = await fetch('/get-flight').then(response => response.json());
+        const departure_code = FlightData.departureAirport_code;
+        const arrival_code = FlightData.destinationAirport_code;
+
+        //calling the new Puppeteer-backed PDF generation route
+        const response = await fetch('/generate-pdf/flight-plan', {
+            method: 'POST'
+        });
+
+        if (!response.ok) {
+            throw new Error('PDF generation failed');
+        }
+
+        //converting the response into a downloadable file
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${departure_code}-${arrival_code}.pdf`;
+        document.body.appendChild(a); //some browsers require the link to be in the DOM to trigger download
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); //freeing up memory once the download has started
+
+    } catch (err) {
+        console.error('PDF download failed:', err);
+        showAlert('Something went wrong generating your flight plan PDF. Please try again.');
+    } finally {
+        downloadButton.style.pointerEvents = 'all';
+        downloadButton.style.opacity = 1;
+    }
 }
 
 

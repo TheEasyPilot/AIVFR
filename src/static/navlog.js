@@ -208,38 +208,39 @@ download.addEventListener('click', async () => {
 
 
 async function downloadPDF() {
-await fetch('/get-flight') //fetching the flight data
-.then(response => response.json())
-.then(async FlightData => {
-    //get the departure and arrival names to put in the file name
-    const departure_code = FlightData.departureAirport_code
-    const arrival_code = FlightData.destinationAirport_code
+    download.style.pointerEvents = 'none'; //disabling button to prevent multiple clicks while generating
+    download.style.opacity = 0.4;
 
-    download.style.pointerEvents = 'none' //disabling button to prevent multiple clicks while generating
-    download.style.opacity = 0.4
-    await refreshPLOG(); //refresh the navlog to make sure all the latest data is included in the downloaded PDF
-    //getting the table
-    const navlog = document.getElementById('navlogTable');
-    
-    //getting the template
-    const template_container = document.getElementById('navlogPDF_template');
-    const navlog_content = document.getElementById('navlog_pdf_content');
-    const dateAndTime = document.getElementById('navlog_pdf_dateAndTime');
+    try {
+        await refreshPLOG(); //refresh the navlog to make sure all the latest data is included before generating
 
-    //inserting the data into the templete
-    navlog_content.innerHTML = navlog.outerHTML;
-    dateAndTime.innerHTML = `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`
-    //using html2pdf to convert the html table into a image, then save to PDF
-    const options = {
-            margin: 0.2,
-            filename: `Navlog ${departure_code}-${arrival_code}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            logging: false,
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape'}
-        };
-    
-    //triggering the download of the PDF
-    html2pdf().set(options).from(template_container.innerHTML).save();
-    })
+        const FlightData = await fetch('/get-flight').then(response => response.json());
+        const departure_code = FlightData.departureAirport_code;
+        const arrival_code = FlightData.destinationAirport_code;
+
+        const response = await fetch('/generate-pdf/navlog', {
+            method: 'POST'
+        });
+
+        if (!response.ok) {
+            throw new Error('Navlog PDF generation failed');
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Navlog ${departure_code}-${arrival_code}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+    } catch (err) {
+        console.error('Navlog PDF download failed:', err);
+        showAlert('Something went wrong generating your navlog PDF. Please try again.');
+    } finally {
+        download.style.pointerEvents = 'all';
+        download.style.opacity = 1;
+    }
 }

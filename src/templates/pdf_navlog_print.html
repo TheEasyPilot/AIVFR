@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+    <title>Navigation Log</title>
+    <link rel="stylesheet" href="../static/base.css" />
+    <link rel="stylesheet" href="../static/components.css" />
+    <link rel="stylesheet" href="../static/pdf.css" />
+  </head>
+  <body style="background-color: white;">
+
+    <!-- No wrapper div — only one template rendered per route, nothing to toggle -->
+    <div id="navlog_pdf_header">
+      <!--Logo-->
+      <div>
+        <span id="logoAI_pdf" style="font-size: 70px;">AI</span>
+        <span id="logoVFR_pdf" style="font-size: 70px;">VFR</span>
+        <p style="margin-top: -16px; font-size: 14px;"><b>AI ASSISTED FLIGHT PLANNING</b></p>
+      </div>
+      <h2 style="color: #000000;">Navigation Log</h2>
+    </div>
+
+    <div id="navlog_pdf_content" class="light_mode" style="padding: 20px 0;">
+      <table id="navlogTable">
+        <thead>
+          <tr>
+            {% for header in flight.NAVLOG.headers %}
+              <th>{{ header }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in flight.NAVLOG.rows %}
+            <tr {% if row["FROM/TO"].value == flight.destinationAirport_code + " - " + flight.alternateAirport_code %}style="background-color: var(--alternate);"{% endif %}>
+              {% for header in flight.NAVLOG.headers %}
+                {% set cell = row[header] %}
+                <td>
+                  {% if cell.value is none or cell.value == "" %}
+                  {% elif cell.value == "ERROR" %}
+                    ERROR
+                  {% elif "°" in header %}
+                    {% set numeric_value = cell.value|float(default=none) %}
+                    {% if numeric_value is none %}
+                      {{ cell.value }}
+                    {% else %}
+                      {{ '%03d' % numeric_value|round|int }}
+                    {% endif %}
+                  {% else %}
+                    {{ cell.value }}
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div id="navlog_pdf_footer" class="light_mode">
+      <p><em>FOR EDUCATIONAL PURPOSES ONLY. MUST NOT BE USED IN REAL WORLD FLIGHT OPERATIONS</em></p>
+      <p><span>{{ generated_at }}</span> | <b>www.aivfr.co.uk</b></p>
+    </div>
+
+  </body>
+</html>
