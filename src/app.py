@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, send_from_directory, session, jsonify, request
+from datetime import datetime
+from flask import Blueprint, render_template, send_from_directory, session, jsonify, request, send_file
 from .models import Flight
 from .extentions import db
 from math import radians, degrees, sin, asin, cos, sqrt
@@ -6,7 +7,9 @@ import os, pint, requests, json
 from openai import OpenAI
 from dotenv import load_dotenv
 from .ai_roles import fetchRole
-
+import subprocess
+import tempfile
+import os
 main = Blueprint('app', __name__)
 
 #-------------------------------------------FLIGHT DATA AND DATABASE MANAGEMENT------------------------------------
@@ -1382,3 +1385,133 @@ def remove_expense():
         return jsonify({"status": "success"}), 200
     except IndexError: #shouldn't be possible as a click is required on frontend
         return jsonify({"error": "Invalid expense index"}), 400
+
+#------------------------------------PDF GENERATION--------------------------------------------------
+
+#Puppeteer routes to generate PDFs
+ 
+#print-only route for the flight plan PDF — no buttons, no toggle JS, just the populated template
+@main.route('/pdf-template/flight-plan')
+def print_flight_plan():
+    return render_template(
+        'pdf_base_print.html',
+        flight=get_flight_data()[1]["flight"],
+        generated_at=datetime.now().strftime('%d/%m/%Y at %H:%M:%S')
+    )
+ 
+#print-only route for the navlog PDF — same idea, separate template
+@main.route('/pdf-template/navlog')
+def print_navlog():
+    return render_template(
+        'pdf_navlog_print.html',
+        flight=get_flight_data()[1]["flight"],
+        generated_at=datetime.now().strftime('%d/%m/%Y at %H:%M:%S')
+    )
+ 
+#--------Base PDF generation
+@main.route('/generate-pdf/flight-plan', methods=["POST"])
+def generate_flight_plan_pdf():
+    flight = get_flight_data()[1]["flight"]
+    departure_code = flight.get("departureAirport_code", "DEP")
+    arrival_code = flight.get("destinationAirport_code", "ARR")
+    filename = f"{departure_code}-{arrival_code}.pdf"
+ 
+    #building the cookie string from the incoming request, so Puppeteer
+    #can "log in" as the same session that's currently viewing the dashboard
+    cookie_header = "; ".join(f"{name}={value}" for name, value in request.cookies.items())
+ 
+    #creating a temporary file path for the PDF to be written to
+    #delete=False because we need the file to still exist after this block closes,
+    #so Puppeteer (a separate process) can write to it
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+        output_path = tmp.name
+ 
+    try:
+        #the actual print route Puppeteer will visit
+        #IMPORTANT: this must point at wherever Flask is actually running.
+        #using an env variable here means this works both locally and once deployed,
+        #without needing to hardcode localhost vs the live domain
+        base_url = os.environ.get("INTERNAL_BASE_URL", "http://127.0.0.1:5000")
+        print_url = f"{base_url}/pdf-template/flight-plan"
+ 
+        result = subprocess.run(
+            [
+                "node", "generate_pdf.js",
+                print_url,
+                output_path,
+                f"--cookie={cookie_header}"
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30  #safety net: don't let a hung Puppeteer process block the server forever
+        )
+ 
+        #checking the exit code generate_pdf.js sends back (remember process.exit(0) vs process.exit(1))
+        if result.returncode != 0:
+            #something went wrong inside Puppeteer/Node — log it so we can debug
+            print("PDF generation failed:")
+            print("stdout:", result.stdout)
+            print("stderr:", result.stderr)
+            return jsonify({"error": "PDF generation failed"}), 500
+ 
+        #reading the generated PDF back into memory so we can send it to the browser
+        return send_file(
+            output_path,
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name=filename
+        )
+ 
+    finally:
+        #cleaning up the temp file regardless of success or failure,
+        #so these don't pile up on the server over time
+        if os.path.exists(output_path):
+            os.remove(output_path)
+
+
+#--------navlog PDF generation
+@main.route('/generate-pdf/navlog', methods=["POST"])
+def generate_navlog_pdf():
+    flight = get_flight_data()[1]["flight"]
+    departure_code = flight.get("departureAirport_code", "DEP")
+    arrival_code = flight.get("destinationAirport_code", "ARR")
+    filename = f"Navlog {departure_code}-{arrival_code}.pdf"
+
+    cookie_header = "; ".join(f"{name}={value}" for name, value in request.cookies.items())
+
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+        output_path = tmp.name
+
+    try:
+        base_url = os.environ.get("INTERNAL_BASE_URL", "http://127.0.0.1:5000")
+        print_url = f"{base_url}/pdf-template/navlog"
+
+        result = subprocess.run(
+            [
+                "node", "generate_pdf.js",
+                print_url,
+                output_path,
+                f"--cookie={cookie_header}",
+                "--landscape"  #only real difference from the flight-plan route
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+
+        if result.returncode != 0:
+            print("Navlog PDF generation failed:")
+            print("stdout:", result.stdout)
+            print("stderr:", result.stderr)
+            return jsonify({"error": "Navlog PDF generation failed"}), 500
+
+        return send_file(
+            output_path,
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name=filename
+        )
+
+    finally:
+        if os.path.exists(output_path):
+            os.remove(output_path)
