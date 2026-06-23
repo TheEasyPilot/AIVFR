@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     }
 
-    updateSettings("current_page", "/");
+    updateSettings("current_page", "/home");
 
     //===========================FUNCTIONS===========================
     //display the disclaimer
