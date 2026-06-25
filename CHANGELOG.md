@@ -7,9 +7,9 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #
 
-## [Unreleased]
+## [1.2.0-beta](https://github.com/TheEasyPilot/AIVFR/releases/tag/v1.2.0-beta) - 2026-06-25
 
-
+Finished my A-levels so expect alot more updates to come! This update contains some bug fixes and some refactoring of existing features.
 
 ### Added
 
