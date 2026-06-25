@@ -9,7 +9,7 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-**AI features are now operative** and can be used in the webtool.
+
 
 ### Added
 
