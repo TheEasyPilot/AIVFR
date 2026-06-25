@@ -22,7 +22,7 @@
 }
 
 /*user feedback when saving/saved */
-#save_json.savingOrSaved, #save_pdf.savingOrSaved { 
+#save_json.inop, #save_pdf.inop { 
     background-color: var(--onhover);
     border: none;
     color: gray;

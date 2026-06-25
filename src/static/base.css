@@ -15,7 +15,8 @@
 
 /*unless dark mode is toggled, then these become the root
 and are used instead*/
-.dark-mode {
+.dark-mode,
+body[data-theme="dark"] {
 /*BACKGROUND*/                  --bg: hsl(0 0% 12.5%);
 /*PRIMARY COLOR*/               --primary: hsl(190 100% 27.6%);
 /*MAIN BOX COLOURS*/            --highlight: hsl(0 0% 20.8%);
@@ -26,6 +27,22 @@ and are used instead*/
 /*TABLE HEADER COLOUR*/         --tableHeader: hsl(0 0% 30.8%);
 /*INPUT BORDER HIGHLIGHTING*/   --inputHighlight: hsla(190, 100%, 27.6%, 0.5);
 /*ALERT BOX COLOR*/             --alert: hsla(0 100% 50% / 0.6);
+}
+
+/*in auto mode use system preference immediately, before JS finishes loading*/
+@media (prefers-color-scheme: dark) {
+    body[data-theme="auto"] {
+/*BACKGROUND*/                  --bg: hsl(0 0% 12.5%);
+/*PRIMARY COLOR*/               --primary: hsl(190 100% 27.6%);
+/*MAIN BOX COLOURS*/            --highlight: hsl(0 0% 20.8%);
+/*TEXT*/                        --text: hsla(0, 0%, 100%, 0.795);
+/*MOUSE HOVER COLOR*/           --onhover: hsl(0 0% 32.9%);
+/*DARK OVERLAY FOR POPUP*/      --popupbg: hsla(0, 0%, 0%, 0.33);
+/*ALTERNATE SECTION ON NAVLOG*/ --alternate: hsl(48.54, 83.18%, 29.02%);
+/*TABLE HEADER COLOUR*/         --tableHeader: hsl(0 0% 30.8%);
+/*INPUT BORDER HIGHLIGHTING*/   --inputHighlight: hsla(190, 100%, 27.6%, 0.5);
+/*ALERT BOX COLOR*/             --alert: hsla(0 100% 50% / 0.6);
+    }
 }
 
 .light_mode {

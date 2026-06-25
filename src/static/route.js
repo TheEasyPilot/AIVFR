@@ -262,8 +262,10 @@ async function load_map() {
                 const theme = FlightData.settings.theme;
                 const route = FlightData.flight.route
                 const alternate_coords = FlightData.flight.alternateAirport_coords;
+                const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; //checking if the user has dark mode enabled in their system settings to determine the theme if the theme is set to auto
+                const resolvedTheme = theme === 'auto' ? (systemPrefersDark ? 'dark' : 'light') : theme; //resolving the theme to either dark or light based on the user preference if the theme is set to auto
 
-                if (mapStyle == 'normal' && theme == 'light') { //if the map style is normal and the theme is light, use the basemap layer and hide the maptiler logo
+                if (mapStyle == 'normal' && resolvedTheme == 'light') { //if the map style is normal and the resolved theme is light, use the basemap layer and hide the maptiler logo
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
@@ -284,7 +286,7 @@ async function load_map() {
                 .showMeasurements();
                 }
 
-                } else if (mapStyle == 'normal' && theme == 'dark') { //if the map style is normal and the theme is dark, use the dark mode layer and hide the maptiler logo
+                } else if (mapStyle == 'normal' && resolvedTheme == 'dark') { //if the map style is normal and the resolved theme is dark, use the dark mode layer and hide the maptiler logo
                     mapTilerLogo.style.display = "none";
                     //crafting the map
                     map = L.map('routeMAP', { 
@@ -345,6 +347,12 @@ async function load_map() {
     });
 
 }
+
+//reloading the map on theme change
+const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)'); //to check if user has dark mode enabled in their system settings for the theme of the map if the theme is set to auto
+mediaQuery.addEventListener('change', () => {
+    reload_map(); //reload the map to update the theme of the map if the user changes their system theme while using the app
+})
 //=============================ROUTE PLAN=============================
 
 //------------------------adding a waypoint

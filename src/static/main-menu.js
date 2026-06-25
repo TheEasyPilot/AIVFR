@@ -1,5 +1,8 @@
+import { applyTheme } from "./components.js";
+
 //ensuring the HTML has loaded properly before runing the script
 document.addEventListener("DOMContentLoaded", function() {
+    applyTheme(); //applies the theme from the user's settings when they load the page
     //linking the buttons and disclaimer to the script
     const uploadFlight = document.getElementById("uploadFlight");
     const disclaimer = document.getElementById("disclaimer");
@@ -18,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     }
 
-    updateSettings("current_page", "/");
+    updateSettings("current_page", "/home");
 
     //===========================FUNCTIONS===========================
     //display the disclaimer
