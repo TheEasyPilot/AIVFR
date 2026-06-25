@@ -1431,7 +1431,8 @@ def generate_flight_plan_pdf():
         #IMPORTANT: this must point at wherever Flask is actually running.
         #using an env variable here means this works both locally and once deployed,
         #without needing to hardcode localhost vs the live domain
-        base_url = os.environ.get("INTERNAL_BASE_URL", "http://127.0.0.1:5000")
+        port = os.environ.get("PORT", "5000")
+        base_url = os.environ.get("INTERNAL_BASE_URL", f"http://127.0.0.1:{port}")
         print_url = f"{base_url}/pdf-template/flight-plan"
  
         result = subprocess.run(
@@ -1483,8 +1484,9 @@ def generate_navlog_pdf():
         output_path = tmp.name
 
     try:
-        base_url = os.environ.get("INTERNAL_BASE_URL", "http://127.0.0.1:5000")
-        print_url = f"{base_url}/pdf-template/navlog"
+        port = os.environ.get("PORT", "5000")
+        base_url = os.environ.get("INTERNAL_BASE_URL", f"http://127.0.0.1:{port}")
+        print_url = f"{base_url}/pdf-template/flight-plan"
 
         result = subprocess.run(
             [

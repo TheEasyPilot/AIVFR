@@ -68,3 +68,11 @@ generatePDF(url, outputPath, landscape, cookieHeader)
     console.error('PDF generation failed:', err);
     process.exit(1);
   });
+
+const browser = await puppeteer.launch({
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage'  // needed for Railway's container environment
+    ]
+});
