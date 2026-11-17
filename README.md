@@ -21,8 +21,6 @@ The webtool tries its best to follow the standard flight-planning procedure for 
 
 Information (ⓘ) icons on some pages contain essential information related to the functionality of the specific tool being accessed.
 
-Users who would like to track the development of this webtool should refer to the Notion development page linked at the top of the readme, as well as on the main menu page of AIVFR.
-
 ## Debugging routes
 
 `/debug` - View raw JSON data for the current session
