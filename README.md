@@ -1,7 +1,7 @@
 # <img width="1920" height="1080" alt="AI VFR Webtool UI Design (1)" src="https://github.com/user-attachments/assets/a5cd6a27-54eb-4a14-973c-2734a586292d" />
 
 ![Version](https://img.shields.io/badge/Version-v1.2.0--beta_(OPEN_BETA)-green?style=for-the-badge&logo=git&logoColor=fff)
-[![WEBSITE STATUS](https://img.shields.io/badge/website_status-OFFLINE-red?style=for-the-badge&logo=railway)](https://www.aivfr.co.uk)
+[![WEBSITE STATUS](https://img.shields.io/badge/website_status-ONLINE-green?style=for-the-badge&logo=railway)](https://www.aivfr.co.uk)
 
 [![Documentation](https://img.shields.io/badge/initial_development_documentation-purple?style=for-the-badge&logo=google-drive&logoColor=fff)](https://drive.google.com/file/d/18-YZnYtjpRsJhMTNNbw9D_Hvr1SXoUU7/view?usp=drive_link)
 [![NOTION](https://img.shields.io/badge/development_page-blue?style=for-the-badge&logo=notion)](https://www.aivfr.co.uk/development)
@@ -14,7 +14,7 @@ Created by a real licensed pilot, this project had the aim of seeing how AI can 
 
 This webtool is not adapted for mobile users. For the best experience please use a laptop/tablet.
 
-As of 25/07/2026, development of AIVFR has terminated. Its been great!
+As of 25/07/2026, development of AIVFR has terminated. The webapp is still fully accessible though!
 
 ## Usage
 
